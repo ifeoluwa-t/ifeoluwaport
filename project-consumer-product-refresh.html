@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-reveal');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consumer Product Refresh — Ifeoluwa Taiwo</title>
+<meta name="description" content="Leading creative direction and content across a full consumer refresh, from new web pages to a redesigned app and Play Store presence.">
+<link rel="stylesheet" href="css/style.css?v=264">
+</head>
+<!-- CASE STUDY PAGE — built from the shared template (see
+     project-eur-gbp-global-accounts.html for the fully-annotated
+     version). Page-specific additions, per this project's brief:
+     - Our Approach is full-width text only (no side/wide image of its
+       own) — the sections right after it carry the visuals instead.
+     - Product Consumer Pages reuses the same .cs-tabs-card component
+       from the Onboard Business Pivot page's "Products Launched," with
+       a .cs-tabs-visual--landscape modifier for web-page screenshots
+       (2 tabs: Global Accounts, Cards). Given its own pale background
+       so it reads as a clearly separate section.
+     - App/Play-Store Redesign is NOT the tabs card — it's a single
+       auto-scrolling, draggable line of .cs-screen cards (see
+       initScreensCarousel in script.js), each flipping between the
+       redesigned screen and the old one ("Previously") on hover/tap.
+     - A Personal Website Refresh section, directly under Our Approach —
+       a single .cs-flip card showing the redesigned Personal page that
+       flips to the previous one on hover/tap (see initFlipCards in
+       script.js), both at the same 2000x1083 size.
+     - None of the three new sections above carry a sub-heading
+       intro line, by request — just the section heading itself (the
+       two flip sections add one small "hover to see" hint instead). -->
+<body data-page="work" style="--cs-accent: var(--indigo);">
+
+<div class="page-transition" aria-hidden="true">
+  <div class="transition-card transition-card--accent"></div>
+  <div class="transition-card transition-card--cover">
+    <span class="loader-title"></span>
+  </div>
+</div>
+
+<header class="site-header" id="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="brand">IFEOLUWA<span>.</span></a>
+
+    <div class="nav-wrap" id="nav-wrap">
+      <nav class="main-nav" id="main-nav">
+        <a href="work.html" class="nav-link" data-page="work">Work</a>
+        <a href="events.html" class="nav-link" data-page="events">Events</a>
+        <a href="storytelling.html" class="nav-link" data-page="storytelling">Storytelling</a>
+        <a href="side-quests.html" class="nav-link" data-page="side-quests">Side-Quests</a>
+        <a href="contact.html" class="nav-link" data-page="contact">Contact</a>
+      </nav>
+    </div>
+
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">/menu</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- 1–4. LOGO, HEADLINE, DESCRIPTION, META ROW + HERO VISUAL — one
+       full-viewport landing section, content centered, no scrolling
+       needed to see it. -->
+  <section class="cs-hero">
+    <div class="section-inner cs-hero-inner--wide">
+      <div class="cs-hero-logo exp-logo" aria-label="Onboard"><img src="assets/images/logos/onboard.jpg" alt=""></div>
+      <div class="cs-hero-top cs-hero-top--landscape">
+        <div class="cs-hero-copy">
+          <h1 class="cs-headline">Giving Onboard's Consumer Experience a Reason to Be Trusted</h1>
+          <p class="cs-subdesc">Leading creative direction and content across a full consumer refresh, from new web pages to a redesigned app and Play Store presence.</p>
+
+          <div class="cs-meta-row">
+            <div class="cs-meta-top-row">
+              <div class="cs-meta-item">
+                <span class="cs-meta-item-label">Year</span>
+                <span class="cs-meta-year">2026</span>
+              </div>
+              <div class="cs-meta-item">
+                <span class="cs-meta-item-label">Category</span>
+                <span class="work-card-pill">Branding &amp; Content</span>
+              </div>
+            </div>
+            <div class="cs-meta-item">
+              <span class="cs-meta-item-label">Skills</span>
+              <div class="cs-skills">
+                <span class="cs-skill-tag">Creative Direction</span>
+                <span class="cs-skill-tag">Brand Positioning</span>
+                <span class="cs-skill-tag">Content Strategy</span>
+                <span class="cs-skill-tag">UX Copywriting</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cs-hero-media cs-hero-media--landscape">
+          <img src="assets/images/consumer-personal-page.webp" width="2400" height="1500" alt="Onboard's refreshed Personal page: &ldquo;Your money, minus the worry&rdquo;. Send globally, spend freely, and receive money easily.">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. CHALLENGES -->
+  <section class="cs-pullquote-section">
+    <div class="section-inner">
+      <div class="cs-pullquote-row">
+        <img class="cs-pullquote-media" src="assets/images/consumer-challenge.webp" width="1992" height="1132" alt="A joyful woman in a red striped top, arms stretched wide against a blue sky." decoding="async">
+        <div>
+          <span class="cs-challenge-tag">Challenge</span>
+          <p class="cs-pullquote">&ldquo;Onboard's consumer experience still looked and read like a crypto app. If professionals were going to trust us with their salaries, every page, every screen, and every store listing needed to earn that trust first.&rdquo;</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. OUR APPROACH — full-width text only; the sections right
+       after this one carry the visuals. -->
+  <section class="cs-approach-section">
+    <div class="section-inner">
+      <p class="cs-section-label">Our Approach</p>
+      <h2 class="cs-section-heading">Rebuilding Trust, Page by Page</h2>
+      <p class="cs-section-intro">We rebuilt the consumer experience from the ground up, starting with the pages and screens people see before they even sign up.</p>
+
+      <div class="cs-approach-did">
+        <h3 class="cs-approach-did-heading">What I Did</h3>
+        <ul class="cs-approach-list">
+          <li>Led creative direction and copywriting across the full consumer site refresh, including the Personal Page, Global Accounts page, and Cards page</li>
+          <li>Repositioned messaging on every page to reflect Onboard as a stablecoin neobank for global professionals, moving away from crypto-first language</li>
+          <li>Directed the App Store and Play Store redesign, rewriting screenshot copy and visuals to lead with clarity and outcomes rather than features</li>
+          <li>Wrote and art-directed campaign creative ("Your Money, Minus the Worry") tying the refreshed brand voice across web, app, and social</li>
+          <li>Coordinated with design and product teams to ensure consistency between the new web pages and the in-app experience</li>
+          <li>Used old screens and copy as a baseline to sharpen what needed to change, keeping what already worked and rewriting what didn't</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEW SECTION: PERSONAL WEBSITE REFRESH — one card showing the redesigned
+       Personal page that flips to the previous one on hover/tap. Both
+       screens are the same size (2000x1083) so the swap is clean. -->
+  <section class="cs-compare-section">
+    <div class="section-inner">
+      <div class="cs-screens-head">
+        <h2 class="cs-section-heading">Personal Website Refresh</h2>
+        <p class="cs-screens-hint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="M13 13l6 6"/></svg>
+          <span class="cs-screens-hint-hover">Hover the screen to see how it looked before</span>
+          <span class="cs-screens-hint-tap">Tap the screen to see how it looked before</span>
+        </p>
+      </div>
+
+      <div class="cs-flip" role="button" tabindex="0" aria-pressed="false" aria-label="Onboard Personal page. Showing the redesigned page; activate to see the previous version.">
+        <div class="cs-flip-media">
+          <img class="cs-flip-img cs-flip-img--old" src="assets/images/consumer-page-previous.webp" width="2000" height="1083" alt="The previous Onboard Personal page: &ldquo;Your money, minus the worry&rdquo; over a photo of a woman with her arms outstretched." loading="lazy" decoding="async" draggable="false">
+          <img class="cs-flip-img cs-flip-img--new" src="assets/images/consumer-page-redesigned.webp" width="2000" height="1083" alt="The redesigned Onboard Personal page: &ldquo;Your money, minus the worry&rdquo; over a photo of a smiling man on a bicycle." loading="lazy" decoding="async" draggable="false">
+          <span class="cs-screen-badge" aria-hidden="true">Previously</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEW SECTION: PRODUCT CONSUMER PAGES — the same .cs-tabs-card
+       component as Onboard Business Pivot's "Products Launched," with a
+       wide, full-width landscape screen (laptop scale) for web-page captures and 2 tabs (the Personal
+       page has its own section above). Pale background gives it its
+       own clear identity as a section. -->
+  <section class="cs-products-section cs-products-section--pale">
+    <div class="section-inner">
+      <h2 class="cs-section-heading">Product Consumer Pages</h2>
+
+      <div class="cs-tabs-card cs-tabs-card--wide">
+        <div class="cs-tabs-list">
+          <button type="button" class="cs-tab-item is-active">
+            <h3 class="cs-tab-title">Global Accounts</h3>
+            <p class="cs-tab-desc">Introducing a new page that shows how you can receive and pay out in USD, EUR, and GBP from a single dashboard.</p>
+          </button>
+          <button type="button" class="cs-tab-item">
+            <h3 class="cs-tab-title">Cards</h3>
+            <p class="cs-tab-desc">A refreshed Cards experience, cleaner, clearer, and easier to see what your cards can do.</p>
+          </button>
+        </div>
+        <div class="cs-tabs-visual cs-tabs-visual--landscape">
+          <div class="cs-tabs-visual-inner">
+            <img class="cs-tabs-image is-active" src="assets/images/consumer-page-global-accounts.webp" width="2400" height="1500" alt="Onboard's Global Accounts page: receive and pay out in USD, EUR, and GBP from a single dashboard." loading="lazy" decoding="async" draggable="false">
+            <img class="cs-tabs-image" src="assets/images/consumer-page-cards.webp" width="2400" height="1500" alt="Onboard's refreshed Cards page." loading="lazy" decoding="async" draggable="false">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEW SECTION 2: APP/PLAY-STORE REDESIGN — one straight line of
+       before/after screens that auto-scrolls and can be dragged. -->
+  <section class="cs-products-section">
+    <div class="section-inner">
+      <div class="cs-screens-head">
+        <h2 class="cs-section-heading">App/Play-Store Redesign</h2>
+        <p class="cs-screens-hint">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="M13 13l6 6"/></svg>
+          <span class="cs-screens-hint-hover">Hover a screen to see how it looked before</span>
+          <span class="cs-screens-hint-tap">Tap a screen to see how it looked before</span>
+        </p>
+      </div>
+
+      <div class="cs-screens-viewport" id="cs-screens">
+        <div class="cs-screens-track">
+          <div class="cs-screen" aria-label="Your Last Finance App">
+            <div class="cs-screen-media">
+              <img class="cs-screen-img cs-screen-img--old" src="assets/images/app-screens/previous-your-last-finance-app.webp" alt="Previous app store screen: Your Last Finance App" loading="lazy" decoding="async" draggable="false">
+              <img class="cs-screen-img cs-screen-img--new" src="assets/images/app-screens/redesigned-your-last-finance-app.webp" alt="Redesigned app screen: Your Last Finance App" loading="lazy" decoding="async" draggable="false">
+              <span class="cs-screen-badge" aria-hidden="true">Previously</span>
+            </div>
+          </div>
+          <div class="cs-screen" aria-label="Get Paid Globally">
+            <div class="cs-screen-media">
+              <img class="cs-screen-img cs-screen-img--old" src="assets/images/app-screens/previous-cash-card-crypto.webp" alt="Previous app store screen: Cash Card Crypto" loading="lazy" decoding="async" draggable="false">
+              <img class="cs-screen-img cs-screen-img--new" src="assets/images/app-screens/redesigned-get-paid-globally.webp" alt="Redesigned app screen: Get Paid Globally" loading="lazy" decoding="async" draggable="false">
+              <span class="cs-screen-badge" aria-hidden="true">Previously</span>
+            </div>
+          </div>
+          <div class="cs-screen" aria-label="Pay Almost Anywhere">
+            <div class="cs-screen-media">
+              <img class="cs-screen-img cs-screen-img--old" src="assets/images/app-screens/previous-pay-almost-anywhere.webp" alt="Previous app store screen: Pay Almost Anywhere" loading="lazy" decoding="async" draggable="false">
+              <img class="cs-screen-img cs-screen-img--new" src="assets/images/app-screens/redesigned-pay-almost-anywhere.webp" alt="Redesigned app screen: Pay Almost Anywhere" loading="lazy" decoding="async" draggable="false">
+              <span class="cs-screen-badge" aria-hidden="true">Previously</span>
+            </div>
+          </div>
+          <div class="cs-screen" aria-label="Send Money To Anyone">
+            <div class="cs-screen-media">
+              <img class="cs-screen-img cs-screen-img--old" src="assets/images/app-screens/previous-13-currencies-supported.webp" alt="Previous app store screen: 13+ Currencies Supported" loading="lazy" decoding="async" draggable="false">
+              <img class="cs-screen-img cs-screen-img--new" src="assets/images/app-screens/redesigned-send-money-to-anyone.webp" alt="Redesigned app screen: Send Money To Anyone" loading="lazy" decoding="async" draggable="false">
+              <span class="cs-screen-badge" aria-hidden="true">Previously</span>
+            </div>
+          </div>
+          <div class="cs-screen" aria-label="Exchange Your Money">
+            <div class="cs-screen-media">
+              <img class="cs-screen-img cs-screen-img--old" src="assets/images/app-screens/previous-exchange-your-money.webp" alt="Previous app store screen: Exchange Your Money" loading="lazy" decoding="async" draggable="false">
+              <img class="cs-screen-img cs-screen-img--new" src="assets/images/app-screens/redesigned-exchange-your-money.webp" alt="Redesigned app screen: Exchange Your Money" loading="lazy" decoding="async" draggable="false">
+              <span class="cs-screen-badge" aria-hidden="true">Previously</span>
+            </div>
+          </div>
+          <div class="cs-screen" aria-label="Get USD, EUR, GBP Accounts">
+            <div class="cs-screen-media">
+              <img class="cs-screen-img cs-screen-img--old" src="assets/images/app-screens/previous-get-a-usd-account.webp" alt="Previous app store screen: Get a USD Account" loading="lazy" decoding="async" draggable="false">
+              <img class="cs-screen-img cs-screen-img--new" src="assets/images/app-screens/redesigned-get-usd-eur-gbp-accounts.webp" alt="Redesigned app screen: Get USD, EUR, GBP Accounts" loading="lazy" decoding="async" draggable="false">
+              <span class="cs-screen-badge" aria-hidden="true">Previously</span>
+            </div>
+          </div>
+          <div class="cs-screen" aria-label="Grow Your Wealth">
+            <div class="cs-screen-media">
+              <img class="cs-screen-img cs-screen-img--old" src="assets/images/app-screens/previous-invest-in-top-assets.webp" alt="Previous app store screen: Invest in Top Assets" loading="lazy" decoding="async" draggable="false">
+              <img class="cs-screen-img cs-screen-img--new" src="assets/images/app-screens/redesigned-grow-your-wealth.webp" alt="Redesigned app screen: Grow Your Wealth" loading="lazy" decoding="async" draggable="false">
+              <span class="cs-screen-badge" aria-hidden="true">Previously</span>
+            </div>
+          </div>
+          <div class="cs-screen" aria-label="Open a Business Account">
+            <div class="cs-screen-media">
+              <img class="cs-screen-img cs-screen-img--new" src="assets/images/app-screens/redesigned-open-a-business-account.webp" alt="Redesigned app screen: Open a Business Account" loading="lazy" decoding="async" draggable="false">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. THE RESULTS — no side image on this page: just the copy and
+       stats, in a single readable column (.cs-results-solo). -->
+  <section class="cs-results-section">
+    <div class="section-inner">
+      <div class="cs-results-solo">
+        <p class="cs-section-label">The Results</p>
+        <h2 class="cs-section-heading">A Site and Store Presence People Actually Engaged With</h2>
+        <p class="cs-section-intro">The refresh didn't just look better, it performed better, immediately.</p>
+
+        <div class="cs-results-stats">
+          <div class="cs-stat">
+            <span class="cs-stat-value">412%</span>
+            <span class="cs-stat-label">Increase in website views in the first week</span>
+          </div>
+          <div class="cs-stat">
+            <span class="cs-stat-value">82%</span>
+            <span class="cs-stat-label">Engagement rate increase in the first week</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. MORE PROJECTS -->
+  <section class="cs-more-projects">
+    <div class="section-inner">
+      <h2 class="section-heading">More Projects</h2>
+
+      <div class="cs-more-grid">
+        <a href="project-eur-gbp-global-accounts.html" class="work-card">
+          <img class="img-placeholder" src="assets/images/eur-gbp-global-accounts.jpg?v=2" alt="EUR &amp; GBP accounts are here">
+          <span class="work-card-pill">GTM &amp; Product Launch</span>
+          <h3>EUR/GBP Global Accounts</h3>
+          <p>Owned end-to-end product marketing for the launch of EUR and GBP accounts, from positioning through to...</p>
+          <div class="work-card-results">
+            <div class="work-card-stat"><strong>300+</strong><span>New accounts created in the first month</span></div>
+            <div class="work-card-stat"><strong>$100K+</strong><span>In deposits within the first month</span></div>
+          </div>
+        </a>
+
+        <a href="project-onboard-business-pivot.html" class="work-card">
+          <img class="img-placeholder" src="assets/images/onboard-b2b-pivot.jpg" alt="Onboard B2B: one account for all your global business payments">
+          <span class="work-card-pill">Market Entry &amp; Positioning</span>
+          <h3>Onboard Business Pivot</h3>
+          <p>Led product, content and brand marketing across our launch into B2B payments, driving $20M+ in transaction volume within...</p>
+          <div class="work-card-results">
+            <div class="work-card-stat"><strong>$20M+</strong><span>Transaction volume in 3 months</span></div>
+            <div class="work-card-stat"><strong>4</strong><span>Global products launched</span></div>
+          </div>
+        </a>
+
+        <a href="project-stablecoin-sprint.html" class="work-card">
+          <img class="img-placeholder" src="assets/images/stablecoin-sprint.jpg?v=2" alt="Stablecoin Sprint featuring 10+ African products">
+          <span class="work-card-pill">Campaigns &amp; Activation</span>
+          <h3>Stablecoin Sprint</h3>
+          <p>Co-organised and led creative direction. Powered by Base West Africa, cNGN and Uglycash, stablecoin education and adoption...</p>
+          <div class="work-card-results">
+            <div class="work-card-stat"><strong>121k+</strong><span>Total impressions on X</span></div>
+            <div class="work-card-stat"><strong>70+</strong><span>Active users onboarded across 3 products</span></div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. CLOSING CTA — reused verbatim from the homepage's Contact section -->
+  <section class="contact" id="contact">
+    <div class="section-inner">
+      <div class="contact-grid">
+        <div class="contact-copy">
+          <p class="contact-eyebrow">Let's Build Something Together</p>
+          <p>Whether you're hiring for product marketing, creative strategy, or ready to build something bold, I'm here for it &mdash; highly adaptable, versatile, and built for cross-disciplinary work.</p>
+          <p>Outside of marketing, I'm endlessly curious: always side-questing, exploring new tools, and chasing new ideas.</p>
+
+          <div class="contact-cta-row">
+            <a href="mailto:thewilltaiwo@gmail.com" class="btn btn-pill btn-pill-solid">Get in Touch</a>
+            <a href="side-quests.html" class="btn btn-pill">Side Quests</a>
+          </div>
+        </div>
+
+        <div class="contact-side">
+          <div class="contact-photo">
+            <img src="assets/images/who-i-am-photo.png" alt="Ifeoluwa Taiwo" class="contact-photo-img" width="780" height="861">
+          </div>
+
+          <h2 class="section-heading contact-tag">Work<br>With Me!</h2>
+
+          <div class="social-icons">
+            <a href="#" class="social-icon" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.94 8.5H3.56V20.5H6.94V8.5Z"/><path d="M5.25 7.03C6.35 7.03 7.25 6.13 7.25 5.03C7.25 3.92 6.35 3.03 5.25 3.03C4.14 3.03 3.25 3.92 3.25 5.03C3.25 6.13 4.14 7.03 5.25 7.03Z"/><path d="M20.5 20.5H17.13V14.5C17.13 13 17.1 11.13 15.06 11.13C13 11.13 12.69 12.71 12.69 14.39V20.5H9.31V8.5H12.56V10.03H12.6C13.06 9.17 14.17 8.27 15.83 8.27C19.25 8.27 20.5 10.5 20.5 13.87V20.5Z"/></svg>
+            </a>
+            <a href="#" class="social-icon" aria-label="X (Twitter)">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22L14.5 10.6L23.3 22H16.4L11 15.2L4.8 22H1.7L9.7 12.8L1.3 2H8.4L13.3 8.2L18.9 2ZM17.7 20H19.6L7 3.9H5L17.7 20Z"/></svg>
+            </a>
+            <a href="mailto:thewilltaiwo@gmail.com" class="social-icon" aria-label="Email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7L12 13L21 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="brands-strip">
+        <p class="brands-label">Brands I've Worked With</p>
+        <div class="brands-logos">
+          <div class="exp-logo exp-logo--lg" aria-label="Onboard"><img src="assets/images/logos/onboard.jpg" alt=""></div>
+          <div class="exp-logo exp-logo--lg" aria-label="FBI Africa"><img src="assets/images/logos/fbi-africa.jpg" alt=""></div>
+          <div class="exp-logo exp-logo--lg" aria-label="The Graph"><img src="assets/images/logos/the-graph.jpg" alt=""></div>
+          <div class="exp-logo exp-logo--lg" aria-label="Blockchain.com"><img src="assets/images/logos/blockchain-com.jpg" alt=""></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="contact-bar">
+    <p>&copy; 2026 Ìfẹ́olúwa Táíwò</p>
+    <p>Extra rights reserved. I built this myself.</p>
+  </div>
+
+</main>
+
+<script src="js/script.js?v=104"></script>
+</body>
+</html>

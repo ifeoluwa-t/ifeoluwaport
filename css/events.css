@@ -1,0 +1,210 @@
+/* ============================================
+   EVENTS PAGE: a few compact cards that open in place.
+   Loaded only by events.html, on top of style.css.
+============================================ */
+.ev-section {
+  background: #fff;
+  padding: 128px 0 clamp(64px, 9vw, 110px);
+}
+.ev-heading { text-align: center; margin: 0 0 clamp(32px, 5vw, 56px); }
+.ev-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+.ev-item { display: block; }
+.ev-card {
+  background: var(--pale);
+  border-radius: 24px;
+  padding: 14px;
+  height: 100%;
+}
+.ev-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: var(--navy);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.ev-toggle:focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; border-radius: 18px; }
+.ev-media.img-placeholder {
+  display: flex;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  margin: 0;
+  border-radius: 16px;
+}
+.ev-media--img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  object-fit: cover;
+}
+.ev-item.is-open .ev-media--img { width: 42%; flex: none; align-self: flex-start; }
+.ev-slides {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.ev-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.ev-slide.is-current { opacity: 1; }
+.ev-item.is-open .ev-slides { width: 42%; flex: none; align-self: flex-start; }
+.ev-video {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.ev-video-poster { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+.ev-video-el {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  background: #000;
+}
+.ev-video.is-playing .ev-video-el { opacity: 1; }
+.ev-item.is-open .ev-video:not(.is-playing) { cursor: pointer; }
+/* Opened card: the video itself is shown (its poster frame) rather than the thumbnail. */
+.ev-item.is-open .ev-video-el { opacity: 1; }
+/* Play icon on the thumbnail: the viewer chooses whether the video loads and plays. */
+.ev-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 68px;
+  height: 68px;
+  margin: -34px 0 0 -34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--blue);
+  pointer-events: none;
+  transition: transform 0.25s ease, background-color 0.25s ease;
+}
+.ev-play svg { width: 30px; height: 30px; margin-left: 4px; }
+.ev-toggle:hover .ev-play { transform: scale(1.08); }
+.ev-play { display: none; }
+.ev-item.is-open .ev-video:not(.is-playing) .ev-play { display: flex; }
+.ev-video.is-playing .ev-play { display: none; }
+.ev-play-btn {
+  display: inline-flex;
+  margin: 0 0 14px;
+  padding: 11px 20px;
+  border: none;
+  border-radius: 999px;
+  background: var(--blue);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.ev-play-btn:hover { background: var(--navy); }
+.ev-play-btn:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
+.ev-item.is-open .ev-video { width: 42%; flex: none; align-self: flex-start; }
+.ev-card-body { display: flex; flex-direction: column; gap: 8px; padding: 0 6px 6px; }
+.ev-card-title { font-size: 1.2rem; font-weight: 700; line-height: 1.2; }
+.ev-card-brief { font-size: 0.95rem; line-height: 1.5; color: rgba(12, 0, 84, 0.72); }
+.ev-card-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--blue);
+}
+.ev-more-open { display: none; }
+.ev-plus {
+  position: relative;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+.ev-plus::before, .ev-plus::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 10px; height: 2px;
+  background: #fff;
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s ease;
+}
+.ev-plus::after { transform: translate(-50%, -50%) rotate(90deg); }
+.ev-toggle:hover .ev-card-title { color: var(--blue); }
+
+/* Open: the card takes the full row, image beside the details. */
+.ev-item.is-open { grid-column: 1 / -1; }
+.ev-item.is-open .ev-toggle { flex-direction: row; align-items: stretch; gap: 24px; }
+.ev-item.is-open .ev-media.img-placeholder { width: 42%; flex: none; aspect-ratio: 4 / 3; }
+.ev-item.is-open .ev-card-body { justify-content: center; padding: 6px 6px 6px 0; }
+.ev-item.is-open .ev-more-closed { display: none; }
+.ev-item.is-open .ev-more-open { display: inline; }
+.ev-item.is-open .ev-plus::after { transform: translate(-50%, -50%) rotate(0deg); }
+
+.ev-detail {
+  margin-top: 14px;
+  padding: 18px 20px 20px;
+  background: #fff;
+  border-radius: 18px;
+}
+.ev-detail[hidden] { display: none; }
+.ev-detail-title { margin: 0 0 10px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--blue); }
+.ev-detail-list { margin: 0 0 16px; padding-left: 20px; line-height: 1.6; color: var(--navy); }
+.ev-detail-note { margin: 0 0 16px; line-height: 1.6; color: var(--navy); }
+.ev-link {
+  display: inline-flex;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: var(--blue);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: background-color 0.25s ease;
+}
+.ev-link:hover { background: var(--navy); }
+.ev-link:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
+
+@media (max-width: 960px) {
+  .ev-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .ev-grid { grid-template-columns: 1fr; }
+  .ev-item.is-open .ev-toggle { flex-direction: column; }
+  .ev-item.is-open .ev-media.img-placeholder, .ev-item.is-open .ev-media--img, .ev-item.is-open .ev-slides, .ev-item.is-open .ev-video { width: 100%; }
+  .ev-item.is-open .ev-card-body { padding: 0 6px 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ev-plus::before, .ev-plus::after { transition: none; }
+}

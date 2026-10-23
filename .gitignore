@@ -1,0 +1,10 @@
+# dependencies and secrets
+node_modules/
+.env
+.env.*
+
+# OS / editor files
+.DS_Store
+
+# local Claude Code settings (machine-specific)
+.claude/settings.local.json

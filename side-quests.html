@@ -2,12 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-reveal');</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Side Quests — Ifeoluwa Taiwo</title>
-<meta name="description" content="A closer look at Ifeoluwa Taiwo, marketer building at the intersection of product, branding, and growth &mdash; plus the side quests outside of it.">
-<link rel="stylesheet" href="css/style.css?v=26">
+<title>Side-Quests | Ifeoluwa Taiwo</title>
+<meta name="description" content="What Ifeoluwa Taiwo gets up to outside of marketing: music, books, comics, sport, birthdays, photography, design and health.">
+<link rel="stylesheet" href="css/style.css?v=264">
+<link rel="stylesheet" href="css/side-quests.css?v=18">
 </head>
 <body data-page="side-quests">
+
+<div class="page-transition" aria-hidden="true">
+  <div class="transition-card transition-card--accent"></div>
+  <div class="transition-card transition-card--cover">
+    <span class="loader-title"></span>
+  </div>
+</div>
 
 <header class="site-header" id="site-header">
   <div class="header-inner">
@@ -15,12 +24,11 @@
 
     <div class="nav-wrap" id="nav-wrap">
       <nav class="main-nav" id="main-nav">
-        <a href="index.html" class="nav-link" data-page="home">/home</a>
-        <a href="work.html" class="nav-link" data-page="work">/work</a>
-        <a href="events.html" class="nav-link" data-page="events">/events</a>
-        <a href="storytelling.html" class="nav-link" data-page="storytelling">/storytelling</a>
-        <a href="side-quests.html" class="nav-link" data-page="side-quests">/side-quests</a>
-        <a href="contact.html" class="nav-link" data-page="contact">/contact</a>
+        <a href="work.html" class="nav-link" data-page="work">Work</a>
+        <a href="events.html" class="nav-link" data-page="events">Events</a>
+        <a href="storytelling.html" class="nav-link" data-page="storytelling">Storytelling</a>
+        <a href="side-quests.html" class="nav-link" data-page="side-quests">Side-Quests</a>
+        <a href="contact.html" class="nav-link" data-page="contact">Contact</a>
       </nav>
     </div>
 
@@ -30,88 +38,158 @@
 
 <main>
 
-  <!-- WHO I AM -->
-  <section class="who-i-am page-top">
-    <div class="section-inner who-i-am-inner">
-
-      <p class="who-i-am-tag">Ifeoluwa <strong>Taiwo</strong></p>
-
-      <div class="who-i-am-grid">
-        <div class="who-i-am-portrait">
-          <h1 class="section-heading who-i-am-heading">Who I Am</h1>
-          <img src="assets/images/illustration.png" alt="Illustrated portrait of Ifeoluwa Taiwo" width="1283" height="1193" data-cutout>
-        </div>
-
-        <div class="who-i-am-copy">
-          <p>I am a marketer building at the intersection of product, branding, and growth marketing. I build strategies that move people from awareness to action across B2B and B2C.</p>
-
-          <p>I am passionate about brand storytelling and build and execute strategies that move people from awareness to action, driving product adoption, growing communities, and improving retention through running events, creative marketing campaigns and real-world experiences.</p>
-
-          <p>From launching products to organising events that impact builders and creators, I care about outcomes that matter.</p>
-
-          <a href="work.html" class="btn btn-pill btn-pill-light">View My Work</a>
+  <!-- PART 1: one continuous, auto-scrolling row of equal-height tiles.
+       Tile media are striped placeholders; swap each .sq2-tile-media for a real <img loading="lazy"> later. -->
+  <section class="sq2-gallery sq2-dark" aria-label="Side-quests gallery">
+        <div class="sq2-gallery-head">
+      <p class="sq2-label">side-quests</p>
+    </div>
+    <div class="sq2-rows">
+      <div class="sq2-row" data-dir="-1" data-speed="26">
+        <div class="sq2-track">
+            <div class="sq2-tile sq2-tile--p" tabindex="0" role="group" aria-label="Comics" data-caption="Comics" style="--hs:1; --r:14px; aspect-ratio: 825 / 1100;">
+              <img class="sq2-tile-media" src="assets/images/side-quests/comics.webp" width="825" height="1100" alt="A hand-painted denim jacket with an Attack on Titan crest, holding the first manga volume" loading="lazy" decoding="async" draggable="false">
+            </div>
+            <div class="sq2-tile sq2-tile--l" tabindex="0" role="group" aria-label="Afrohouse and afrobeats playlists" data-caption="Afrohouse and afrobeats playlists" style="--hs:1; --r:22px; aspect-ratio: 924 / 1030;">
+              <img class="sq2-tile-media" src="assets/images/side-quests/genres.webp" width="924" height="1030" alt="Top music genres: Afroswing, soft pop, Afro house, alte and indie" loading="lazy" decoding="async" draggable="false">
+              
+            </div>
+            <div class="sq2-tile sq2-tile--p" tabindex="0" role="group" aria-label="Volleyball" data-caption="Volleyball" style="--hs:1; --r:24px 40px 24px 12px; aspect-ratio: 825 / 1100;">
+              <img class="sq2-tile-media" src="assets/images/side-quests/volleyball.webp" width="825" height="1100" alt="Playing volleyball in a green and black kit, at the court" loading="lazy" decoding="async" draggable="false">
+            </div>
+            <div class="sq2-tile sq2-tile--l" tabindex="0" role="group" aria-label="A graphic design piece" data-caption="A graphic design piece" style="--hs:1; --r:24px 40px 24px 12px; aspect-ratio: 880 / 1100;">
+              <img class="sq2-tile-media" src="assets/images/side-quests/easter.webp" width="880" height="1100" alt="Onboard Happy Easter graphic with a decorated blue egg" loading="lazy" decoding="async" draggable="false">
+            </div>
+            <div class="sq2-tile sq2-tile--p" tabindex="0" role="group" aria-label="A photo shoot" data-caption="A photo shoot" style="--hs:1; --r:28px; aspect-ratio: 825 / 1100;">
+              <img class="sq2-tile-media" src="assets/images/side-quests/car.webp" width="825" height="1100" alt="Posing beside a vintage white Mercedes in a courtyard" loading="lazy" decoding="async" draggable="false">
+              
+            </div>
+            <div class="sq2-tile sq2-tile--p" tabindex="0" role="group" aria-label="An art exhibition" data-caption="An art exhibition" style="--hs:1; --r:28px; aspect-ratio: 825 / 1100;">
+              <img class="sq2-tile-media" src="assets/images/side-quests/wall.webp" width="825" height="1100" alt="Exhibition wall text: Owu. Fil. Faden. Thread." loading="lazy" decoding="async" draggable="false">
+            </div>
+            <div class="sq2-tile sq2-tile--s" tabindex="0" role="group" aria-label="Medical volunteer" data-caption="Medical volunteer" style="--hs:1; --r:22px; aspect-ratio: 1 / 1;">
+              <img class="sq2-tile-media" src="assets/images/side-quests/medical-volunteer.webp" width="1000" height="1000" alt="Ifeoluwa in a white volunteer shirt holding a Medical Unit Volunteer badge at the 11th All Africa University Games" loading="lazy" decoding="async" draggable="false">
+            </div>
+            <div class="sq2-tile sq2-tile--p" tabindex="0" role="group" aria-label="Books" data-caption="Books" style="--hs:1; --r:36px 14px 36px 14px; aspect-ratio: 825 / 1100;">
+              <img class="sq2-tile-media" src="assets/images/side-quests/books.webp" width="825" height="1100" alt="Shelf of novels and manga" loading="lazy" decoding="async" draggable="false">
+            </div>
+            <div class="sq2-tile sq2-tile--p" tabindex="0" role="group" aria-label="A walk in nature" data-caption="A walk in nature" style="--hs:1; --r:24px 40px 24px 12px; aspect-ratio: 825 / 1100;">
+              <img class="sq2-tile-media" src="assets/images/side-quests/stream.webp" width="825" height="1100" alt="A stream winding through rocks and grass" loading="lazy" decoding="async" draggable="false">
+            </div>
+            <div class="sq2-tile sq2-tile--p" tabindex="0" role="group" aria-label="Photography close-up" data-caption="Photography close-up" style="--hs:1; --r:40px 12px 40px 12px; aspect-ratio: 825 / 1100;">
+              <img class="sq2-tile-media" src="assets/images/side-quests/photo-shoot.webp" width="825" height="1100" alt="Selfie in front of a framed portrait painting" loading="lazy" decoding="async" draggable="false">
+            </div>
         </div>
       </div>
-
     </div>
   </section>
 
-  <!-- SIDE QUESTS -->
-  <section class="side-quests">
+  <!-- PART 2: the "me" story -->
+  <section class="sq2-story">
     <div class="section-inner">
-      <p class="side-quests-kicker">plot twist</p>
-      <h2 class="section-heading section-heading--light side-quests-heading">Side Quests</h2>
-      <p class="side-quests-intro">There's so much more to me than marketing &mdash; I'm creative at my core. Here's what I get up to when I'm not busy building brands.</p>
+      <h1 class="sq2-story-heading">The side-quest log</h1>
+      <div class="sq2-story-inner">
+        <div class="sq2-story-photo">
+        <img class="sq2-photo" src="assets/images/side-quests/me-illustration.webp" width="1100" height="1100" alt="Illustrated portrait of Ifeoluwa in a blue hoodie against a bright blue sky with clouds" loading="lazy" decoding="async">
+        <span class="sq2-sticker sq2-sticker--lime sq2-photo-sticker">that's me</span>
+        <svg class="sq2-doodle sq2-doodle--star" viewBox="0 0 48 48" fill="currentColor" aria-hidden="true"><path d="M24 2l5.2 14.6L44 18l-12 9.4L35.8 44 24 35.2 12.2 44 16 27.4 4 18l14.8-1.4z"/></svg>
+        <svg class="sq2-doodle sq2-doodle--squiggle" viewBox="0 0 120 40" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22c10-18 18 18 28 0s18 18 28 0 18 18 28 0 18 14 28 0"/></svg>
+        <svg class="sq2-doodle sq2-doodle--arrow" viewBox="0 0 90 60" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 14c30-14 62-2 68 32M56 40l18 8 6-20"/></svg>
+      </div>
+        <div class="sq2-story-copy">
+          <p>Marketing is my job, but curiosity is the real day job. Most of what I do outside work comes down to two things: <button type="button" class="sq2-term" data-quest="motion" aria-haspopup="true">staying in motion</button> and <button type="button" class="sq2-term" data-quest="creative" aria-haspopup="true">making things</button>.</p>
+          <p>Asides marketing, the creative side shows up everywhere else. I plan <button type="button" class="sq2-term" data-quest="events" aria-haspopup="true">events and hangouts</button> for my friends the way I plan launches, with a theme, a flow and a few surprises. I take <button type="button" class="sq2-term" data-quest="photo" aria-haspopup="true">photos</button> leisurely, I <button type="button" class="sq2-term" data-quest="design" aria-haspopup="true">design</button> when a project needs it and I live inside <button type="button" class="sq2-term" data-quest="music" aria-haspopup="true">playlists</button>, <button type="button" class="sq2-term" data-quest="books" aria-haspopup="true">books</button> and <button type="button" class="sq2-term" data-quest="books" aria-haspopup="true">comics</button>. <br>I learned to explain complicated things simply and to be careful because of my <button type="button" class="sq2-term" data-quest="health" aria-haspopup="true">Bachelor's in Pharmacy</button>, and I have carried that into everything I make.</p>
+          <p>Sport keeps me moving. <button type="button" class="sq2-term" data-quest="sport" aria-haspopup="true">Track and volleyball</button> gave me medals, and the <button type="button" class="sq2-term" data-quest="run" aria-haspopup="true">5K</button> I slip in weekly keeps the habit going. Being athletic puts me in rooms with people I would never have met otherwise, and that has taught me more about audiences than any report.</p>
+          <p class="sq2-story-kicker"><mark>Side-quests are where many of my best ideas come from.</mark></p>
 
-      <div class="sq-grid">
-        <div class="sq-card sq-card--1">
-          <span class="sq-emoji" aria-hidden="true">🎧</span>
-          <h3>Pop Culture &amp; Media Enthusiast</h3>
-          <p>I am what the cool kids call polyjammerous. I listen to a wide range of music but you'll always find me on Afrohouse, pop, folk, Afrobeats and alternative music. I consume a fair amount of media and belong to multiple fandoms from books to comics to movies.</p>
-          <a href="#" class="sq-link">🎵 Spotify Profile</a>
-        </div>
-
-        <div class="sq-card sq-card--2">
-          <span class="sq-emoji" aria-hidden="true">🏃‍♂️</span>
-          <h3>Award-Winning Athlete &amp; 5K Runner</h3>
-          <p>I love being on the move, both mentally and physically. This has influenced me to play a variety of sports and games. I've earned awards and medals across track and volleyball, and I'm an intermittent 5K runner.</p>
-        </div>
-
-        <div class="sq-card sq-card--3">
-          <span class="sq-emoji" aria-hidden="true">💊</span>
-          <h3>Pharmacist &amp; Health Advocate</h3>
-          <p>With a Bachelor's in Pharmacy, I'm keen on promoting good health practices and wellness. I led the Publications team at Oasis Initiative and participated actively in physical outreaches to reduce non-communicable diseases. I also volunteered as an official at StackReform, a health event organised by KB Klub.</p>
-        </div>
-
-        <div class="sq-card sq-card--4">
-          <span class="sq-emoji" aria-hidden="true">📸</span>
-          <h3>Photographer</h3>
-          <p>My interest in the arts led me to intern with Tonishutter at shoots ranging from birthday celebrations to induction events. I continue to explore photography periodically and enjoy capturing moments through this medium.</p>
-        </div>
-
-        <div class="sq-card sq-card--5">
-          <span class="sq-emoji" aria-hidden="true">🎨</span>
-          <h3>Graphic Designer</h3>
-          <p>I started my creative journey as a Creative Director at Greenitivity, a student design community. Being in close proximity to designers throughout my career piqued my interest to try design myself, a skill which has come in handy across various projects.</p>
+          <div class="sq2-pop" id="sq2-pop" role="dialog" aria-live="polite" hidden></div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="sq-outro">
-        <h3 class="sq-outro-heading">There's so much more to me than marketing, I'm creative at my core</h3>
-        <p class="sq-outro-copy">Drawn to good design and experiences, which deeply influences my marketing approach. Ready to work with someone who brings both strategy AND personality?</p>
-        <a href="#contact" class="btn btn-pill btn-pill-light sq-talk-btn">Let's Talk</a>
+  <!-- Hover/tap cards for the underlined words in the story (content for the six quests) -->
+  <template id="sq2-q-music">
+    <div class="sq2-pop-body">
+      <span class="sq2-sticker sq2-sticker--yellow">Music</span>
+      <h3 class="sq2-pop-title">Music and Culture</h3>
+      <p class="sq2-pop-desc">Polyjammerous. Lately it's Afro House, Pop, Alternative, EDM, Gospel and Afrobeats.</p>
+    </div>
+  </template>
+  <template id="sq2-q-books">
+    <div class="sq2-pop-body">
+      <span class="sq2-sticker sq2-sticker--coral">Fandoms</span>
+      <h3 class="sq2-pop-title">Books, Comics and Movies</h3>
+      <p class="sq2-pop-desc">I belong to many fandoms, from novels to comics to cinema.</p>
+    </div>
+  </template>
+  <template id="sq2-q-sport">
+    <div class="sq2-pop-body">
+      <span class="sq2-sticker sq2-sticker--lime">Sports</span>
+      <h3 class="sq2-pop-title">Athlete</h3>
+      <p class="sq2-pop-desc">Track and volleyball first, then a bit of every other sport and game I can get my hands on. Got some medals and awards to show for it.</p>
+    </div>
+  </template>
+  <template id="sq2-q-motion">
+    <div class="sq2-pop-body">
+      <span class="sq2-sticker sq2-sticker--lime">Sports</span>
+      <h3 class="sq2-pop-title">Athlete</h3>
+      <p class="sq2-pop-desc">Track and volleyball first, then a bit of every other sport and game I can get my hands on. Got some medals and awards to show for it.</p>
+    </div>
+  </template>
+  <template id="sq2-q-run">
+    <div class="sq2-pop-body">
+      <span class="sq2-sticker sq2-sticker--lime">Sports</span>
+      <h3 class="sq2-pop-title">Athlete</h3>
+      <p class="sq2-pop-desc">Strava has the receipts. Every weekly 5K is on record, me racing the clock, and some weeks the clock loses.</p>
+    </div>
+  </template>
+  <template id="sq2-q-events">
+    <div class="sq2-pop-body">
+      <span class="sq2-sticker sq2-sticker--yellow">Events</span>
+      <h3 class="sq2-pop-title">Events Planner</h3>
+      <p class="sq2-pop-desc">Casual hangouts, birthdays for friends, planned like launches.</p>
+    </div>
+  </template>
+  <template id="sq2-q-photo">
+    <div class="sq2-pop-body">
+      <span class="sq2-sticker sq2-sticker--coral">Creator</span>
+      <h3 class="sq2-pop-title">Photographer</h3>
+      <p class="sq2-pop-desc">Interned with Tonishutter on shoots, from events to birthday and induction shoots.</p>
+    </div>
+  </template>
+  <template id="sq2-q-creative">
+    <div class="sq2-pop-body">
+      <span class="sq2-sticker sq2-sticker--coral">Creator</span>
+      <h3 class="sq2-pop-title">Creative Director</h3>
+      <p class="sq2-pop-desc">Started out as Creative Director at Greenitivity, a student design group, and it has since grown into creative direction for other projects I have worked on and for.</p>
+    </div>
+  </template>
+  <template id="sq2-q-design">
+    <div class="sq2-pop-body">
+      <span class="sq2-sticker sq2-sticker--coral">Creator</span>
+      <h3 class="sq2-pop-title">Designer</h3>
+      <p class="sq2-pop-desc">I design occasionally, on demand, whenever a project needs it.</p>
+    </div>
+  </template>
+  <template id="sq2-q-health">
+    <div class="sq2-pop-body">
+      <span class="sq2-sticker sq2-sticker--coral">Pharmacy</span>
+      <h3 class="sq2-pop-title">Health</h3>
+      <p class="sq2-pop-desc">Bachelor&#x27;s in Pharmacy. Led the Publications team at the Oasis Initiative and joined outreaches to reduce non-communicable diseases.</p>
+    </div>
+  </template>
 
-        <div class="sq-social-icons">
-          <a href="#" class="social-icon sq-social-icon" aria-label="Snapchat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c3 0 5 2.3 5 5.5v2.3c0 .4.2.8.6 1.1.7.5 1.6.8 2.4.9-.1.5-.7.9-1.3 1.1-.3.1-.4.3-.3.6.1.3.2.6.2.9-.9.2-1.7.1-2.4-.1-.4-.1-.7 0-.9.3-.7 1-1.9 1.6-3.3 1.6s-2.6-.6-3.3-1.6c-.2-.3-.5-.4-.9-.3-.7.2-1.5.3-2.4.1 0-.3.1-.6.2-.9.1-.3 0-.5-.3-.6-.6-.2-1.2-.6-1.3-1.1.8-.1 1.7-.4 2.4-.9.4-.3.6-.7.6-1.1V8.5C7 5.3 9 3 12 3Z"/></svg>
-          </a>
-          <a href="#" class="social-icon sq-social-icon" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-          </a>
-          <a href="#" class="social-icon sq-social-icon" aria-label="TikTok">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.5 2c.3 2.1 1.8 3.8 3.9 4.2v3.1c-1.4-.1-2.7-.6-3.9-1.4v6.6c0 3.4-2.8 6.1-6.1 6.1S4.3 17.9 4.3 14.5c0-3.3 2.6-6 5.9-6.1v3.2c-1.6.1-2.9 1.4-2.9 3 0 1.7 1.4 3 3 3s3-1.3 3-3V2h3.2z"/></svg>
-          </a>
-        </div>
+  <!-- PART 4: closing -->
+  <section class="sq2-closing sq2-dark">
+    <div class="section-inner sq2-closing-inner">
+      <h2 class="sq2-closing-heading">Got a side-quest idea? Let's talk.</h2>
+      <a class="sq2-btn" href="contact.html">Get in touch</a>
+      <div class="sq2-socials">
+        <a class="sq2-social" href="https://www.instagram.com/will.og_/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+        <a class="sq2-social" href="https://www.tiktok.com/@will.og_" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.53.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
+        <a class="sq2-social" href="https://www.linkedin.com/in/ifeoluwa-marketing/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.94 8.5H3.56V20.5H6.94V8.5Z"/><path d="M5.25 7.03C6.35 7.03 7.25 6.13 7.25 5.03C7.25 3.92 6.35 3.03 5.25 3.03C4.14 3.03 3.25 3.92 3.25 5.03C3.25 6.13 4.14 7.03 5.25 7.03Z"/><path d="M20.5 20.5H17.13V14.5C17.13 13 17.1 11.13 15.06 11.13C13 11.13 12.69 12.71 12.69 14.39V20.5H9.31V8.5H12.56V10.03H12.6C13.06 9.17 14.17 8.27 15.83 8.27C19.25 8.27 20.5 10.5 20.5 13.87V20.5Z"/></svg></a>
+        <a class="sq2-social" href="https://x.com/_WillOG" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22L14.5 10.6L23.3 22H16.4L11 15.2L4.8 22H1.7L9.7 12.8L1.3 2H8.4L13.3 8.2L18.9 2ZM17.7 20H19.6L7 3.9H5L17.7 20Z"/></svg></a>
       </div>
     </div>
   </section>
@@ -124,6 +202,7 @@
 
 </main>
 
-<script src="js/script.js?v=16"></script>
+<script src="js/script.js?v=104"></script>
+<script src="js/side-quests.js?v=5"></script>
 </body>
 </html>

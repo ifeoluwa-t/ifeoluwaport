@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-reveal');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onchain Design Sprint — Ifeoluwa Taiwo</title>
+<meta name="description" content="Organising a design sprint with Dacoit Design and industry brands to create real, paid pathways into Web3 product design.">
+<link rel="stylesheet" href="css/style.css?v=264">
+</head>
+<!-- CASE STUDY PAGE — built from the shared template (see
+     project-eur-gbp-global-accounts.html for the fully-annotated
+     version). Page-specific deviations:
+     - .cs-partners credit line under the meta row (from the
+       Stablecoin Sprint page).
+     - "What I Did" uses the fuller .cs-approach-list bullet version.
+     - Two new sections after Our Approach: Sprint Details (a
+       .cs-tabs-card--duo: Team / Mentors / Partners / Products) and Sessions (an
+       auto-scrolling, draggable strip of flyers, clipped to the same width as the hero — deliberately NOT a
+       tab component).
+     - The Results has no side image (.cs-results-solo), followed by a
+       Testimonials row (.cs-testimonials) and a Resources CTA
+       (.cs-resources-section). -->
+<body data-page="work" style="--cs-accent: var(--blue);">
+
+<div class="page-transition" aria-hidden="true">
+  <div class="transition-card transition-card--accent"></div>
+  <div class="transition-card transition-card--cover">
+    <span class="loader-title"></span>
+  </div>
+</div>
+
+<header class="site-header" id="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="brand">IFEOLUWA<span>.</span></a>
+
+    <div class="nav-wrap" id="nav-wrap">
+      <nav class="main-nav" id="main-nav">
+        <a href="work.html" class="nav-link" data-page="work">Work</a>
+        <a href="events.html" class="nav-link" data-page="events">Events</a>
+        <a href="storytelling.html" class="nav-link" data-page="storytelling">Storytelling</a>
+        <a href="side-quests.html" class="nav-link" data-page="side-quests">Side-Quests</a>
+        <a href="contact.html" class="nav-link" data-page="contact">Contact</a>
+      </nav>
+    </div>
+
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">/menu</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- 1–4. LOGO, HEADLINE, DESCRIPTION, META ROW + HERO VISUAL — one
+       full-viewport landing section, content centered, no scrolling
+       needed to see it. -->
+  <section class="cs-hero">
+    <div class="section-inner cs-hero-inner--wide">
+      <div class="cs-hero-logo exp-logo" aria-label="FBI Africa"><img src="assets/images/logos/fbi-africa.jpg" alt=""></div>
+      <div class="cs-hero-top cs-hero-top--landscape">
+        <div class="cs-hero-copy">
+          <h1 class="cs-headline">2-week Sprint For Brand and Product Designers</h1>
+          <p class="cs-subdesc">Organising a design sprint in partnership with Dacoit Design and other industry brands to create real, paid pathways into Web3 product design.</p>
+
+          <div class="cs-meta-row">
+            <div class="cs-meta-top-row">
+              <div class="cs-meta-item">
+                <span class="cs-meta-item-label">Year</span>
+                <span class="cs-meta-year">2025</span>
+              </div>
+              <div class="cs-meta-item">
+                <span class="cs-meta-item-label">Category</span>
+                <span class="work-card-pill">Partnerships &amp; Talent Programs</span>
+              </div>
+            </div>
+            <div class="cs-meta-item">
+              <span class="cs-meta-item-label">Skills</span>
+              <div class="cs-skills">
+                <span class="cs-skill-tag">Program Design</span>
+                <span class="cs-skill-tag">Partnership Management</span>
+                <span class="cs-skill-tag">Creative Direction</span>
+                <span class="cs-skill-tag">Community Building</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cs-partners">
+            <span class="cs-partners-label">In partnership with</span>
+            <ul class="cs-partners-list">
+              <li class="cs-partner"><span class="cs-partner-logo" role="img" aria-label="Dacoit Design logo (placeholder)">D</span>Dacoit Design</li>
+            </ul>
+          </div>
+        </div>
+        <div class="cs-hero-media cs-hero-media--landscape cs-hero-media--outlined">
+          <img src="assets/images/onchain-design-sprint-hero.webp" width="1800" height="1125" alt="Onchain Design Sprint: a 10-day internship programme, July 13 to 22, 2025, by FBI Africa and Dacoit" decoding="async">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. CHALLENGES -->
+  <section class="cs-pullquote-section">
+    <div class="section-inner">
+      <div class="cs-pullquote-row">
+        <img class="cs-pullquote-media" src="assets/images/onchain-mentors.webp" width="2000" height="2000" alt="Onchain Design Sprint mentors: Pratyush, Faith, Destinyspoke, Folajindayo, Lota, Akhil, Druids, Manishi, Wilfred and Piyush" decoding="async">
+        <div>
+          <span class="cs-challenge-tag">Challenge</span>
+          <p class="cs-pullquote">&ldquo;African designers had the talent, but not the pathway. Web3 product design roles existed, but almost none of them were opening their doors to designers without a network already inside the industry.&rdquo;</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. OUR APPROACH — full-width text with "What I Did" as the fuller bullet list. -->
+  <section class="cs-approach-section">
+    <div class="section-inner">
+      <p class="cs-section-label">Our Approach</p>
+      <h2 class="cs-section-heading">Building a Pipeline, Not Just a Workshop</h2>
+      <p class="cs-section-intro">We designed a 10-day sprint that paired real mentorship with real products, so participants left with more than a certificate.</p>
+
+      <div class="cs-approach-did">
+        <h3 class="cs-approach-did-heading">What I Did</h3>
+        <ul class="cs-approach-list">
+          <li>Organised a 2-week design sprint in collaboration with Dacoit Design and other industry brands</li>
+          <li>Built and managed a thriving community of 100+ designers from across Africa</li>
+          <li>Designed a hands-on curriculum pairing participants with industry-leading mentors</li>
+          <li>Coordinated partnerships with design firms and facilitated immersive, real-world design sprints across multiple live products</li>
+          <li>Led creative direction and promotional content for the sprint, driving sign-ups across Africa's design community</li>
+          <li>Directed the mentor and host matching process, ensuring each participant worked alongside experienced product designers</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SPRINT DETAILS — a tabs card (initProductTabs: hover on desktop,
+       tap on touch) with four topics: Team (the FBI Africa and Dacoits
+       posters side by side), Mentors, Partners and Products. The frame
+       hugs whichever posters are showing. -->
+  <section class="cs-products-section cs-products-section--pale">
+    <div class="section-inner">
+      <p class="cs-section-label">Sprint Details</p>
+      <h2 class="cs-section-heading">The People, Partners and Products Behind It</h2>
+      <p class="cs-section-intro">Everyone and everything that made the sprint real.</p>
+
+      <div class="cs-tabs-card cs-tabs-card--duo">
+        <div class="cs-tabs-list">
+          <button type="button" class="cs-tab-item is-active"><h3 class="cs-tab-title">Team</h3></button>
+          <button type="button" class="cs-tab-item"><h3 class="cs-tab-title">Mentors</h3></button>
+          <button type="button" class="cs-tab-item"><h3 class="cs-tab-title">Partners</h3></button>
+          <button type="button" class="cs-tab-item"><h3 class="cs-tab-title">Products</h3></button>
+        </div>
+        <div class="cs-tabs-visual cs-tabs-visual--duo">
+          <div class="cs-tabs-visual-inner">
+            <div class="cs-tabs-image cs-duo is-active">
+              <img class="cs-duo-img" src="assets/images/onchain-fbi-africa-team.webp" width="1200" height="1200" alt="The FBI Africa team: Ifeoluwa (Lead Player), Ifeoluwa (Brand Designer), Wallace (Product Facilitator) and Ini-ekanem (Facilitator and Roaster)" decoding="async" draggable="false">
+              <img class="cs-duo-img" src="assets/images/onchain-dacoits-team.webp" width="1200" height="1200" alt="The Dacoit team: Rahul (Founder and Art Director), Shreya (Roaster and PM), Ishika (Brand Designer and Chief Roaster) and Ayo (Brand Designer)" decoding="async" draggable="false">
+            </div>
+            <div class="cs-tabs-image cs-duo">
+              <img class="cs-duo-img" src="assets/images/onchain-mentors.webp" width="1200" height="1200" alt="Onchain Design Sprint mentors: Pratyush, Faith, Destinyspoke, Folajindayo, Lota, Akhil, Druids, Manishi, Wilfred and Piyush" loading="lazy" decoding="async" draggable="false">
+            </div>
+            <div class="cs-tabs-image cs-duo">
+              <img class="cs-duo-img" src="assets/images/onchain-partners.webp" width="1200" height="1200" alt="Community partners: Based West Africa, Everybody Needs Base, Borderless, Web3Ladies, Based East Africa, Farcaster Builders International, Felbeth, Engineering Career Expo and Based Southern Africa" loading="lazy" decoding="async" draggable="false">
+            </div>
+            <div class="cs-tabs-image cs-duo">
+              <img class="cs-duo-img" src="assets/images/onchain-products.webp" width="1200" height="1200" alt="Live Roast with Roastrider, July 25, 2025: Nedapay, Billoqpay, Proofprep, Bitmor, RapiMoni, Bondr, FVP, Ferfie, Alphai and Mantua" loading="lazy" decoding="async" draggable="false">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SESSIONS — the ten days of live sessions as a seamless, auto-scrolling
+       strip that can also be dragged (initSessionsStrip). All sessions ran
+       online, so this is a flyer reel rather than event photos. -->
+  <section class="cs-events-section">
+    <div class="section-inner">
+      <p class="cs-section-label">Sessions</p>
+      <h2 class="cs-section-heading">Ten Days of Live Learning</h2>
+      <p class="cs-section-intro">Every session ran live online, across Google Meet, X Spaces and X Livestream, taking designers from first principles to a live roast.</p>
+    </div>
+    <div class="section-inner cs-sessions-inner">
+      <div class="cs-screens-viewport cs-sessions-viewport" id="cs-sessions" data-autoscroll aria-label="Session flyers, scrolling automatically; drag to move">
+        <div class="cs-screens-track">
+          <figure class="cs-session"><img src="assets/images/sprint-sessions-od/onchain-design-principles.webp" width="900" height="900" alt="Onchain Design Principles with Lota and Folajindayo, Monday July 14, 2025, Google Meet" loading="lazy" decoding="async" draggable="false"></figure>
+          <figure class="cs-session"><img src="assets/images/sprint-sessions-od/live-roast-panel.webp" width="900" height="900" alt="Live Roast with Roastrider panelists: Rahul, Shreya, Damilare, Ifeoluwa, Destiny and Ishika" loading="lazy" decoding="async" draggable="false"></figure>
+          <figure class="cs-session"><img src="assets/images/sprint-sessions-od/consumer-products.webp" width="900" height="900" alt="Designing Onchain Consumer Products with Druids, Folajindayo and Faith, Tuesday July 15, 2025, X Spaces" loading="lazy" decoding="async" draggable="false"></figure>
+          <figure class="cs-session"><img src="assets/images/sprint-sessions-od/final-session.webp" width="900" height="900" alt="Final session: Live Roast with Roastrider, Friday July 25, 2025, X Livestream" loading="lazy" decoding="async" draggable="false"></figure>
+          <figure class="cs-session"><img src="assets/images/sprint-sessions-od/mvp.webp" width="900" height="900" alt="Designing for a Minimum Viable Product with Rahul and Pratyush, Friday July 18, 2025, Google Meet" loading="lazy" decoding="async" draggable="false"></figure>
+          <figure class="cs-session"><img src="assets/images/sprint-sessions-od/schedule.webp" width="900" height="900" alt="The Onchain Design Sprint schedule, July 13 to 22, with topics and locations" loading="lazy" decoding="async" draggable="false"></figure>
+          <figure class="cs-session"><img src="assets/images/sprint-sessions-od/what-to-expect.webp" width="900" height="900" alt="What to Expect from the Onchain Design Sprint with Ifeoluwa, Rahul and Destinyspoke, Tuesday July 8, 2025, X Livestream" loading="lazy" decoding="async" draggable="false"></figure>
+          <figure class="cs-session"><img src="assets/images/sprint-sessions-od/feedback.webp" width="900" height="900" alt="Taking Feedback and Critique as a Designer with Piyush and Shreya, Saturday July 19, 2025, Google Meet" loading="lazy" decoding="async" draggable="false"></figure>
+          <figure class="cs-session"><img src="assets/images/sprint-sessions-od/personal-brand.webp" width="900" height="900" alt="Crafting a Personal Brand as a Designer with Wilfred, Destinyspoke and Manishi, Sunday July 20, 2025, X Space" loading="lazy" decoding="async" draggable="false"></figure>
+          <figure class="cs-session"><img src="assets/images/sprint-sessions-od/ai-tools.webp" width="900" height="900" alt="Leveraging AI Tools in Your Design Process with Rahul and Ishika, Wednesday July 16, 2025, Google Meet" loading="lazy" decoding="async" draggable="false"></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. THE RESULTS — single column, no side image (.cs-results-solo). -->
+  <section class="cs-results-section">
+    <div class="section-inner">
+      <div class="cs-results-solo">
+        <p class="cs-section-label">The Results</p>
+        <h2 class="cs-section-heading">Real Outcomes, Not Just Certificates</h2>
+        <p class="cs-section-intro">Within months, the sprint moved from training to employment.</p>
+
+        <div class="cs-results-stats">
+          <div class="cs-stat">
+            <span class="cs-stat-value">7+</span>
+            <span class="cs-stat-label">Designers secured paid roles across Web3 products</span>
+          </div>
+          <div class="cs-stat">
+            <span class="cs-stat-value">100+</span>
+            <span class="cs-stat-label">Designers trained by industry-leading mentors</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS — participant messages as three square cards in a row. -->
+  <section class="cs-testimonials-section">
+    <div class="section-inner cs-testimonials-inner">
+      <p class="cs-section-label">Testimonials</p>
+      <h2 class="cs-section-heading">In Their Own Words</h2>
+      <p class="cs-section-intro">What participants said once the sprint wrapped.</p>
+
+      <ul class="cs-testimonials">
+        <li class="cs-testimonial"><img src="assets/images/sprint-testimonials/testimonial-1.webp" width="1000" height="1000" alt="Testimonials from Judith and Neche, thanking the FBI Africa and Dacoit teams for the hands-on experience, mentor feedback and live sessions" loading="lazy" decoding="async"></li>
+        <li class="cs-testimonial"><img src="assets/images/sprint-testimonials/testimonial-2.webp" width="1000" height="1000" alt="Testimonials from Xhan and Doc of Designs, praising the research, behind-the-scenes sessions and team feedback" loading="lazy" decoding="async"></li>
+        <li class="cs-testimonial"><img src="assets/images/sprint-testimonials/testimonial-3.webp" width="1000" height="1000" alt="Testimonials from Mihaela Hinayon and Elizabeth Olusipe, on connecting with mentors and learning to use AI in the design process" loading="lazy" decoding="async"></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- RESOURCES — the copy first, then the Starter Pack image, then a CTA to the
+       pack itself. -->
+  <section class="cs-resources-section">
+    <div class="section-inner">
+      <p class="cs-section-label">Resources</p>
+      <h2 class="cs-section-heading">Missed a Lesson? Catch Up Anytime</h2>
+      <p class="cs-section-intro">Get access to the lessons we had during the sprint, with the session recordings and other resources, all in the Onchain Design Starter Pack.</p>
+      <a href="https://drive.google.com/drive/folders/13bigOfKQP6MIbNXGTjQYIHdRQ0DpULih" class="cs-resources-media-link" target="_blank" rel="noopener" aria-label="Open the Onchain Design Starter Pack"><img class="cs-resources-media" src="assets/images/onchain-starter-pack.webp" width="1000" height="1000" alt="Onchain Design Starter Pack: find the links to the recordings and other resources here" loading="lazy" decoding="async"></a>
+      <a href="https://drive.google.com/drive/folders/13bigOfKQP6MIbNXGTjQYIHdRQ0DpULih" class="btn btn-pill btn-pill-solid cs-resources-cta" target="_blank" rel="noopener">Get the Starter Pack</a>
+    </div>
+  </section>
+
+  <!-- 8. MORE PROJECTS -->
+  <section class="cs-more-projects">
+    <div class="section-inner">
+      <h2 class="section-heading">More Projects</h2>
+
+      <div class="cs-more-grid">
+        <a href="project-stablecoin-sprint.html" class="work-card">
+          <img class="img-placeholder" src="assets/images/stablecoin-sprint.jpg?v=2" alt="Stablecoin Sprint featuring 10+ African products">
+          <span class="work-card-pill">Campaigns &amp; Activation</span>
+          <h3>Stablecoin Sprint</h3>
+          <p>Co-organised and led creative direction. Powered by Base West Africa, cNGN and Uglycash, stablecoin education and adoption...</p>
+          <div class="work-card-results">
+            <div class="work-card-stat"><strong>121k+</strong><span>Total impressions on X</span></div>
+            <div class="work-card-stat"><strong>70+</strong><span>Active users onboarded across 3 products</span></div>
+          </div>
+        </a>
+
+        <a href="project-onboard-test-pilots.html" class="work-card">
+          <img class="img-placeholder" src="assets/images/onboard-test-pilots.jpg?v=2" alt="Onboard Test Pilots cover">
+          <span class="work-card-pill">Product Feedback &amp; Iteration</span>
+          <h3>Onboard Test Pilots</h3>
+          <p>Managed a community of product testers and built the feedback loop between users and the product and engineering teams, optimising...</p>
+          <div class="work-card-results">
+            <div class="work-card-stat"><strong>4</strong><span>Major product features tested and optimised</span></div>
+            <div class="work-card-stat"><strong>2</strong><span>Paid roles secured by Test Pilots</span></div>
+          </div>
+        </a>
+
+        <a href="project-onboard-business-pivot.html" class="work-card">
+          <img class="img-placeholder" src="assets/images/onboard-b2b-pivot.jpg" alt="Onboard B2B: one account for all your global business payments">
+          <span class="work-card-pill">Market Entry &amp; Positioning</span>
+          <h3>Onboard Business Pivot</h3>
+          <p>Led product, content, and brand marketing for Onboard's launch into B2B global payments...</p>
+          <div class="work-card-results">
+            <div class="work-card-stat"><strong>$20M+</strong><span>In transaction volume within the first three months</span></div>
+            <div class="work-card-stat"><strong>4</strong><span>Global products launched and marketed</span></div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. CLOSING CTA — reused verbatim from the homepage's Contact section -->
+  <section class="contact" id="contact">
+    <div class="section-inner">
+      <div class="contact-grid">
+        <div class="contact-copy">
+          <p class="contact-eyebrow">Let's Build Something Together</p>
+          <p>Whether you're hiring for product marketing, creative strategy, or ready to build something bold, I'm here for it &mdash; highly adaptable, versatile, and built for cross-disciplinary work.</p>
+          <p>Outside of marketing, I'm endlessly curious: always side-questing, exploring new tools, and chasing new ideas.</p>
+
+          <div class="contact-cta-row">
+            <a href="mailto:thewilltaiwo@gmail.com" class="btn btn-pill btn-pill-solid">Get in Touch</a>
+            <a href="side-quests.html" class="btn btn-pill">Side Quests</a>
+          </div>
+        </div>
+
+        <div class="contact-side">
+          <div class="contact-photo">
+            <img src="assets/images/who-i-am-photo.png" alt="Ifeoluwa Taiwo" class="contact-photo-img" width="780" height="861">
+          </div>
+
+          <h2 class="section-heading contact-tag">Work<br>With Me!</h2>
+
+          <div class="social-icons">
+            <a href="#" class="social-icon" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.94 8.5H3.56V20.5H6.94V8.5Z"/><path d="M5.25 7.03C6.35 7.03 7.25 6.13 7.25 5.03C7.25 3.92 6.35 3.03 5.25 3.03C4.14 3.03 3.25 3.92 3.25 5.03C3.25 6.13 4.14 7.03 5.25 7.03Z"/><path d="M20.5 20.5H17.13V14.5C17.13 13 17.1 11.13 15.06 11.13C13 11.13 12.69 12.71 12.69 14.39V20.5H9.31V8.5H12.56V10.03H12.6C13.06 9.17 14.17 8.27 15.83 8.27C19.25 8.27 20.5 10.5 20.5 13.87V20.5Z"/></svg>
+            </a>
+            <a href="#" class="social-icon" aria-label="X (Twitter)">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22L14.5 10.6L23.3 22H16.4L11 15.2L4.8 22H1.7L9.7 12.8L1.3 2H8.4L13.3 8.2L18.9 2ZM17.7 20H19.6L7 3.9H5L17.7 20Z"/></svg>
+            </a>
+            <a href="mailto:thewilltaiwo@gmail.com" class="social-icon" aria-label="Email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7L12 13L21 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="brands-strip">
+        <p class="brands-label">Brands I've Worked With</p>
+        <div class="brands-logos">
+          <div class="exp-logo exp-logo--lg" aria-label="Onboard"><img src="assets/images/logos/onboard.jpg" alt=""></div>
+          <div class="exp-logo exp-logo--lg" aria-label="FBI Africa"><img src="assets/images/logos/fbi-africa.jpg" alt=""></div>
+          <div class="exp-logo exp-logo--lg" aria-label="The Graph"><img src="assets/images/logos/the-graph.jpg" alt=""></div>
+          <div class="exp-logo exp-logo--lg" aria-label="Blockchain.com"><img src="assets/images/logos/blockchain-com.jpg" alt=""></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="contact-bar">
+    <p>&copy; 2026 Ìfẹ́olúwa Táíwò</p>
+    <p>Extra rights reserved. I built this myself.</p>
+  </div>
+
+</main>
+
+<script src="js/script.js?v=104"></script>
+</body>
+</html>

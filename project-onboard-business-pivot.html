@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-reveal');</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboard Business Pivot — Ifeoluwa Taiwo</title>
+<meta name="description" content="Leading product, content, and brand marketing for Onboard's launch into B2B global payments.">
+<link rel="stylesheet" href="css/style.css?v=264">
+</head>
+<!-- CASE STUDY PAGE — built from the shared template (see
+     project-eur-gbp-global-accounts.html for the fully-annotated
+     version). Page-specific deviations from that template, per this
+     project's brief:
+     - No side-by-side image/text pairs: Our Approach and The Results
+       each run full-width text followed by a full-width .cs-wide-media
+       image instead of the template's .cs-approach-row/.cs-results-row
+       paired grids.
+     - "What I Did" uses the fuller .cs-approach-list bullet version
+       instead of the shortened .cs-approach-summary paragraph.
+     - A new page-specific section, Products Launched (.cs-tabs-card),
+       sits between Our Approach and The Results — see the "PRODUCTS
+       LAUNCHED" block in css/style.css and initProductTabs in
+       js/script.js for the interactive hover/tap-to-switch behavior. -->
+<body data-page="work" style="--cs-accent: var(--blue);">
+
+<div class="page-transition" aria-hidden="true">
+  <div class="transition-card transition-card--accent"></div>
+  <div class="transition-card transition-card--cover">
+    <span class="loader-title"></span>
+  </div>
+</div>
+
+<header class="site-header" id="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="brand">IFEOLUWA<span>.</span></a>
+
+    <div class="nav-wrap" id="nav-wrap">
+      <nav class="main-nav" id="main-nav">
+        <a href="work.html" class="nav-link" data-page="work">Work</a>
+        <a href="events.html" class="nav-link" data-page="events">Events</a>
+        <a href="storytelling.html" class="nav-link" data-page="storytelling">Storytelling</a>
+        <a href="side-quests.html" class="nav-link" data-page="side-quests">Side-Quests</a>
+        <a href="contact.html" class="nav-link" data-page="contact">Contact</a>
+      </nav>
+    </div>
+
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">/menu</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- 1–4. LOGO, HEADLINE, DESCRIPTION, META ROW + HERO VISUAL — one
+       full-viewport landing section, content centered, no scrolling
+       needed to see it. -->
+  <section class="cs-hero">
+    <div class="section-inner">
+      <div class="cs-hero-logo exp-logo" aria-label="Onboard"><img src="assets/images/logos/onboard.jpg" alt=""></div>
+      <div class="cs-hero-top">
+        <div class="cs-hero-copy">
+          <h1 class="cs-headline">Building Onboard's First Product for Businesses With Cross-Border Payments</h1>
+          <p class="cs-subdesc">Leading product, content, and brand marketing for Onboard's launch into B2B global payments.</p>
+
+          <div class="cs-meta-row">
+            <div class="cs-meta-top-row">
+              <div class="cs-meta-item">
+                <span class="cs-meta-item-label">Year</span>
+                <span class="cs-meta-year">2026</span>
+              </div>
+              <div class="cs-meta-item">
+                <span class="cs-meta-item-label">Category</span>
+                <span class="work-card-pill">Market Entry &amp; Positioning</span>
+              </div>
+            </div>
+            <div class="cs-meta-item">
+              <span class="cs-meta-item-label">Skills</span>
+              <div class="cs-skills">
+                <span class="cs-skill-tag">Product Marketing</span>
+                <span class="cs-skill-tag">Content Strategy</span>
+                <span class="cs-skill-tag">Brand Positioning</span>
+                <span class="cs-skill-tag">GTM Strategy</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="cs-hero-media">
+          <img src="assets/images/business-pivot-hero.webp" width="1400" height="1400" alt="Onboard Business: one account for all your global business payments. Hold, send, and receive money across currencies, all from a single dashboard." decoding="async">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. CHALLENGES -->
+  <section class="cs-pullquote-section">
+    <div class="section-inner">
+      <div class="cs-pullquote-row">
+        <div class="cs-pullquote-slides cs-pullquote-slides--portrait" data-slideshow data-interval="2000">
+          <img class="cs-slide is-current" src="assets/images/business-challenge-1.webp" width="1200" height="1500" alt="Payments that move as fast as your business does: send cross-border payments in minutes, not days" decoding="async" draggable="false">
+          <img class="cs-slide" src="assets/images/business-challenge-2.webp" width="1200" height="1500" alt="International remittance for global businesses: pay suppliers, run payroll, receive from clients" loading="lazy" decoding="async" draggable="false">
+          <img class="cs-slide" src="assets/images/business-challenge-3.webp" width="1200" height="1500" alt="Pay your suppliers, get paid by your buyers: EUR and GBP deposits and withdrawals now live on Onboard Business" loading="lazy" decoding="async" draggable="false">
+        </div>
+        <div>
+          <span class="cs-challenge-tag">Challenge</span>
+          <p class="cs-pullquote">&ldquo;Businesses, payment companies, and fintechs needed reliable rails to receive, send, and convert money across borders, but Onboard had never built a product to serve them directly.&rdquo;</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. OUR APPROACH — full-width text (no side-by-side pair on this
+       page), "What I Did" as the fuller bullet list, then one
+       full-width supporting image below the bullets. -->
+  <section class="cs-approach-section">
+    <div class="section-inner">
+      <p class="cs-section-label">Our Approach</p>
+      <h2 class="cs-section-heading">Turning Consumer Trust Into Business Infrastructure</h2>
+      <p class="cs-section-intro">We took everything that made Onboard trusted by individual professionals and rebuilt it as infrastructure businesses could plug into directly.</p>
+
+      <div class="cs-approach-did">
+        <h3 class="cs-approach-did-heading">What I Did</h3>
+        <ul class="cs-approach-list">
+          <li>Led product marketing strategy for Onboard's first B2B offering, spanning three distinct products: a self-serve Business App, a developer-facing API, and an OTC Desk for high-volume trades</li>
+          <li>Directed content strategy across the launch, translating technical infrastructure (stablecoin liquidity, FX rails, compliance backing) into clear, business-focused messaging</li>
+          <li>Led brand positioning for the pivot, establishing Onboard Business as a regulated, proven company</li>
+          <li>Built messaging around Onboard's existing scale (30,000+ users, $300M+ processed) to give the new business product instant credibility</li>
+          <li>Coordinated launch materials across channels, including the website, sales deck, media assets and partner-facing collateral</li>
+          <li>Aligned product, compliance, and go-to-market teams to ensure consistent positioning across every customer touchpoint</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEW: PRODUCTS LAUNCHED — interactive tabs card (vanilla port of
+       a Framer "Tabs card" component). Hover a tab on desktop, or tap
+       it on mobile, to switch the active square image — see
+       initProductTabs in script.js. -->
+  <section class="cs-products-section">
+    <div class="section-inner">
+      <p class="cs-section-label">Products Launched</p>
+      <h2 class="cs-section-heading">Four Products, One Business Infrastructure</h2>
+
+      <div class="cs-tabs-card">
+        <div class="cs-tabs-list">
+          <button type="button" class="cs-tab-item is-active">
+            <h3 class="cs-tab-title">Business App</h3>
+            <p class="cs-tab-desc">A self-serve dashboard for businesses to hold, send, and convert money across currencies from one account.</p>
+          </button>
+          <button type="button" class="cs-tab-item">
+            <h3 class="cs-tab-title">USD Accounts</h3>
+            <p class="cs-tab-desc">Dedicated USD accounts so businesses can receive and hold dollars without routing through a third party.</p>
+          </button>
+          <button type="button" class="cs-tab-item">
+            <h3 class="cs-tab-title">EUR/GBP Accounts</h3>
+            <p class="cs-tab-desc">The same direct-currency model extended to business customers earning or billing in euros and pounds.</p>
+          </button>
+          <button type="button" class="cs-tab-item">
+            <h3 class="cs-tab-title">Corporate Cards</h3>
+            <p class="cs-tab-desc">Cards issued directly against a business's Onboard balance, for teams spending across borders.</p>
+          </button>
+        </div>
+        <div class="cs-tabs-visual cs-tabs-visual--poster">
+          <div class="cs-tabs-visual-inner">
+            <img class="cs-tabs-image is-active" src="assets/images/business-product-business-app.webp" width="1200" height="1500" alt="Track every payment in one place: see every payout, deposit and transfer the moment it happens" decoding="async" draggable="false">
+            <img class="cs-tabs-image" src="assets/images/business-product-usd-accounts.webp" width="1200" height="1500" alt="USD account for your business: send and receive USD in your business name" loading="lazy" decoding="async" draggable="false">
+            <img class="cs-tabs-image" src="assets/images/business-product-eur-gbp-accounts.webp" width="1200" height="1500" alt="EUR and GBP now on your Onboard Business account: deposit and withdraw easily across borders" loading="lazy" decoding="async" draggable="false">
+            <img class="cs-tabs-image" src="assets/images/business-product-corporate-cards.webp" width="1200" height="1500" alt="Pay for the tools that run your business: Figma, AWS, Notion and more, all from one card" loading="lazy" decoding="async" draggable="false">
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLOG ARTICLES — cover images of Onboard blog posts in a seamless,
+       auto-scrolling, draggable strip (initAutoStrips), then a CTA to the blog. -->
+  <section class="cs-articles-section">
+    <div class="section-inner cs-articles-inner">
+      <p class="cs-section-label">Blog Articles</p>
+      <h2 class="cs-section-heading">Stories From the Onboard Blog</h2>
+      <p class="cs-section-intro">A few of the articles behind the launch, from business payments to the infrastructure underneath.</p>
+
+      <div class="cs-screens-viewport cs-articles-viewport" data-autoscroll aria-label="Blog article covers, scrolling automatically; drag to move">
+        <div class="cs-screens-track">
+          <figure class="cs-article"><img src="assets/images/blog-articles/new-dispensation.webp" width="1200" height="675" alt="A New Dispensation: Onboard for Businesses, Onboard Stories" loading="lazy" decoding="async" draggable="false"></figure>
+          <figure class="cs-article"><img src="assets/images/blog-articles/affiliate.webp" width="1200" height="675" alt="Introduce a business, earn in USD: join the Onboard Affiliate Program" loading="lazy" decoding="async" draggable="false"></figure>
+          <figure class="cs-article"><img src="assets/images/blog-articles/eur-gbp-live.webp" width="1200" height="675" alt="EUR/GBP now live: deposit and withdraw across borders easily, Onboard for businesses" loading="lazy" decoding="async" draggable="false"></figure>
+          <figure class="cs-article"><img src="assets/images/blog-articles/infrastructure.webp" width="1200" height="675" alt="The infrastructure behind global payments: licensing, liquidity and rails, all in one place" loading="lazy" decoding="async" draggable="false"></figure>
+          <figure class="cs-article"><img src="assets/images/blog-articles/one-card.webp" width="1200" height="675" alt="One card built for your business: create, name and track your spend on your cards by their purpose" loading="lazy" decoding="async" draggable="false"></figure>
+          <figure class="cs-article"><img src="assets/images/blog-articles/vs-wise-stripe.webp" width="1200" height="675" alt="Onboard vs Wise vs Stripe: which is better for African businesses?" loading="lazy" decoding="async" draggable="false"></figure>
+          <figure class="cs-article"><img src="assets/images/blog-articles/losing-money.webp" width="1200" height="675" alt="You are losing money on every payment" loading="lazy" decoding="async" draggable="false"></figure>
+        </div>
+      </div>
+
+      <a href="https://onboard.xyz/blog" class="btn btn-pill btn-pill-solid cs-articles-cta" target="_blank" rel="noopener">Read the Onboard Blog</a>
+    </div>
+  </section>
+
+  <!-- DECKS — the two decks side by side: the sales deck cover and the Q3 2026 Product Report cover. -->
+  <section class="cs-decks-section">
+    <div class="section-inner cs-decks-inner">
+      <p class="cs-section-label">Decks</p>
+      <h2 class="cs-section-heading">The Decks Behind the Launch</h2>
+      <p class="cs-section-intro">The sales deck that took Onboard Business to market, and the Q3 2026 product report that tracked what came next.</p>
+
+      <ul class="cs-decks">
+        <li class="cs-deck">
+          <img src="assets/images/deck-sales-deck.webp" width="1600" height="900" alt="Onboard Business sales deck cover: stablecoin liquidity, FX and cross-border payments infrastructure for Africa and beyond" loading="lazy" decoding="async">
+          <span class="cs-deck-name">Sales Deck</span>
+        </li>
+        <li class="cs-deck">
+          <img src="assets/images/deck-q3-product-report.webp" width="1600" height="900" alt="Onboard Q3 2026 Product Report deck cover" loading="lazy" decoding="async">
+          <span class="cs-deck-name">Q3 2026 Product Report</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 7. THE RESULTS — single centred column, no side image (.cs-results-solo). -->
+  <section class="cs-results-section">
+    <div class="section-inner">
+      <div class="cs-results-solo">
+        <p class="cs-section-label">The Results</p>
+        <h2 class="cs-section-heading">From Zero to a Proven B2B Product</h2>
+        <p class="cs-section-intro">Within three months, Onboard Business moved from concept to a product handling real volume.</p>
+
+        <div class="cs-results-stats">
+          <div class="cs-stat">
+            <span class="cs-stat-value">$20M+</span>
+            <span class="cs-stat-label">In transaction volume within the first three months</span>
+          </div>
+          <div class="cs-stat">
+            <span class="cs-stat-value">4</span>
+            <span class="cs-stat-label">Global products launched and marketed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. MORE PROJECTS -->
+  <section class="cs-more-projects">
+    <div class="section-inner">
+      <h2 class="section-heading">More Projects</h2>
+
+      <div class="cs-more-grid">
+        <a href="project-eur-gbp-global-accounts.html" class="work-card">
+          <img class="img-placeholder" src="assets/images/eur-gbp-global-accounts.jpg?v=2" alt="EUR &amp; GBP accounts are here">
+          <span class="work-card-pill">GTM &amp; Product Launch</span>
+          <h3>EUR/GBP Global Accounts</h3>
+          <p>Owned end-to-end product marketing for the launch of EUR and GBP accounts, from positioning through to...</p>
+          <div class="work-card-results">
+            <div class="work-card-stat"><strong>300+</strong><span>New accounts created in the first month</span></div>
+            <div class="work-card-stat"><strong>$100K+</strong><span>In deposits within the first month</span></div>
+          </div>
+        </a>
+
+        <a href="project-consumer-product-refresh.html" class="work-card">
+          <img class="img-placeholder" src="assets/images/onboard-consumer-website-refresh.jpg?v=2" alt="Onboard consumer website homepage: Your Money, Minus the Worry">
+          <span class="work-card-pill">Branding &amp; Content</span>
+          <h3>Consumer Product Refresh</h3>
+          <p>Repositioned Onboard as a stablecoin neobank for global professionals, leading creative direction across...</p>
+          <div class="work-card-results">
+            <div class="work-card-stat"><strong>412%</strong><span>Increase in website views in first week</span></div>
+            <div class="work-card-stat"><strong>82%</strong><span>Engagement rate increase in first week</span></div>
+          </div>
+        </a>
+
+        <a href="project-stablecoin-sprint.html" class="work-card">
+          <img class="img-placeholder" src="assets/images/stablecoin-sprint.jpg?v=2" alt="Stablecoin Sprint featuring 10+ African products">
+          <span class="work-card-pill">Campaigns &amp; Activation</span>
+          <h3>Stablecoin Sprint</h3>
+          <p>Co-organised and led creative direction. Powered by Base West Africa, cNGN and Uglycash, stablecoin education and adoption...</p>
+          <div class="work-card-results">
+            <div class="work-card-stat"><strong>121k+</strong><span>Total impressions on X</span></div>
+            <div class="work-card-stat"><strong>70+</strong><span>Active users onboarded across 3 products</span></div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. CLOSING CTA — reused verbatim from the homepage's Contact section -->
+  <section class="contact" id="contact">
+    <div class="section-inner">
+      <div class="contact-grid">
+        <div class="contact-copy">
+          <p class="contact-eyebrow">Let's Build Something Together</p>
+          <p>Whether you're hiring for product marketing, creative strategy, or ready to build something bold, I'm here for it &mdash; highly adaptable, versatile, and built for cross-disciplinary work.</p>
+          <p>Outside of marketing, I'm endlessly curious: always side-questing, exploring new tools, and chasing new ideas.</p>
+
+          <div class="contact-cta-row">
+            <a href="mailto:thewilltaiwo@gmail.com" class="btn btn-pill btn-pill-solid">Get in Touch</a>
+            <a href="side-quests.html" class="btn btn-pill">Side Quests</a>
+          </div>
+        </div>
+
+        <div class="contact-side">
+          <div class="contact-photo">
+            <img src="assets/images/who-i-am-photo.png" alt="Ifeoluwa Taiwo" class="contact-photo-img" width="780" height="861">
+          </div>
+
+          <h2 class="section-heading contact-tag">Work<br>With Me!</h2>
+
+          <div class="social-icons">
+            <a href="#" class="social-icon" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.94 8.5H3.56V20.5H6.94V8.5Z"/><path d="M5.25 7.03C6.35 7.03 7.25 6.13 7.25 5.03C7.25 3.92 6.35 3.03 5.25 3.03C4.14 3.03 3.25 3.92 3.25 5.03C3.25 6.13 4.14 7.03 5.25 7.03Z"/><path d="M20.5 20.5H17.13V14.5C17.13 13 17.1 11.13 15.06 11.13C13 11.13 12.69 12.71 12.69 14.39V20.5H9.31V8.5H12.56V10.03H12.6C13.06 9.17 14.17 8.27 15.83 8.27C19.25 8.27 20.5 10.5 20.5 13.87V20.5Z"/></svg>
+            </a>
+            <a href="#" class="social-icon" aria-label="X (Twitter)">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22L14.5 10.6L23.3 22H16.4L11 15.2L4.8 22H1.7L9.7 12.8L1.3 2H8.4L13.3 8.2L18.9 2ZM17.7 20H19.6L7 3.9H5L17.7 20Z"/></svg>
+            </a>
+            <a href="mailto:thewilltaiwo@gmail.com" class="social-icon" aria-label="Email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7L12 13L21 7"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="brands-strip">
+        <p class="brands-label">Brands I've Worked With</p>
+        <div class="brands-logos">
+          <div class="exp-logo exp-logo--lg" aria-label="Onboard"><img src="assets/images/logos/onboard.jpg" alt=""></div>
+          <div class="exp-logo exp-logo--lg" aria-label="FBI Africa"><img src="assets/images/logos/fbi-africa.jpg" alt=""></div>
+          <div class="exp-logo exp-logo--lg" aria-label="The Graph"><img src="assets/images/logos/the-graph.jpg" alt=""></div>
+          <div class="exp-logo exp-logo--lg" aria-label="Blockchain.com"><img src="assets/images/logos/blockchain-com.jpg" alt=""></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="contact-bar">
+    <p>&copy; 2026 Ìfẹ́olúwa Táíwò</p>
+    <p>Extra rights reserved. I built this myself.</p>
+  </div>
+
+</main>
+
+<script src="js/script.js?v=104"></script>
+</body>
+</html>

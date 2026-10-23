@@ -79,111 +79,1344 @@ document.addEventListener('DOMContentLoaded', () => {
     link.classList.toggle('active', link.dataset.page === currentPage);
   });
 
-  /* ---------- Auto-scrolling, draggable card marquee ----------
-     Auto-advances slowly by default. The viewer can drag (mouse),
-     swipe (touch), or trackpad-scroll it at any time — that pauses
-     auto-advance, which resumes a couple of seconds after they let go.
-     The track's contents are duplicated in the HTML so wrapping the
-     scroll position at the halfway point loops it seamlessly. */
-  function initMarquee(root, { speed = 40, resumeDelay = 2200, mobileBreakpoint = null } = {}) {
-    const track = root.querySelector('.marquee-track');
-    if (!track) return;
+  /* ---------- "View All Work" mobile expand ----------
+     On mobile the homepage Work grid shows only its top 3 projects;
+     tapping "View All Work" reveals the other 3 in place instead of
+     leaving for the Work page. Desktop/tablet keep the plain link. */
+  const workExpandBtn = document.querySelector('[data-view-all-work]');
+  const workGrid = document.querySelector('.work-grid');
+  if (workExpandBtn && workGrid) {
+    const mobileQuery = window.matchMedia('(max-width: 640px)');
+    const defaultLabel = workExpandBtn.textContent;
 
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const mobileQuery = mobileBreakpoint ? window.matchMedia(`(max-width: ${mobileBreakpoint}px)`) : null;
-
-    let hovering = false;
-    let interacting = false;
-    let dragging = false;
-    let dragged = false;
-    let startX = 0;
-    let startScrollLeft = 0;
-    let resumeTimer = null;
-    let lastTime = null;
-
-    const isEnabled = () => !mobileQuery || mobileQuery.matches;
-
-    function scheduleResume() {
-      clearTimeout(resumeTimer);
-      resumeTimer = setTimeout(() => { interacting = false; }, resumeDelay);
-    }
-
-    function wrap() {
-      const half = track.scrollWidth / 2;
-      if (half <= 0) return;
-      if (root.scrollLeft <= 0) root.scrollLeft += half;
-      else if (root.scrollLeft >= half) root.scrollLeft -= half;
-    }
-
-    function step(time) {
-      if (lastTime == null) lastTime = time;
-      const dt = time - lastTime;
-      lastTime = time;
-
-      if (isEnabled() && !hovering && !interacting && !reduceMotion.matches) {
-        root.scrollLeft += (speed * dt) / 1000;
-      }
-      wrap();
-      requestAnimationFrame(step);
-    }
-
-    root.addEventListener('mouseenter', () => { hovering = true; });
-    root.addEventListener('mouseleave', () => { hovering = false; });
-
-    root.addEventListener('wheel', () => {
-      interacting = true;
-      scheduleResume();
-    }, { passive: true });
-
-    root.addEventListener('pointerdown', (e) => {
-      interacting = true;
-      dragged = false;
-      clearTimeout(resumeTimer);
-      if (e.pointerType === 'mouse') {
-        dragging = true;
-        startX = e.clientX;
-        startScrollLeft = root.scrollLeft;
-        root.classList.add('is-dragging');
-        try { root.setPointerCapture(e.pointerId); } catch (err) { /* no active pointer session — safe to ignore */ }
-        e.preventDefault();
-      }
+    workExpandBtn.addEventListener('click', (e) => {
+      if (!mobileQuery.matches) return;
+      e.preventDefault();
+      const expanded = workGrid.classList.toggle('is-expanded');
+      workExpandBtn.textContent = expanded ? 'Show Less' : defaultLabel;
     });
 
-    root.addEventListener('pointermove', (e) => {
-      if (!dragging) return;
-      const dx = e.clientX - startX;
-      if (Math.abs(dx) > 5) dragged = true;
-      root.scrollLeft = startScrollLeft - dx;
+    mobileQuery.addEventListener('change', (e) => {
+      if (!e.matches) {
+        workGrid.classList.remove('is-expanded');
+        workExpandBtn.textContent = defaultLabel;
+      }
     });
-
-    function endInteraction() {
-      dragging = false;
-      root.classList.remove('is-dragging');
-      interacting = false;
-      scheduleResume();
-    }
-    root.addEventListener('pointerup', endInteraction);
-    root.addEventListener('pointercancel', endInteraction);
-
-    root.addEventListener('touchend', scheduleResume, { passive: true });
-
-    // Suppress the click-through navigation on a card if the user was
-    // actually dragging rather than tapping/clicking.
-    root.addEventListener('click', (e) => {
-      if (dragged) { e.preventDefault(); e.stopPropagation(); }
-    }, true);
-
-    requestAnimationFrame(step);
   }
 
-  const workMarquee = document.querySelector('.work-marquee');
-  if (workMarquee) initMarquee(workMarquee, { speed: 40 });
+  /* ---------- Scroll reveal choreography ----------
+     Splits section headings into word-level spans and cascades
+     cards/copy in as they cross into view. Entirely opt-in: the
+     html.js-reveal class (added below) is the only thing that makes
+     any of this invisible-until-revealed, so a reduced-motion
+     preference just leaves everything statically visible. */
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  const eventsMarquee = document.querySelector('.events-marquee');
-  if (eventsMarquee) initMarquee(eventsMarquee, { speed: 34, mobileBreakpoint: 640 });
+  function splitIntoWords(el) {
+    if (el.dataset.split) return;
+    el.dataset.split = 'true';
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    let node;
+    while ((node = walker.nextNode())) textNodes.push(node);
+    textNodes.forEach(textNode => {
+      const parts = textNode.textContent.split(/(\s+)/);
+      const frag = document.createDocumentFragment();
+      parts.forEach(part => {
+        if (part.trim() === '') { frag.appendChild(document.createTextNode(part)); return; }
+        const span = document.createElement('span');
+        span.className = 'reveal-word';
+        span.textContent = part;
+        frag.appendChild(span);
+      });
+      textNode.replaceWith(frag);
+    });
+  }
 
-  const storytellingMarquee = document.querySelector('.storytelling-marquee');
-  if (storytellingMarquee) initMarquee(storytellingMarquee, { speed: 36 });
+  function initScrollReveal() {
+    if (prefersReducedMotion.matches) return;
+    document.documentElement.classList.add('js-reveal');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        if (el.classList.contains('reveal-heading')) {
+          el.querySelectorAll('.reveal-word').forEach((word, i) => {
+            word.style.setProperty('--stagger', `${Math.min(i * 45, 360)}ms`);
+          });
+        }
+        el.classList.add('is-visible');
+        observer.unobserve(el);
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+
+    // Headings: word-level stagger, varies with whatever text each one holds.
+    document.querySelectorAll('.section-heading:not(.hero-name)').forEach(h => {
+      splitIntoWords(h);
+      h.classList.add('reveal-heading');
+      observer.observe(h);
+    });
+
+    // Cards/copy: cascade in with a per-section rhythm rather than one
+    // repeated fade-up everywhere.
+    const groups = [
+      { selector: '.who-i-am-copy > p', variant: 'up', stagger: 100 },
+      { selector: '.skills-grid > .skill', variant: 'up', stagger: 70 },
+      { selector: '.experience-grid > .exp-card', variant: 'alt', stagger: 90 },
+      { selector: '.exp-media-grid > .exp-media-card', variant: 'scale', stagger: 100 },
+      { selector: '.sq-grid > .sq-card', variant: 'sq-fade', stagger: 90 },
+      { selector: '.work-slide-cards > .slide-card', variant: 'up', stagger: 80 },
+      { selector: '.contact-cta-row > .btn', variant: 'up', stagger: 80 },
+      { selector: '.social-icons > .social-icon', variant: 'up', stagger: 60 },
+      { selector: '.sq-social-icons > .sq-social-icon', variant: 'up', stagger: 60 },
+      { selector: '.brands-logos > .exp-logo--lg', variant: 'up', stagger: 70 },
+      { selector: '.work-outro-heading, .sq-outro-heading', variant: 'up', stagger: 0 },
+    ];
+
+    groups.forEach(({ selector, variant, stagger }) => {
+      document.querySelectorAll(selector).forEach((el, i) => {
+        const v = variant === 'alt' ? (i % 2 === 0 ? 'left' : 'right') : variant;
+        el.dataset.reveal = v;
+        el.style.setProperty('--stagger', `${Math.min(i * stagger, 480)}ms`);
+        observer.observe(el);
+      });
+    });
+  }
+
+  initScrollReveal();
+
+  /* ---------- Magnetic hover on buttons + nav links ----------
+     Fine pointer + motion-OK only. Touch devices and reduced-motion
+     users just get the plain, fully normal hover states — nothing
+     here is required for the site to work. */
+  function initMagneticButtons() {
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+    if (!finePointer.matches || prefersReducedMotion.matches) return;
+
+    // Buttons already lift on :hover via CSS — since this inline
+    // transform takes over that property while active, bake an
+    // equivalent lift bias in here too so the pull doesn't read as
+    // replacing the lift. Kept subtle (small multipliers) — this used
+    // to pull much harder and read as too much motion.
+    document.querySelectorAll('.btn-pill, .btn-pill-solid, .btn-pill-light').forEach(el => {
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const relX = e.clientX - rect.left - rect.width / 2;
+        const relY = e.clientY - rect.top - rect.height / 2;
+        el.style.transform = `translate(${relX * 0.1}px, ${relY * 0.12 - 1.5}px)`;
+      });
+      el.addEventListener('mouseleave', () => { el.style.transform = ''; });
+    });
+
+    // Nav links get no magnetic pull at all — color change only, via
+    // the plain :hover rule in style.css.
+  }
+
+  initMagneticButtons();
+
+  /* ---------- Hero highlight card ----------
+     An original recreation of the rotating photo+caption card on
+     growxy.framer.website's landing page: every slide sits absolutely
+     stacked in the same fixed-size box, and this just swaps which one
+     is .is-active on an interval, crossfading via the CSS transition
+     on .hero-highlight-slide. Pauses while the tab is hidden rather
+     than racing to catch up when it becomes visible again. */
+  function initHeroHighlightCard() {
+    const card = document.getElementById('hero-highlight-card');
+    if (!card) return;
+    const slides = Array.from(card.querySelectorAll('.hero-highlight-slide'));
+    if (slides.length < 2 || prefersReducedMotion.matches) return;
+
+    let index = 0;
+    const ROTATE_MS = 3500;
+
+    function advance() {
+      slides[index].classList.remove('is-active');
+      index = (index + 1) % slides.length;
+      slides[index].classList.add('is-active');
+    }
+
+    let timer = setInterval(advance, ROTATE_MS);
+    document.addEventListener('visibilitychange', () => {
+      clearInterval(timer);
+      if (!document.hidden) timer = setInterval(advance, ROTATE_MS);
+    });
+  }
+
+  initHeroHighlightCard();
+
+  /* ---------- Hero side-element alignment ----------
+     Both side elements stay on their original side — the highlight
+     card on the right, the one-liner/logo stack on the left — each
+     aligned to the nearer end of the wordmark: the card's right edge
+     lines up with the "a", and the stack's left edge lines up with
+     the "I". Measured directly off the rendered glyphs (see the
+     wrapped .hero-name-first/.hero-name-last spans in index.html)
+     rather than a guessed fixed offset, since the wordmark's own
+     rendered width shifts with viewport size and the font-size
+     clamp. Desktop only (>900px) — below that breakpoint both
+     elements are back in normal document flow, so any inline
+     left/right here is cleared. */
+  function alignHeroSideElements() {
+    const hero = document.querySelector('.hero');
+    const inner = document.querySelector('.hero-inner');
+    const name = document.querySelector('.hero-name');
+    const first = document.querySelector('.hero-name-first');
+    const last = document.querySelector('.hero-name-last');
+    const oLetter = document.querySelector('.hero-name-o');
+    const lLetter = document.querySelector('.hero-name-l');
+    const card = document.querySelector('.hero-highlight-card');
+    const stack = document.querySelector('.hero-left-stack');
+    const row = document.querySelector('.hero-row');
+    const photo = document.querySelector('.hero-photo');
+    const kicker = document.querySelector('.hero-kicker');
+    if (!hero || !inner || !name || !first || !last || !oLetter || !lLetter || !card || !stack || !row || !photo || !kicker) return;
+
+    const desktop = window.matchMedia('(min-width: 901px)');
+
+    function align() {
+      if (!desktop.matches) {
+        card.style.left = '';
+        card.style.right = '';
+        card.style.top = '';
+        stack.style.left = '';
+        stack.style.right = '';
+        stack.style.top = '';
+        photo.style.width = '';
+        photo.style.transform = '';
+        kicker.style.left = '';
+        return;
+      }
+      const innerRect = inner.getBoundingClientRect();
+      const nameRect = name.getBoundingClientRect();
+      const firstRect = first.getBoundingClientRect();
+      const lastRect = last.getBoundingClientRect();
+      const oRect = oLetter.getBoundingClientRect();
+      const lRect = lLetter.getBoundingClientRect();
+
+      /* Below the wordmark's own rendered bottom edge, not a fixed
+         clamp — the wordmark's height itself scales with its
+         font-size clamp, so a fixed top would drift out of sync
+         (sitting too high, overlapping the letters) whenever that
+         relationship isn't exactly what it was when the clamp was
+         tuned. Uses the whole element's box, not just the first/last
+         letters, since a middle letter's own ascender/descender can
+         render lower or higher than either of those. */
+      const top = (nameRect.bottom - innerRect.top) + 24;
+      card.style.top = top + 'px';
+      card.style.right = (innerRect.right - lastRect.right) + 'px';
+      card.style.left = 'auto';
+
+      stack.style.top = top + 'px';
+      stack.style.left = (firstRect.left - innerRect.left) + 'px';
+      stack.style.right = 'auto';
+
+      /* Sized as big as it can go while reaching all the way down to
+         the section's own bottom edge (row.top is fixed by the flow
+         above it, unaffected by the photo's own size, so this is
+         safe to measure up front). The one-liner text on the left
+         has no background of its own, so that side stays a hard
+         boundary (leftBound); the floating highlight card on the
+         right does have an opaque background and already renders in
+         front of the photo (z-index 5 vs. the photo row's 3), so the
+         photo is free to extend behind it, right up to the card's
+         own far edge (rightBound) — recovering the width that used
+         to be reserved as empty symmetric gap on both sides. Real
+         photo, so width/height stay locked to its natural aspect
+         ratio rather than stretching. */
+      const stackRect = stack.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+      const margin = 4;
+      const leftBound = stackRect.right + margin;
+      const rightBound = cardRect.right - margin;
+      const maxWidthByBounds = rightBound - leftBound;
+
+      const heroRect = hero.getBoundingClientRect();
+      const rowRect = row.getBoundingClientRect();
+      const aspect = 950 / 1000; // natural height/width of hero-headshot.png
+      const heightBudget = heroRect.bottom - rowRect.top;
+      const widthFromHeight = heightBudget / aspect;
+
+      const photoWidth = Math.max(160, Math.min(760, maxWidthByBounds, widthFromHeight));
+
+      photo.style.transform = 'none';
+      photo.style.width = photoWidth + 'px';
+      const naturalRect = photo.getBoundingClientRect();
+
+      /* Positioned (not resized — width/height are untouched above)
+         so the head's actual apex — measured directly from the
+         source PNG's alpha cutout at 53.15% of the photo's own
+         width, not its bounding-box center — lands on the midpoint
+         between "O" and "L". */
+      const APEX_FRACTION = 0.5315;
+      const target = (oRect.right + lRect.left) / 2;
+      const desiredLeft = target - photoWidth * APEX_FRACTION;
+      photo.style.transform = `translateX(${desiredLeft - naturalRect.left}px)`;
+
+      /* "hi, i'm" shifted off its default centered position (over the
+         whole wordmark) to sit right over that same O/L midpoint.
+         Positioned via left/position rather than transform: the
+         kicker already has its own CSS entrance animation that sets
+         transform (translateY), and animation-fill-mode:both makes
+         that replace the whole property outright once it finishes —
+         exactly the bug hero-photo hit earlier — so transform here
+         would just get overwritten. left has no such conflict. */
+      kicker.style.position = 'relative';
+      kicker.style.left = '0px';
+      const kickerRect = kicker.getBoundingClientRect();
+      const kickerCenter = (kickerRect.left + kickerRect.right) / 2;
+      kicker.style.left = (target - kickerCenter) + 'px';
+    }
+
+    align();
+    window.addEventListener('resize', align);
+    if (document.fonts && document.fonts.ready) {
+      /* fonts.ready can resolve a frame or two before the browser
+         actually repaints with the swapped-in font, so a measurement
+         taken right on resolution can still reflect the fallback
+         font's (narrower) metrics — double rAF pushes the re-measure
+         past that repaint. */
+      document.fonts.ready.then(() => {
+        requestAnimationFrame(() => requestAnimationFrame(align));
+      });
+    }
+  }
+
+  alignHeroSideElements();
+
+  /* ---------- Draggable pill strip ("What I Do") ----------
+     Touch already gets native swipe + momentum for free on an
+     overflow-x:auto track — this only adds click-and-drag for mouse
+     users, plus a simple friction-based momentum fling on release so
+     it doesn't feel like it stops dead. */
+  function initPillStripDrag() {
+    const track = document.getElementById('pill-strip-track');
+    if (!track) return;
+
+    let isDown = false;
+    let startX = 0;
+    let startScroll = 0;
+    let lastX = 0;
+    let lastT = 0;
+    let velocity = 0;
+    let momentumId = null;
+
+    function stopMomentum() {
+      if (momentumId) {
+        cancelAnimationFrame(momentumId);
+        momentumId = null;
+      }
+    }
+
+    function momentumStep() {
+      track.scrollLeft -= velocity;
+      velocity *= 0.94;
+      if (Math.abs(velocity) > 0.4) {
+        momentumId = requestAnimationFrame(momentumStep);
+      } else {
+        momentumId = null;
+      }
+    }
+
+    track.addEventListener('mousedown', (e) => {
+      isDown = true;
+      stopMomentum();
+      track.classList.add('is-dragging');
+      startX = e.clientX;
+      startScroll = track.scrollLeft;
+      lastX = e.clientX;
+      lastT = performance.now();
+      velocity = 0;
+      e.preventDefault();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      track.scrollLeft = startScroll - (e.clientX - startX);
+
+      const now = performance.now();
+      const dt = now - lastT;
+      if (dt > 0) {
+        velocity = ((e.clientX - lastX) / dt) * 16;
+        lastX = e.clientX;
+        lastT = now;
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!isDown) return;
+      isDown = false;
+      track.classList.remove('is-dragging');
+      if (!prefersReducedMotion.matches && Math.abs(velocity) > 0.4) {
+        momentumId = requestAnimationFrame(momentumStep);
+      }
+    });
+
+    track.addEventListener('dragstart', (e) => e.preventDefault());
+  }
+
+  initPillStripDrag();
+
+  /* ---------- Side Quests carousel ("Ebbtide" port) ----------
+     A vanilla-JS/CSS reimplementation of the "Ebbtide" Framer
+     component's core mechanics (no React/Framer/framer-motion —
+     original at framerusercontent.com/modules/.../Ebbtide.js):
+     seamless auto-scrolling track, drag-with-momentum (mirrors
+     initPillStripDrag's physics just above, transform-driven instead
+     of native scrollLeft since the track has to loop seamlessly),
+     hover-to-grow tiles with dimmed siblings, and a blurred backdrop
+     that crossfades to whichever tile is hovered. Autoscroll pauses
+     under prefers-reduced-motion; drag/hover stay available either
+     way, same split initPillStripDrag already uses (motion is
+     optional, the interaction itself isn't). */
+  function initSideQuestsCarousel() {
+    const track = document.getElementById('sq-carousel-track');
+    const viewport = track && track.parentElement;
+    const haze = document.getElementById('sq-carousel-haze');
+    if (!track || !viewport || !haze) return;
+
+    const seedTiles = Array.from(track.children);
+    const GAP = 16;
+    const PACE = 34; // px/s autoscroll speed
+
+    let loopWidth = 0;
+    let offset = 0;
+    let hovered = null;
+    let isDragging = false;
+
+    function apply() {
+      track.style.transform = `translate3d(${-offset}px, 0, 0)`;
+    }
+
+    /* Haze reads the tile's own placeholder gradient via computed
+       style for now — once real <img>/<video> tiles replace the
+       placeholders, swap this for reading the media element's own
+       source (e.g. a data-haze-bg attribute) instead. */
+    function bindTile(tile) {
+      const media = tile.querySelector('.sq-tile-media');
+      tile.addEventListener('pointerenter', () => {
+        if (isDragging) return;
+        hovered = tile;
+        tile.classList.add('is-hovered');
+        track.classList.add('has-hover');
+        if (media) {
+          const bg = window.getComputedStyle(media).backgroundImage;
+          if (bg && bg !== 'none') haze.style.backgroundImage = bg;
+        }
+        haze.classList.add('is-visible');
+      });
+      tile.addEventListener('pointerleave', () => {
+        tile.classList.remove('is-hovered');
+        if (hovered === tile) {
+          hovered = null;
+          track.classList.remove('has-hover');
+          haze.classList.remove('is-visible');
+        }
+      });
+    }
+
+    // Clone enough extra copies of the 5 seed tiles so the track
+    // always spans at least two viewport-widths, however wide the
+    // viewport is — the loop wraps within one seed-set's width, so
+    // there always has to be a full extra copy on either side of
+    // whatever's currently in view.
+    function buildLoop() {
+      track.querySelectorAll('[data-clone]').forEach((el) => el.remove());
+      const seedWidth = seedTiles.reduce((sum, el) => sum + el.getBoundingClientRect().width + GAP, 0);
+      const copies = Math.max(2, Math.ceil((viewport.clientWidth * 2) / seedWidth) + 1);
+      for (let i = 0; i < copies; i++) {
+        seedTiles.forEach((el) => {
+          const clone = el.cloneNode(true);
+          clone.setAttribute('data-clone', '');
+          track.appendChild(clone);
+          bindTile(clone);
+        });
+      }
+      return seedWidth;
+    }
+
+    seedTiles.forEach(bindTile);
+    loopWidth = buildLoop();
+    window.addEventListener('resize', () => { loopWidth = buildLoop(); });
+
+    let last = performance.now();
+    function tick(now) {
+      const dt = (now - last) / 1000;
+      last = now;
+      if (!prefersReducedMotion.matches && !isDragging && !hovered && loopWidth > 0) {
+        offset += PACE * dt;
+        if (offset >= loopWidth) offset -= loopWidth;
+        apply();
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    let startX = 0, startOffset = 0, lastX = 0, lastT = 0, velocity = 0, momentumId = null;
+
+    function stopMomentum() {
+      if (momentumId) { cancelAnimationFrame(momentumId); momentumId = null; }
+    }
+    function momentumStep() {
+      offset += velocity;
+      if (loopWidth > 0) {
+        offset = ((offset % loopWidth) + loopWidth) % loopWidth;
+      }
+      apply();
+      velocity *= 0.94;
+      if (Math.abs(velocity) > 0.3) {
+        momentumId = requestAnimationFrame(momentumStep);
+      } else {
+        momentumId = null;
+      }
+    }
+
+    track.addEventListener('pointerdown', (e) => {
+      isDragging = true;
+      stopMomentum();
+      track.classList.add('is-dragging');
+      startX = e.clientX;
+      startOffset = offset;
+      lastX = e.clientX;
+      lastT = performance.now();
+      velocity = 0;
+      track.setPointerCapture(e.pointerId);
+    });
+
+    track.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      offset = startOffset - (e.clientX - startX);
+      if (loopWidth > 0) {
+        offset = ((offset % loopWidth) + loopWidth) % loopWidth;
+      }
+      apply();
+      const now = performance.now();
+      const dt = now - lastT;
+      if (dt > 0) {
+        velocity = -((e.clientX - lastX) / dt) * 16;
+        lastX = e.clientX;
+        lastT = now;
+      }
+    });
+
+    function endDrag() {
+      if (!isDragging) return;
+      isDragging = false;
+      track.classList.remove('is-dragging');
+      if (!prefersReducedMotion.matches && Math.abs(velocity) > 0.3) {
+        momentumId = requestAnimationFrame(momentumStep);
+      }
+    }
+    track.addEventListener('pointerup', endDrag);
+    track.addEventListener('pointercancel', endDrag);
+    track.addEventListener('dragstart', (e) => e.preventDefault());
+  }
+
+  initSideQuestsCarousel();
+
+  /* ---------- Footer mascot ("Interactive Footer" port) ----------
+     Vanilla port of a Framer "Interactive Footer" component's
+     eye-tracking character (no React/framer-motion) — a Minion (see
+     the "MINION" CSS rules) standing in for the source's illustrated
+     artwork: the eyes ease toward the pointer (or, when one's
+     hovered/focused, toward whichever [data-footer-link] instead),
+     the whole character gets a subtle pointer-driven tilt/3D depth
+     and a slow idle float, and it blinks on a randomized timer — all
+     plain rAF + CSS custom properties, paused off-screen
+     (IntersectionObserver) or when the tab is hidden, and skipped
+     under prefers-reduced-motion (eyes just stay centered, no
+     blink/tilt/float). */
+  function initFooterMascot() {
+    const mascot = document.getElementById('footer-mascot');
+    const footer = document.getElementById('site-footer');
+    if (!mascot || !footer) return;
+
+    const eyes = Array.from(mascot.querySelectorAll('[data-eye]'));
+    const pupils = eyes.map((eye) => eye.querySelector('.footer-pupil'));
+
+    if (prefersReducedMotion.matches) return; // CSS fallback already centers the pupils
+
+    const pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    let gazeTarget = null;
+
+    window.addEventListener('pointermove', (e) => {
+      pointer.x = e.clientX;
+      pointer.y = e.clientY;
+    });
+
+    document.querySelectorAll('[data-footer-link]').forEach((link) => {
+      link.addEventListener('pointerenter', () => { gazeTarget = link; });
+      link.addEventListener('pointerleave', () => { if (gazeTarget === link) gazeTarget = null; });
+      link.addEventListener('focus', () => { gazeTarget = link; });
+      link.addEventListener('blur', () => { if (gazeTarget === link) gazeTarget = null; });
+    });
+
+    function gazePoint() {
+      if (gazeTarget) {
+        const r = gazeTarget.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+      }
+      return pointer;
+    }
+
+    let blinkStart = null;
+    let nextBlinkAt = performance.now() + 2600 + Math.random() * 3200;
+    function blinkValue(now) {
+      if (blinkStart === null && now >= nextBlinkAt) {
+        blinkStart = now;
+        nextBlinkAt = now + 3600 + Math.random() * 4700;
+      }
+      if (blinkStart === null) return 0;
+      const elapsed = now - blinkStart;
+      if (elapsed <= 65) return elapsed / 65;
+      if (elapsed <= 180) return 1 - (elapsed - 65) / 115;
+      blinkStart = null;
+      return 0;
+    }
+
+    let visible = true;
+    new IntersectionObserver((entries) => { visible = entries[0].isIntersecting; }, { rootMargin: '60px' }).observe(footer);
+
+    const current = { tilt: 0, depthX: 0, depthY: 0 };
+    let last = performance.now();
+
+    function tick(now) {
+      requestAnimationFrame(tick);
+      const dt = now - last;
+      last = now;
+      if (!visible || document.hidden) return;
+
+      mascot.style.setProperty('--mascot-blink', blinkValue(now).toFixed(3));
+
+      const mRect = mascot.getBoundingClientRect();
+      const cx = mRect.left + mRect.width / 2;
+      const cy = mRect.top + mRect.height / 2;
+      const gaze = gazePoint();
+
+      eyes.forEach((eye, i) => {
+        const eRect = eye.getBoundingClientRect();
+        const ex = eRect.left + eRect.width / 2;
+        const ey = eRect.top + eRect.height / 2;
+        const dx = gaze.x - ex;
+        const dy = gaze.y - ey;
+        const dist = Math.hypot(dx, dy, Math.max(110, eRect.width * 1.55));
+        const travel = eRect.width * 0.22;
+        const px = (dx / dist) * travel;
+        const py = (dy / dist) * travel;
+        pupils[i].style.transform = `translate(calc(-50% + ${px}px), calc(-50% + ${py}px))`;
+      });
+
+      const nx = Math.max(-1, Math.min(1, (pointer.x - cx) / (window.innerWidth / 2)));
+      const ny = Math.max(-1, Math.min(1, (pointer.y - cy) / (window.innerHeight / 2)));
+      const blend = 1 - Math.exp(-dt / 150);
+      current.tilt += (nx * 4 - current.tilt) * blend;
+      current.depthX += (-ny * 5 - current.depthX) * blend;
+      current.depthY += (nx * 5 - current.depthY) * blend;
+      const breathe = Math.sin(now / 1600) * 6;
+
+      mascot.style.setProperty('--mascot-tilt', current.tilt.toFixed(2) + 'deg');
+      mascot.style.setProperty('--mascot-depth-x', current.depthX.toFixed(2) + 'deg');
+      mascot.style.setProperty('--mascot-depth-y', current.depthY.toFixed(2) + 'deg');
+      mascot.style.setProperty('--mascot-breathe', breathe.toFixed(2) + 'px');
+    }
+    requestAnimationFrame(tick);
+
+    // Tap/click to blink on demand, same as the source's blinkOnPress.
+    mascot.style.pointerEvents = 'auto';
+    mascot.addEventListener('pointerdown', () => {
+      blinkStart = performance.now();
+      nextBlinkAt = blinkStart + 3600 + Math.random() * 4700;
+    });
+  }
+
+  initFooterMascot();
+
+  /* ---------- Tools orbit ("Team Section" port) ----------
+     Vanilla port of a Framer "Team Section" component's interactive
+     bits — the orbiting itself is pure CSS (see the .tools-orbit
+     rules in style.css); this just handles the two things CSS can't
+     do alone: pausing every ring/avatar the instant ANY chip is
+     hovered (a single shared .is-paused class, exactly like the
+     source's global isPaused flag — not per-item), and pausing the
+     whole thing while it's off-screen via IntersectionObserver, so it
+     costs nothing once you've scrolled past it. */
+  function initToolsOrbit() {
+    const root = document.getElementById('tools-orbit');
+    if (!root) return;
+
+    const avatars = root.querySelectorAll('.tools-orbit-avatar');
+    let hovered = false;
+    let visible = true;
+
+    function sync() {
+      root.classList.toggle('is-paused', hovered || !visible);
+    }
+
+    avatars.forEach((avatar) => {
+      avatar.addEventListener('mouseenter', () => { hovered = true; sync(); });
+      avatar.addEventListener('mouseleave', () => { hovered = false; sync(); });
+    });
+
+    new IntersectionObserver((entries) => {
+      visible = entries[0].isIntersecting;
+      sync();
+    }, { rootMargin: '100px 0px 100px 0px', threshold: 0 }).observe(root);
+  }
+
+  initToolsOrbit();
+
+  /* ---------- Products Launched tabs card ----------
+     Vanilla port of a Framer "Tabs card" component (see the CASE
+     STUDY PAGE / PRODUCTS LAUNCHED block in style.css for the visual
+     side): a column of tab rows beside one shared image panel, where
+     selecting a tab swaps which image shows. Matches the source
+     component's own behavior split — desktop switches on hover,
+     touch/mobile switches on tap — rather than picking one for both.
+     Harmless no-op on any page without a .cs-tabs-card. */
+  function initProductTabs() {
+    document.querySelectorAll('.cs-tabs-card').forEach(card => {
+      const tabs = Array.from(card.querySelectorAll('.cs-tab-item'));
+      const images = Array.from(card.querySelectorAll('.cs-tabs-image'));
+      if (!tabs.length || !images.length) return;
+
+      const setActive = (index) => {
+        tabs.forEach((tab, i) => tab.classList.toggle('is-active', i === index));
+        images.forEach((img, i) => img.classList.toggle('is-active', i === index));
+      };
+
+      tabs.forEach((tab, i) => {
+        tab.addEventListener('click', () => setActive(i));
+      });
+
+      const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      if (canHover) {
+        tabs.forEach((tab, i) => {
+          tab.addEventListener('mouseenter', () => setActive(i));
+        });
+      }
+    });
+  }
+
+  initProductTabs();
+
+  /* ---------- Flyer slideshows inside a tabs card ----------
+     A [data-slideshow] image slot crossfades through its .cs-slide
+     children every data-interval ms (default 2000). It only advances
+     while its tab is the active one, the page is visible, and the user
+     hasn't asked for reduced motion (then it just shows the first). */
+  function initSlideshows() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll('[data-slideshow]').forEach(box => {
+      const slides = Array.from(box.querySelectorAll('.cs-slide'));
+      if (slides.length < 2) return;
+      const delay = parseInt(box.dataset.interval, 10) || 2000;
+      let current = 0;
+      setInterval(() => {
+        if (document.hidden || (box.classList.contains('cs-tabs-slideshow') && !box.classList.contains('is-active'))) return;
+        slides[current].classList.remove('is-current');
+        current = (current + 1) % slides.length;
+        slides[current].classList.add('is-current');
+      }, delay);
+    });
+  }
+
+  initSlideshows();
+
+  /* ---------- Auto-scrolling strips ([data-autoscroll]) ----------
+     A seamless auto-scrolling line of flyers that can also be dragged
+     with momentum — the same transform-driven loop as the app-screens
+     carousel above, minus the flip-to-previous behaviour. It pauses while
+     a mouse is over it, while dragging, off-screen, and with reduced motion. */
+  function initAutoStrips() {
+    document.querySelectorAll('[data-autoscroll]').forEach(setUpAutoStrip);
+  }
+
+  function setUpAutoStrip(viewport) {
+    const track = viewport.querySelector('.cs-screens-track');
+    if (!track) return;
+
+    const seeds = Array.from(track.children);
+    const GAP = 16;
+    const PACE = 40; // px/s
+    let loopWidth = 0;
+    let offset = 0;
+    let isDragging = false;
+    let inView = true;
+    let mouseOver = false;
+
+    const apply = () => { track.style.transform = `translate3d(${-offset}px, 0, 0)`; };
+    const wrap = (v) => (loopWidth > 0 ? ((v % loopWidth) + loopWidth) % loopWidth : v);
+
+    function buildLoop() {
+      track.querySelectorAll('[data-clone]').forEach((el) => el.remove());
+      const seedWidth = seeds.reduce((sum, el) => sum + el.getBoundingClientRect().width + GAP, 0);
+      const copies = Math.max(2, Math.ceil((viewport.clientWidth * 2) / seedWidth) + 1);
+      for (let i = 0; i < copies; i++) {
+        seeds.forEach((el) => {
+          const clone = el.cloneNode(true);
+          clone.setAttribute('data-clone', '');
+          clone.setAttribute('aria-hidden', 'true');
+          track.appendChild(clone);
+        });
+      }
+      loopWidth = seedWidth;
+    }
+    buildLoop();
+    window.addEventListener('resize', () => { buildLoop(); offset = wrap(offset); apply(); });
+
+    new IntersectionObserver((entries) => { inView = entries[0].isIntersecting; },
+      { rootMargin: '100px 0px' }).observe(viewport);
+
+    viewport.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') mouseOver = true; });
+    viewport.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') mouseOver = false; });
+
+    let last = performance.now();
+    function tick(now) {
+      const dt = (now - last) / 1000;
+      last = now;
+      if (inView && !prefersReducedMotion.matches && !isDragging && !mouseOver && loopWidth > 0) {
+        offset = wrap(offset + PACE * dt);
+        apply();
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    let startX = 0, startOffset = 0, lastX = 0, lastT = 0, velocity = 0, momentumId = null;
+    function stopMomentum() { if (momentumId) { cancelAnimationFrame(momentumId); momentumId = null; } }
+    function momentumStep() {
+      offset = wrap(offset + velocity);
+      apply();
+      velocity *= 0.94;
+      momentumId = Math.abs(velocity) > 0.3 ? requestAnimationFrame(momentumStep) : null;
+    }
+
+    viewport.addEventListener('pointerdown', (e) => {
+      isDragging = true;
+      stopMomentum();
+      viewport.classList.add('is-dragging');
+      startX = e.clientX;
+      startOffset = offset;
+      lastX = e.clientX;
+      lastT = performance.now();
+      velocity = 0;
+      try { viewport.setPointerCapture(e.pointerId); } catch (err) { /* pointer already gone */ }
+    });
+    viewport.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      offset = wrap(startOffset - (e.clientX - startX));
+      apply();
+      const now = performance.now();
+      const dt = now - lastT;
+      if (dt > 0) {
+        velocity = -((e.clientX - lastX) / dt) * 16;
+        lastX = e.clientX;
+        lastT = now;
+      }
+    });
+    function endDrag() {
+      if (!isDragging) return;
+      isDragging = false;
+      viewport.classList.remove('is-dragging');
+      if (!prefersReducedMotion.matches && Math.abs(velocity) > 0.3) {
+        momentumId = requestAnimationFrame(momentumStep);
+      }
+    }
+    viewport.addEventListener('pointerup', endDrag);
+    viewport.addEventListener('pointercancel', endDrag);
+    viewport.addEventListener('dragstart', (e) => e.preventDefault());
+  }
+
+  initAutoStrips();
+
+  /* ---------- Before/after screens carousel ----------
+     One straight line of .cs-screen cards that auto-scrolls on a
+     seamless loop and can be dragged with momentum — same transform-
+     driven physics as initSideQuestsCarousel above. Each card flips
+     between its redesigned and "Previously" screen: on hover for a
+     mouse, on tap for touch (reverting by itself after a few seconds).
+     Autoscroll pauses while a mouse is over the strip or any card is
+     showing its old screen, so what you're looking at doesn't slide
+     away; cards without an older counterpart simply don't flip.
+     Hover/tap are delegated from the track, so the cloned loop copies
+     work too. */
+  function initScreensCarousel() {
+    const viewport = document.getElementById('cs-screens');
+    const track = viewport && viewport.querySelector('.cs-screens-track');
+    if (!track) return;
+
+    const seedCards = Array.from(track.children);
+    const GAP = 16;
+    const PACE = 40; // px/s autoscroll speed
+    const TAP_REVERT_MS = 3000;
+
+    let loopWidth = 0;
+    let offset = 0;
+    let isDragging = false;
+    let inView = true;
+    let tapTimer = null;
+
+    function apply() {
+      track.style.transform = `translate3d(${-offset}px, 0, 0)`;
+    }
+    function wrap(value) {
+      return loopWidth > 0 ? ((value % loopWidth) + loopWidth) % loopWidth : value;
+    }
+    // Only cards that actually have an older screen can flip.
+    function setPrevious(card, on) {
+      if (card && card.querySelector('.cs-screen-img--old')) card.classList.toggle('is-previous', on);
+    }
+    function clearPrevious() {
+      track.querySelectorAll('.cs-screen.is-previous').forEach((c) => c.classList.remove('is-previous'));
+    }
+
+    // The loop wraps within one seed-set's width, so the track needs
+    // enough clones to span two viewport widths past it.
+    function buildLoop() {
+      track.querySelectorAll('[data-clone]').forEach((el) => el.remove());
+      const seedWidth = seedCards.reduce((sum, el) => sum + el.getBoundingClientRect().width + GAP, 0);
+      const copies = Math.max(2, Math.ceil((viewport.clientWidth * 2) / seedWidth) + 1);
+      for (let i = 0; i < copies; i++) {
+        seedCards.forEach((el) => {
+          const clone = el.cloneNode(true);
+          clone.setAttribute('data-clone', '');
+          clone.setAttribute('aria-hidden', 'true');
+          track.appendChild(clone);
+        });
+      }
+      loopWidth = seedWidth;
+    }
+    buildLoop();
+    window.addEventListener('resize', () => { buildLoop(); offset = wrap(offset); apply(); });
+
+    new IntersectionObserver((entries) => {
+      inView = entries[0].isIntersecting;
+    }, { rootMargin: '100px 0px' }).observe(viewport);
+
+    let mouseOver = false;
+    viewport.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') mouseOver = true; });
+    viewport.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') mouseOver = false; });
+
+    track.addEventListener('pointerover', (e) => {
+      if (e.pointerType !== 'mouse' || isDragging) return;
+      const card = e.target.closest('.cs-screen');
+      if (card && !card.contains(e.relatedTarget)) setPrevious(card, true);
+    });
+    track.addEventListener('pointerout', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      const card = e.target.closest('.cs-screen');
+      if (card && !card.contains(e.relatedTarget)) setPrevious(card, false);
+    });
+
+    let last = performance.now();
+    function tick(now) {
+      const dt = (now - last) / 1000;
+      last = now;
+      if (inView && !prefersReducedMotion.matches && !isDragging && !mouseOver && loopWidth > 0 &&
+          !track.querySelector('.cs-screen.is-previous')) {
+        offset = wrap(offset + PACE * dt);
+        apply();
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    let startX = 0, startOffset = 0, lastX = 0, lastT = 0, velocity = 0;
+    let moved = false, downCard = null, momentumId = null;
+
+    function stopMomentum() {
+      if (momentumId) { cancelAnimationFrame(momentumId); momentumId = null; }
+    }
+    function momentumStep() {
+      offset = wrap(offset + velocity);
+      apply();
+      velocity *= 0.94;
+      momentumId = Math.abs(velocity) > 0.3 ? requestAnimationFrame(momentumStep) : null;
+    }
+
+    viewport.addEventListener('pointerdown', (e) => {
+      isDragging = true;
+      moved = false;
+      downCard = e.target.closest('.cs-screen');
+      stopMomentum();
+      if (e.pointerType === 'mouse') clearPrevious();
+      viewport.classList.add('is-dragging');
+      startX = e.clientX;
+      startOffset = offset;
+      lastX = e.clientX;
+      lastT = performance.now();
+      velocity = 0;
+      try { viewport.setPointerCapture(e.pointerId); } catch (err) { /* pointer already gone */ }
+    });
+
+    viewport.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      if (Math.abs(e.clientX - startX) > 6) moved = true;
+      offset = wrap(startOffset - (e.clientX - startX));
+      apply();
+      const now = performance.now();
+      const dt = now - lastT;
+      if (dt > 0) {
+        velocity = -((e.clientX - lastX) / dt) * 16;
+        lastX = e.clientX;
+        lastT = now;
+      }
+    });
+
+    function endDrag(e) {
+      if (!isDragging) return;
+      isDragging = false;
+      viewport.classList.remove('is-dragging');
+
+      if (e.type === 'pointerup' && e.pointerType !== 'mouse' && !moved && downCard) {
+        const wasPrevious = downCard.classList.contains('is-previous');
+        clearTimeout(tapTimer);
+        clearPrevious();
+        if (!wasPrevious) {
+          setPrevious(downCard, true);
+          tapTimer = setTimeout(clearPrevious, TAP_REVERT_MS);
+        }
+      } else if (e.pointerType === 'mouse' && e.type === 'pointerup') {
+        const under = document.elementFromPoint(e.clientX, e.clientY);
+        setPrevious(under && under.closest('.cs-screen'), true);
+      }
+
+      if (!prefersReducedMotion.matches && Math.abs(velocity) > 0.3) {
+        momentumId = requestAnimationFrame(momentumStep);
+      }
+    }
+    viewport.addEventListener('pointerup', endDrag);
+    viewport.addEventListener('pointercancel', endDrag);
+    viewport.addEventListener('dragstart', (e) => e.preventDefault());
+  }
+
+  initScreensCarousel();
+
+  /* ---------- Hover-flip cards (.cs-flip) ----------
+     A single image that flips to its "previous" version. A mouse
+     flips it with plain CSS :hover; this adds the other two ways in —
+     a tap on touch/pen, and Enter/Space from the keyboard — each
+     toggling .is-previous. (Mouse clicks are deliberately ignored so
+     they don't fight the hover.) */
+  function initFlipCards() {
+    document.querySelectorAll('.cs-flip').forEach((card) => {
+      const toggle = () => {
+        const on = card.classList.toggle('is-previous');
+        card.setAttribute('aria-pressed', String(on));
+      };
+      card.addEventListener('pointerup', (e) => { if (e.pointerType !== 'mouse') toggle(); });
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+    });
+  }
+
+  initFlipCards();
+
+  /* ---------- Text reveal on scroll ----------
+     Vanilla port of a Framer "Text Reveal Scroll" component (no
+     framer-motion, no React — the original itself is plain DOM +
+     rAF under the hood): words split into their own spans, starting
+     dim, lit up one by one as a single scroll-position window is
+     crossed. Only opacity is ever touched — same as the source, no
+     blur/transform. Math and defaults (90%/30%/0.2) are ported as-is.
+     [data-text-reveal] elements that share a parent are treated as
+     ONE continuous sequence — the reveal runs from the first word of
+     the first element to the last word of the last (progress is
+     measured from the first element's top to the last element's
+     bottom), not as separate per-element triggers — so the three
+     .who-i-am-copy paragraphs read as a single flowing block instead
+     of three independent staggered reveals. TWEAK HERE: START_OFFSET/
+     END_OFFSET (viewport % from the top where the reveal starts/
+     completes) and DIM_OPACITY (opacity of not-yet-revealed words).
+     Word-based rather than the source's char-based default — better
+     fit for multi-sentence body copy; switch the split regex below to
+     characters if a punchier, per-letter reveal is wanted instead. */
+  function initTextRevealScroll() {
+    const targets = Array.from(document.querySelectorAll('[data-text-reveal]'));
+    if (!targets.length || prefersReducedMotion.matches) return; // reduced motion: leave the plain, fully-readable text alone
+
+    const DIM_OPACITY = 0.2;
+    const START_OFFSET = 90;
+    const END_OFFSET = 30;
+
+    // Group elements by parent — siblings reveal together as one
+    // sequence; a differently-parented element elsewhere on the page
+    // gets its own independent instance.
+    const groups = new Map();
+    targets.forEach((el) => {
+      const key = el.parentElement;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(el);
+    });
+
+    const instances = Array.from(groups.values()).map((elements) => {
+      const spans = [];
+      elements.forEach((root) => {
+        const chunks = root.textContent.split(/(\s+)/);
+        root.textContent = '';
+        chunks.forEach((chunk) => {
+          if (chunk === '') return;
+          if (/^\s+$/.test(chunk)) {
+            root.appendChild(document.createTextNode(chunk));
+            return;
+          }
+          const span = document.createElement('span');
+          span.textContent = chunk;
+          span.style.display = 'inline';
+          span.style.opacity = DIM_OPACITY;
+          span.style.willChange = 'opacity';
+          root.appendChild(span);
+          spans.push(span);
+        });
+      });
+      return { elements, spans, visibleSet: new Set(), visible: true };
+    });
+
+    let ticking = false;
+
+    function computeReveal() {
+      ticking = false;
+      const vh = window.innerHeight;
+      const startPx = vh * START_OFFSET / 100;
+      const endPx = vh * END_OFFSET / 100;
+
+      instances.forEach(({ elements, spans, visible }) => {
+        if (!visible || !spans.length) return;
+        // The whole group's progress is driven by its first element's
+        // top and last element's bottom, so mid-group elements (e.g.
+        // paragraph 2 of 3) don't restart or skip the sequence.
+        const firstRect = elements[0].getBoundingClientRect();
+        const lastRect = elements[elements.length - 1].getBoundingClientRect();
+        let progress;
+        const pin = elements[0].closest('[data-reveal-pin]');
+        if (pin && window.innerWidth > 900) {
+          // Pinned: the row stays put while the pin's runway scrolls by, so the
+          // words light up slowly, finishing exactly as the pin releases.
+          const pinRect = pin.getBoundingClientRect();
+          const row = pin.firstElementChild;
+          const stickyTop = parseFloat(getComputedStyle(row).top) || 0;
+          const runway = Math.max(1, pinRect.height - row.getBoundingClientRect().height);
+          const lead = vh * 0.3; // start lighting words a little before the row pins
+          progress = Math.min(1, Math.max(0, (stickyTop + lead - pinRect.top) / (runway + lead)));
+        } else {
+          const totalRange = (lastRect.bottom - firstRect.top) + (startPx - endPx);
+          const scrolled = startPx - firstRect.top;
+          progress = Math.min(1, Math.max(0, totalRange > 0 ? scrolled / totalRange : 0));
+        }
+
+        const total = spans.length;
+        const litCount = Math.floor(progress * total);
+        const frac = progress * total - litCount;
+
+        spans.forEach((span, i) => {
+          let opacity;
+          if (i < litCount) opacity = 1;
+          else if (i === litCount) opacity = DIM_OPACITY + frac * (1 - DIM_OPACITY);
+          else opacity = DIM_OPACITY;
+          span.style.opacity = opacity.toFixed(3);
+        });
+      });
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(computeReveal);
+    }
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const inst = instances.find((it) => it.elements.includes(entry.target));
+        if (!inst) return;
+        if (entry.isIntersecting) inst.visibleSet.add(entry.target);
+        else inst.visibleSet.delete(entry.target);
+        inst.visible = inst.visibleSet.size > 0;
+      });
+      onScroll();
+    }, { rootMargin: '200px 0px 200px 0px', threshold: 0 });
+    targets.forEach((el) => io.observe(el));
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    computeReveal();
+  }
+
+  initTextRevealScroll();
+
+  /* ---------- Scroll-linked "zoom settle" image reveal ----------
+     An original recreation of the scroll-scale effect used on
+     growxy.framer.website's own About/portfolio images: each tagged
+     image starts scaled up (oversized inside an overflow:hidden
+     wrapper) while it's still below the fold, and settles down to
+     its natural scale(1) as it scrolls up into the top third of the
+     viewport — then locks there and doesn't reverse on scroll-back,
+     same as the reference. Progress is recomputed on scroll (rAF-
+     throttled) and stops updating an image entirely once it's fully
+     settled, so this costs nothing once you've scrolled past it. */
+  function initScrollScaleReveal() {
+    const images = Array.from(document.querySelectorAll('[data-scroll-scale]'));
+    if (!images.length) return;
+
+    if (prefersReducedMotion.matches) {
+      images.forEach(img => { img.style.transform = 'scale(1)'; });
+      return;
+    }
+
+    const START_SCALE = 1.25;
+    let pending = images.slice();
+    let ticking = false;
+
+    function update() {
+      ticking = false;
+      const vh = window.innerHeight;
+      const startTrigger = vh;
+      const endTrigger = vh * 0.25;
+
+      pending = pending.filter(img => {
+        const rect = img.getBoundingClientRect();
+        const progress = Math.min(1, Math.max(0, (startTrigger - rect.top) / (startTrigger - endTrigger)));
+        const scale = START_SCALE - (START_SCALE - 1) * progress;
+        img.style.transform = `scale(${scale})`;
+        return progress < 1;
+      });
+
+      if (!pending.length) {
+        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('resize', onScroll);
+      }
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+  }
+
+  initScrollScaleReveal();
+
+  /* ---------- Page transitions ----------
+     Two stacked cards (present in the HTML, covering by default) —
+     an accent card and a solid cover card carrying the current
+     page's title — hold on load, then lift away together to reveal
+     the page, reading as directed rather than a hard reload. Each
+     page knows its own title from its own body[data-page], so no
+     state needs to be handed across the navigation. The stagger
+     between the two cards (accent leads covering, cover leads
+     revealing) lives entirely in CSS via transition-delay; this just
+     toggles the classes and times the navigate. Reduced motion gets
+     the overlay hidden entirely in CSS, and this skips wiring up the
+     click intercept to match — links just navigate instantly, same
+     as a plain static site. */
+  function initPageTransitions() {
+    // Page transitions are switched off for now. Set to true (and remove the
+    // `display: none` rule on .page-transition in style.css) to bring them back.
+    const TRANSITIONS_ENABLED = false;
+    const overlay = document.querySelector('.page-transition');
+    if (!TRANSITIONS_ENABLED || !overlay || prefersReducedMotion.matches) return;
+
+    const PAGE_TITLES = {
+      home: 'Home',
+      work: 'Work',
+      events: 'Events',
+      storytelling: 'Storytelling',
+      'side-quests': 'Side Quests',
+      contact: 'Contact',
+    };
+
+    const LOAD_DELAY = 50;          // let the first paint land before animating
+    const ENTRY_REVEAL_DELAY = 250; // brief hold, fully covered, before lifting away
+    const EXIT_DURATION = 760;      // stagger + transition time to fully re-cover
+
+    const titleEl = overlay.querySelector('.loader-title');
+
+    setTimeout(() => {
+      overlay.classList.add('is-loading');
+      setTimeout(() => {
+        overlay.classList.add('is-revealed');
+      }, ENTRY_REVEAL_DELAY);
+    }, LOAD_DELAY);
+
+    document.addEventListener('click', (e) => {
+      if (e.defaultPrevented || e.button !== 0) return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+      const link = e.target.closest('a[href]');
+      if (!link || link.target === '_blank' || link.hasAttribute('download')) return;
+
+      let url;
+      try { url = new URL(link.href, window.location.href); } catch (err) { return; }
+      if (url.origin !== window.location.origin) return;
+      if (!/\.html?$/.test(url.pathname)) return;
+      if (url.pathname === window.location.pathname) return;
+
+      e.preventDefault();
+      // Snap back to the resting (untitled) state — no title fade on
+      // the way out, that's the destination's job — and re-cover.
+      overlay.classList.remove('is-loading');
+      overlay.classList.remove('is-revealed');
+      setTimeout(() => { window.location.href = link.href; }, EXIT_DURATION);
+    });
+  }
+
+  initPageTransitions();
+
+  /* ---------- Sticky scroll-driven events gallery ----------
+     Scrolling through the tall .events-scroller track advances which
+     slide is "active" (cross-faded in) while .events-scroller-sticky
+     stays pinned to the viewport — an original recreation of Framer's
+     "ImageScroller" component. Progress is computed the same way its
+     scroll-linked animation is: 0 when the track's top reaches the
+     viewport top, 1 when the track's bottom reaches the viewport
+     bottom. Clicking a thumbnail scrolls straight to that slide's
+     middle instead of requiring a scrub through every one before it. */
+  function initEventsScroller() {
+    const container = document.getElementById('events-scroller');
+    if (!container) return;
+    const sticky = container.querySelector('.events-scroller-sticky');
+    const slides = Array.from(container.querySelectorAll('.events-scroller-slide'));
+    const thumbs = Array.from(container.querySelectorAll('.events-scroller-thumb'));
+    const total = slides.length;
+    if (!total) return;
+
+    let activeIndex = 0;
+    function setActive(index) {
+      if (index === activeIndex && slides[index].classList.contains('is-active')) return;
+      activeIndex = index;
+      slides.forEach((slide, i) => slide.classList.toggle('is-active', i === index));
+      thumbs.forEach((thumb, i) => thumb.classList.toggle('is-active', i === index));
+    }
+
+    function update() {
+      const rect = container.getBoundingClientRect();
+      const scrollableHeight = container.offsetHeight - sticky.offsetHeight;
+      if (scrollableHeight <= 0) { setActive(0); return; }
+      const scrolled = -rect.top;
+      const progress = Math.min(1, Math.max(0, scrolled / scrollableHeight));
+      setActive(Math.min(total - 1, Math.floor(progress * total)));
+    }
+
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+
+    thumbs.forEach((thumb, i) => {
+      thumb.addEventListener('click', () => {
+        const scrollableHeight = container.offsetHeight - sticky.offsetHeight;
+        const targetProgress = (i + 0.5) / total;
+        const containerTop = container.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: containerTop + targetProgress * scrollableHeight, behavior: 'smooth' });
+      });
+    });
+  }
+
+  initEventsScroller();
 
   /* ---------- Generic "detail popup" modal ----------
      Shared open/close/backdrop/Escape wiring for any modal that
@@ -199,7 +1432,7 @@ document.addEventListener('DOMContentLoaded', () => {
       modal.classList.add('is-open');
       modal.setAttribute('aria-hidden', 'false');
       document.body.classList.add('modal-open');
-      modal.querySelector('.skill-modal-close').focus();
+      modal.querySelector('button[data-modal-close], a[data-modal-close]').focus();
     };
 
     const close = () => {
@@ -216,16 +1449,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* "What I Do" skill cards */
-  initDetailModal(
-    document.getElementById('skill-modal'),
-    document.querySelectorAll('.skill[data-skill-title]'),
-    (modal, button) => {
-      modal.querySelector('.skill-modal-title').textContent = button.dataset.skillTitle;
-      modal.querySelector('.skill-modal-body').textContent = button.dataset.skillDetail;
-    }
-  );
-
   /* "I've Worked At" experience cards */
   initDetailModal(
     document.getElementById('exp-modal'),
@@ -234,7 +1457,7 @@ document.addEventListener('DOMContentLoaded', () => {
       modal.querySelector('#exp-modal-title').textContent = button.dataset.expCompany;
       modal.querySelector('#exp-modal-role').textContent = button.dataset.expRole;
       modal.querySelector('#exp-modal-date').textContent = button.dataset.expDate;
-      modal.querySelector('#exp-modal-logo').setAttribute('data-label', button.dataset.expLogo || '');
+      modal.querySelector('#exp-modal-logo').innerHTML = button.querySelector('.exp-logo').innerHTML;
 
       const body = modal.querySelector('#exp-modal-body');
       body.innerHTML = '';
@@ -245,5 +1468,218 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   );
+
+  /* Video recap thumbnails: load into a modal on tap, paused, so the
+     viewer decides when to actually start playback. A large play icon
+     (matching the thumbnail's) sits over the paused video and hides
+     itself once playback actually starts. */
+  function initVideoModal() {
+    const modal = document.getElementById('video-modal');
+    const triggers = document.querySelectorAll('[data-video-src]');
+    if (!modal || !triggers.length) return;
+
+    const panel = modal.querySelector('.video-modal-panel');
+    const video = modal.querySelector('.video-modal-player');
+    const playIcon = modal.querySelector('.video-modal-play-icon');
+
+    initDetailModal(modal, triggers, (modal, button) => {
+      video.src = button.dataset.videoSrc;
+      video.poster = button.dataset.videoPoster || '';
+      panel.style.setProperty('--video-aspect', button.dataset.videoAspect || '4 / 5');
+      panel.classList.remove('is-playing');
+    });
+
+    playIcon.addEventListener('click', () => video.play());
+    video.addEventListener('play', () => panel.classList.add('is-playing'));
+    video.addEventListener('pause', () => panel.classList.remove('is-playing'));
+
+    const stopVideo = () => { video.pause(); video.currentTime = 0; panel.classList.remove('is-playing'); };
+    modal.querySelectorAll('[data-modal-close]').forEach(el => el.addEventListener('click', stopVideo));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') stopVideo(); });
+  }
+
+  initVideoModal();
+
+  /* ---------- Hero animated gradient (WebGL) ----------
+     Ported from a React/shadcn "Velaris" component to plain JS/WebGL
+     since this project has no React, TypeScript, Tailwind, or shadcn
+     build tooling — same simplex-noise fragment shader, no framework
+     required. Recolored to the site's own blue palette. Mounted as a
+     canvas behind .hero-inner; the section's existing CSS background
+     (solid navy + radial gradient + noise texture) stays in place
+     underneath as the fallback for prefers-reduced-motion or when
+     WebGL isn't available. */
+  function initHeroGradient() {
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.className = 'hero-gradient-canvas';
+    hero.insertBefore(canvas, hero.firstChild);
+
+    const gl = canvas.getContext('webgl');
+    if (!gl) { canvas.remove(); return; }
+
+    const vertexShaderGLSL = `
+      attribute vec2 position;
+      varying vec2 vUv;
+      void main() {
+        vUv = position * 0.5 + 0.5;
+        gl_Position = vec4(position, 0.0, 1.0);
+      }
+    `;
+
+    const fragmentShaderGLSL = `
+      precision highp float;
+      varying vec2 vUv;
+
+      uniform vec2  u_resolution;
+      uniform float u_time;
+      uniform float u_grain;
+      uniform vec3  u_colors[4];
+      uniform vec3  u_bg;
+
+      vec3 permute(vec3 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
+
+      float snoise(vec2 v){
+        const vec4 C = vec4(0.211324865405187, 0.366025403784439,
+                 -0.577350269189626, 0.024390243902439);
+        vec2 i  = floor(v + dot(v, C.yy) );
+        vec2 x0 = v -   i + dot(i, C.xx);
+        vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+        vec4 x12 = x0.xyxy + C.xxzz;
+        x12.xy -= i1;
+        i = mod(i, 289.0);
+        vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 ))
+        + i.x + vec3(0.0, i1.x, 1.0 ));
+        vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy),
+          dot(x12.zw,x12.zw)), 0.0);
+        m = m*m ;
+        m = m*m ;
+        vec3 x = 2.0 * fract(p * C.www) - 1.0;
+        vec3 h = abs(x) - 0.5;
+        vec3 ox = floor(x + 0.5);
+        vec3 a0 = x - ox;
+        m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+        vec3 g;
+        g.x  = a0.x  * x0.x  + h.x  * x0.y;
+        g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+        return 130.0 * dot(m, g);
+      }
+
+      void main() {
+        vec2 uv = vUv;
+        float ratio = u_resolution.x / u_resolution.y;
+        vec2 p = uv - 0.5;
+        p.x *= ratio;
+
+        float t = u_time * 0.1;
+
+        float n1 = snoise(p * 0.4 + vec2(t * 0.2, -t * 0.3));
+        float n2 = snoise(p * 0.55 + vec2(-t * 0.15, t * 0.25) + n1 * 0.25);
+        float n3 = snoise(p * 0.75 + vec2(t * 0.1, -t * 0.2) + n2 * 0.2);
+
+        vec3 col = u_bg;
+
+        float dist = length(p) * 1.5;
+        float vignette = 1.0 - smoothstep(0.3, 1.2, dist);
+
+        col = mix(col, u_colors[0], smoothstep(-0.2, 0.5, n1) * 0.85);
+        col = mix(col, u_colors[1], smoothstep(-0.1, 0.6, n2) * 0.7);
+        col = mix(col, u_colors[2], smoothstep(-0.3, 0.4, n3) * 0.6);
+        col = mix(col, u_colors[3], smoothstep(0.0, 0.7, n1 * n2) * 0.5);
+
+        float glow = smoothstep(0.8, 0.0, dist) * 0.3;
+        col += u_colors[1] * glow;
+
+        col = mix(col * 0.2, col, vignette);
+
+        float grain = fract(sin(dot(uv, vec2(12.9898, 78.233))) * 43758.5453 + u_time);
+        col += (grain - 0.5) * u_grain * 0.1;
+
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `;
+
+    const createShader = (type, src) => {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      return s;
+    };
+
+    const program = gl.createProgram();
+    gl.attachShader(program, createShader(gl.VERTEX_SHADER, vertexShaderGLSL));
+    gl.attachShader(program, createShader(gl.FRAGMENT_SHADER, fragmentShaderGLSL));
+    gl.linkProgram(program);
+    gl.useProgram(program);
+
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+
+    const posLoc = gl.getAttribLocation(program, 'position');
+    gl.enableVertexAttribArray(posLoc);
+    gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+    const locs = {
+      res: gl.getUniformLocation(program, 'u_resolution'),
+      time: gl.getUniformLocation(program, 'u_time'),
+      grain: gl.getUniformLocation(program, 'u_grain'),
+      colors: gl.getUniformLocation(program, 'u_colors'),
+      bg: gl.getUniformLocation(program, 'u_bg'),
+    };
+
+    const hexToRgb = (hex) => {
+      const h = hex.replace('#', '');
+      return [
+        parseInt(h.slice(0, 2), 16) / 255,
+        parseInt(h.slice(2, 4), 16) / 255,
+        parseInt(h.slice(4, 6), 16) / 255,
+      ];
+    };
+
+    // The site's own blue palette (periwinkle/blue/indigo/navy) —
+    // bg matches .hero's existing solid navy fallback so there's no
+    // color jump once the canvas takes over.
+    const bg = '#0c0054';
+    const colors = ['#bfd4ff', '#0052ff', '#0a00cb', '#0c0054'];
+    const speed = 0.6;
+    const grain = 0.15;
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = hero.clientWidth * dpr;
+      canvas.height = hero.clientHeight * dpr;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    };
+
+    const ro = new ResizeObserver(resize);
+    ro.observe(hero);
+    resize();
+
+    const colorsFlat = new Float32Array(colors.slice(0, 4).flatMap(hexToRgb));
+    const bgRgb = hexToRgb(bg);
+
+    let raf;
+    const render = (t) => {
+      gl.uniform2f(locs.res, canvas.width, canvas.height);
+      gl.uniform1f(locs.time, t * 0.001 * speed);
+      gl.uniform1f(locs.grain, grain);
+      gl.uniform3f(locs.bg, bgRgb[0], bgRgb[1], bgRgb[2]);
+      gl.uniform3fv(locs.colors, colorsFlat);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      raf = requestAnimationFrame(render);
+    };
+    raf = requestAnimationFrame(render);
+
+    window.addEventListener('pagehide', () => {
+      ro.disconnect();
+      cancelAnimationFrame(raf);
+    });
+  }
+
+  initHeroGradient();
 
 });

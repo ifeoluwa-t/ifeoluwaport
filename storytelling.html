@@ -2,12 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-reveal');</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Brand Storytelling — Ifeoluwa Taiwo</title>
+<title>Storytelling | Ifeoluwa Taiwo</title>
 <meta name="description" content="Brand storytelling and content work by Ifeoluwa Taiwo.">
-<link rel="stylesheet" href="css/style.css?v=26">
+<link rel="stylesheet" href="css/style.css?v=264">
+<link rel="stylesheet" href="css/storytelling.css?v=4">
 </head>
 <body data-page="storytelling">
+
+<div class="page-transition" aria-hidden="true">
+  <div class="transition-card transition-card--accent"></div>
+  <div class="transition-card transition-card--cover">
+    <span class="loader-title"></span>
+  </div>
+</div>
 
 <header class="site-header" id="site-header">
   <div class="header-inner">
@@ -15,12 +24,11 @@
 
     <div class="nav-wrap" id="nav-wrap">
       <nav class="main-nav" id="main-nav">
-        <a href="index.html" class="nav-link" data-page="home">/home</a>
-        <a href="work.html" class="nav-link" data-page="work">/work</a>
-        <a href="events.html" class="nav-link" data-page="events">/events</a>
-        <a href="storytelling.html" class="nav-link" data-page="storytelling">/storytelling</a>
-        <a href="side-quests.html" class="nav-link" data-page="side-quests">/side-quests</a>
-        <a href="contact.html" class="nav-link" data-page="contact">/contact</a>
+        <a href="work.html" class="nav-link" data-page="work">Work</a>
+        <a href="events.html" class="nav-link" data-page="events">Events</a>
+        <a href="storytelling.html" class="nav-link" data-page="storytelling">Storytelling</a>
+        <a href="side-quests.html" class="nav-link" data-page="side-quests">Side-Quests</a>
+        <a href="contact.html" class="nav-link" data-page="contact">Contact</a>
       </nav>
     </div>
 
@@ -30,101 +38,241 @@
 
 <main>
 
-  <section class="page-intro page-top">
+  <!-- GALLERY: filter tabs (All / Decks / Articles / Others, with counts) above one tile per
+       story. Each tile is a real anchor to its detail section below. -->
+  <section class="st-gallery-section" id="st-gallery" tabindex="-1">
     <div class="section-inner">
-      <h1 class="section-heading">Brand Storytelling</h1>
-      <p>I've always been passionate about sharing the narratives of brands &mdash; through campaign recaps, community highlights, and the stories behind the products people use every day.</p>
+      <h1 class="st-heading">Brand Storytelling</h1>
+      <div class="st-filters" role="tablist" aria-label="Filter stories" hidden>
+        <button type="button" role="tab" class="st-filter is-active" data-filter="all" aria-selected="true">All<sup>10</sup></button>
+        <button type="button" role="tab" class="st-filter" data-filter="decks" aria-selected="false">Decks<sup>3</sup></button>
+        <button type="button" role="tab" class="st-filter" data-filter="articles" aria-selected="false">Articles<sup>3</sup></button>
+        <button type="button" role="tab" class="st-filter" data-filter="others" aria-selected="false">Others<sup>4</sup></button>
+      </div>
+      <ul class="st-gallery">
+        <li data-cat="decks"><a class="st-tile" href="#sales-deck">
+          <img class="st-tile-img" src="assets/images/onboard-b2b-sales-deck.jpg" alt="Onboard Business sales deck cover slide" loading="lazy" decoding="async">
+          <span class="work-card-pill st-pill">Deck</span>
+          <span class="st-tile-title">Onboard Business Sales Deck</span>
+          <span class="st-tile-desc">The creative and content behind Onboard Business&#x27;s sales deck, built for sales calls.</span>
+          <span class="st-tile-more">Read more &rarr;</span>
+        </a></li>
+        <li data-cat="decks"><a class="st-tile" href="#q1-2026-product-report">
+          <img class="st-tile-img" src="assets/images/q1-2026-product-report.jpg" alt="Onboard Q1 2026 Product Report cover slide" loading="lazy" decoding="async">
+          <span class="work-card-pill st-pill">Deck</span>
+          <span class="st-tile-title">Q1 2026 Product Report</span>
+          <span class="st-tile-desc">Onboard&#x27;s Q1 2026 product report, from features and awards to the Q2 roadmap.</span>
+          <span class="st-tile-more">Read more &rarr;</span>
+        </a></li>
+        <li data-cat="decks"><a class="st-tile" href="#q3-2026-product-report">
+          <img class="st-tile-img" src="assets/images/q3-2026-product-report.webp" alt="Onboard Q3 2026 Product Report cover slide" loading="lazy" decoding="async">
+          <span class="work-card-pill st-pill">Deck</span>
+          <span class="st-tile-title">Q3 2026 Product Report</span>
+          <span class="st-tile-desc">Onboard&#x27;s Q3 2026 product report, rounding up the quarter&#x27;s updates and launches.</span>
+          <span class="st-tile-more">Read more &rarr;</span>
+        </a></li>
+        <li data-cat="articles"><a class="st-tile" href="#onboard-blog">
+          <img class="st-tile-img" src="assets/images/onboard-blog.jpg" alt="Onboard blog featured articles grid" loading="lazy" decoding="async">
+          <span class="work-card-pill st-pill">Article</span>
+          <span class="st-tile-title">Onboard Blog</span>
+          <span class="st-tile-desc">The Onboard blog, launched from scratch: product updates, finance tips and behind-the-scenes.</span>
+          <span class="st-tile-more">Read more &rarr;</span>
+        </a></li>
+        <li data-cat="articles"><a class="st-tile" href="#the-graph-articles">
+          <img class="st-tile-img" src="assets/images/the-graph.jpg" alt="Medium articles by Ifeoluwa on The Graph" loading="lazy" decoding="async">
+          <span class="work-card-pill st-pill">Article</span>
+          <span class="st-tile-title">The Graph Articles</span>
+          <span class="st-tile-desc">Articles and threads that make The Graph and data indexing easy to understand.</span>
+          <span class="st-tile-more">Read more &rarr;</span>
+        </a></li>
+        <li data-cat="articles"><a class="st-tile" href="#polygon-in-africa-2022-h2">
+          <img class="st-tile-img" src="assets/images/putting-africa-on-the-web3-map.jpg" alt="Polygon: Putting Africa on the Web3 Map" loading="lazy" decoding="async">
+          <span class="work-card-pill st-pill">Article</span>
+          <span class="st-tile-title">Polygon in Africa 2022 H2</span>
+          <span class="st-tile-desc">A deep dive into Polygon&#x27;s expansion across Africa in the second half of 2022.</span>
+          <span class="st-tile-more">Read more &rarr;</span>
+        </a></li>
+        <li data-cat="others"><a class="st-tile" href="#onchain-products-from-africa">
+          <img class="st-tile-img" src="assets/images/onchain-products-from-africa.jpg" alt="Onchain Products From Africa series cover: FBI x Base" loading="lazy" decoding="async">
+          <span class="work-card-pill st-pill">Series</span>
+          <span class="st-tile-title">Onchain Products From Africa</span>
+          <span class="st-tile-desc">A series spotlighting 20+ African-built onchain products on Base.</span>
+          <span class="st-tile-more">Read more &rarr;</span>
+        </a></li>
+        <li data-cat="others"><a class="st-tile" href="#with-love-onboard">
+          <img class="st-tile-img" src="assets/images/with-love-onboard.jpg" alt="With Love, Onboard campaign visual" loading="lazy" decoding="async">
+          <span class="work-card-pill st-pill">Campaign</span>
+          <span class="st-tile-title">With Love, Onboard</span>
+          <span class="st-tile-desc">A month-long Valentine&#x27;s campaign showcasing new features across every channel.</span>
+          <span class="st-tile-more">Read more &rarr;</span>
+        </a></li>
+        <li data-cat="others"><a class="st-tile" href="#2025-h2-onboard-recap">
+          <img class="st-tile-img" src="assets/images/onboard-h2-2025-recap-thumb-wide.jpg" alt="Onboard 2025 H2 recap video cover" loading="lazy" decoding="async">
+          <span class="work-card-pill st-pill">Video</span>
+          <span class="st-tile-title">2025 H2 Onboard Recap</span>
+          <span class="st-tile-desc">A video recap of Onboard&#x27;s H2 2025, including the Onboard 3.0 launch.</span>
+          <span class="st-tile-more">Read more &rarr;</span>
+        </a></li>
+        <li data-cat="others"><a class="st-tile" href="#2024-onboard-recap">
+          <img class="st-tile-img" src="assets/images/onboard-2024-recap-thumb-wide.jpg" alt="Onboard in 2024 recap video cover" loading="lazy" decoding="async">
+          <span class="work-card-pill st-pill">Video</span>
+          <span class="st-tile-title">2024 Onboard Recap</span>
+          <span class="st-tile-desc">&#x27;Onboard Wrapped 2024&#x27;, a video recap of the year&#x27;s launches and growth.</span>
+          <span class="st-tile-more">Read more &rarr;</span>
+        </a></li>
+      </ul>
     </div>
   </section>
 
-  <div class="work-detail">
+  <!-- STORY DETAIL SECTIONS: same order as the gallery. Image sides and
+       backgrounds alternate. A button with data-link-tbc="true" is waiting for its link. -->
+  <div class="st-stories">
 
-    <article class="work-slide work-slide--pale">
-      <div class="section-inner work-slide-inner">
-        <h2 class="section-heading work-slide-title">Onboard Blog</h2>
-        <div class="work-slide-grid">
-          <div class="img-placeholder work-slide-media" data-label="Onboard Blog visual"></div>
-          <div class="story-slide-copy">
-            <p>Launched the Onboard blog and write articles on everything businesses and people need to know about moving money globally. Topics range from product updates to practical financial tips and real talk that makes cross-border money easy.</p>
-            <a href="https://onboard.xyz/blog" target="_blank" rel="noopener noreferrer" class="btn btn-pill btn-pill-solid">Onboard Blog</a>
+    <article data-cat="decks" class="st-story st-story--pale" id="sales-deck" tabindex="-1" aria-labelledby="sales-deck-title">
+      <div class="section-inner st-story-inner">
+        <img class="st-story-media" src="assets/images/onboard-b2b-sales-deck.jpg" alt="Onboard Business sales deck cover slide" loading="lazy" decoding="async">
+        <div class="st-story-copy">
+          <span class="work-card-pill st-pill">Deck</span>
+          <h2 class="st-story-title" id="sales-deck-title">Onboard Business Sales Deck</h2>
+          <p class="st-story-desc">Led creative direction and content for the sales deck behind Onboard Business, built for sales calls and shared with leads. It positions Onboard as regulated, proven infrastructure and walks through three offerings: the Business App, the API and the OTC Desk.</p>
+          
+          <div class="st-story-actions">
+            <a class="st-cta" href="https://docs.google.com/presentation/d/10-vNVp2P1NH5qhmmNdj6VJHJzla4WR2lsY1DGicNGfE/edit?usp=sharing" target="_blank" rel="noopener noreferrer">View the deck <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
           </div>
         </div>
       </div>
     </article>
 
-    <article class="work-slide work-slide--periwinkle">
-      <div class="section-inner work-slide-inner">
-        <h2 class="section-heading work-slide-title">Onchain Products From Africa</h2>
-        <div class="work-slide-grid">
-          <div class="img-placeholder work-slide-media" data-label="Onchain Products From Africa series visual"></div>
-          <div class="story-slide-copy">
-            <p>Launched a series showcasing onchain products, especially those built on Base. Led the team to highlight use cases, features, founders and competitive edges. Showcased about 20 African products overall.</p>
-            <a href="https://x.com/wearefbia/status/1929892979226902814?s=20" target="_blank" rel="noopener noreferrer" class="btn btn-pill btn-pill-solid">View Product Highlights</a>
+    <article data-cat="decks" class="st-story st-story--periwinkle st-story--reverse" id="q1-2026-product-report" tabindex="-1" aria-labelledby="q1-2026-product-report-title">
+      <div class="section-inner st-story-inner">
+        <img class="st-story-media" src="assets/images/q1-2026-product-report.jpg" alt="Onboard Q1 2026 Product Report cover slide" loading="lazy" decoding="async">
+        <div class="st-story-copy">
+          <span class="work-card-pill st-pill">Deck</span>
+          <h2 class="st-story-title" id="q1-2026-product-report-title">Q1 2026 Product Report</h2>
+          <p class="st-story-desc">Led creative direction and design of Onboard&#x27;s Q1 2026 product report, collating product features, community activities, awards, campaigns we orchestrated and user testimonials into one narrative, closing with the Q2 roadmap.</p>
+          <a class="st-inline-link" href="https://onboard.xyz/blog" target="_blank" rel="noopener noreferrer">Read more on our blog</a>
+          <div class="st-story-actions">
+            <a class="st-cta" href="https://docs.google.com/presentation/d/18Pwss15VEYGLOxfxclDrfwADIDzk4BbKSdf10FmhipY/edit?usp=sharing" target="_blank" rel="noopener noreferrer">View the presentation <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
           </div>
         </div>
       </div>
     </article>
 
-    <article class="work-slide work-slide--pale">
-      <div class="section-inner work-slide-inner">
-        <h2 class="section-heading work-slide-title">2025 H2 Onboard Recap</h2>
-        <div class="work-slide-grid">
-          <div class="img-placeholder work-slide-media" data-label="2025 H2 Onboard Recap video thumbnail"></div>
-          <div class="story-slide-copy">
-            <p>Co-created a video showcasing Onboard's product progress in H2 2025, featuring the launch of Onboard 3.0 which consolidated USD Global Accounts, Cards, and stablecoins. Highlighted features launched across 6 months: free virtual card for Apple/Google Pay, dedicated Naira account, Solana support, and more.</p>
-            <a href="https://x.com/_WillOG/status/2016103794707238989?s=20" target="_blank" rel="noopener noreferrer" class="btn btn-pill btn-pill-solid">Watch Onboard Recap</a>
+    <article data-cat="decks" class="st-story st-story--pale" id="q3-2026-product-report" tabindex="-1" aria-labelledby="q3-2026-product-report-title">
+      <div class="section-inner st-story-inner">
+        <img class="st-story-media" src="assets/images/q3-2026-product-report.webp" alt="Onboard Q3 2026 Product Report cover slide" loading="lazy" decoding="async">
+        <div class="st-story-copy">
+          <span class="work-card-pill st-pill">Deck</span>
+          <h2 class="st-story-title" id="q3-2026-product-report-title">Q3 2026 Product Report</h2>
+          <p class="st-story-desc">Designed the Q3 2026 product report deck, rounding up the quarter&#x27;s product updates and launches for Onboard&#x27;s community and partners.</p>
+          
+          <div class="st-story-actions">
+            <span class="st-cta st-cta--disabled" data-link-tbc="true" aria-disabled="true">View the deck <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></span><span class="st-tbc-note">Link coming soon</span>
           </div>
         </div>
       </div>
     </article>
 
-    <article class="work-slide work-slide--periwinkle">
-      <div class="section-inner work-slide-inner">
-        <h2 class="section-heading work-slide-title">The Graph</h2>
-        <div class="work-slide-grid">
-          <div class="img-placeholder work-slide-media" data-label="The Graph content visual"></div>
-          <div class="story-slide-copy">
-            <p>Wrote various educative articles and threads to inform builders on the use case of The Graph, stating the importance of indexing their data whilst building products.</p>
-            <a href="https://medium.com/@ifeoluwawill/the-graph-vs-traditional-databases-revolutionizing-data-indexing-for-blockchain-05a0c7a636d2" target="_blank" rel="noopener noreferrer" class="btn btn-pill btn-pill-solid">Read Articles</a>
+    <article data-cat="articles" class="st-story st-story--periwinkle st-story--reverse" id="onboard-blog" tabindex="-1" aria-labelledby="onboard-blog-title">
+      <div class="section-inner st-story-inner">
+        <img class="st-story-media" src="assets/images/onboard-blog.jpg" alt="Onboard blog featured articles grid" loading="lazy" decoding="async">
+        <div class="st-story-copy">
+          <span class="work-card-pill st-pill">Article</span>
+          <h2 class="st-story-title" id="onboard-blog-title">Onboard Blog</h2>
+          <p class="st-story-desc">Launched the Onboard blog from scratch, covering product updates, practical finance tips and behind-the-scenes looks at what we are building. From monthly recaps to feature explainers, it gives users and businesses one place to understand Onboard.</p>
+          
+          <div class="st-story-actions">
+            <a class="st-cta" href="https://onboard.xyz/blog" target="_blank" rel="noopener noreferrer">Read the blog <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
           </div>
         </div>
       </div>
     </article>
 
-    <article class="work-slide work-slide--pale">
-      <div class="section-inner work-slide-inner">
-        <h2 class="section-heading work-slide-title">With Love, Onboard</h2>
-        <div class="work-slide-grid">
-          <div class="img-placeholder work-slide-media" data-label="With Love, Onboard campaign visual"></div>
-          <div class="story-slide-copy">
-            <p>Launched a month-long product marketing campaign across email, push notifications, socials and in-app messaging tied to Valentine's season. Wrote a recap that highlighted features we launched in February.</p>
-            <a href="https://x.com/_WillOG/status/2029953412087881817?s=20" target="_blank" rel="noopener noreferrer" class="btn btn-pill btn-pill-solid">Read Recap</a>
+    <article data-cat="articles" class="st-story st-story--pale" id="the-graph-articles" tabindex="-1" aria-labelledby="the-graph-articles-title">
+      <div class="section-inner st-story-inner">
+        <img class="st-story-media" src="assets/images/the-graph.jpg" alt="Medium articles by Ifeoluwa on The Graph" loading="lazy" decoding="async">
+        <div class="st-story-copy">
+          <span class="work-card-pill st-pill">Article</span>
+          <h2 class="st-story-title" id="the-graph-articles-title">The Graph Articles</h2>
+          <p class="st-story-desc">Educational articles and threads explaining what The Graph does and why indexing data matters when building projects and products. Written to make a technical protocol easy to understand for developers and non-technical readers alike.</p>
+          
+          <div class="st-story-actions">
+            <a class="st-cta" href="https://medium.com/@ifeoluwawill/the-graph-vs-traditional-databases-revolutionizing-data-indexing-for-blockchain-05a0c7a636d2" target="_blank" rel="noopener noreferrer">Read the articles <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
           </div>
         </div>
       </div>
     </article>
 
-    <article class="work-slide work-slide--periwinkle">
-      <div class="section-inner work-slide-inner">
-        <h2 class="section-heading work-slide-title">2024 Onboard Recap</h2>
-        <div class="work-slide-grid">
-          <div class="img-placeholder work-slide-media" data-label="2024 Onboard Recap video thumbnail"></div>
-          <div class="story-slide-copy">
-            <p>Co-created 'Onboard Wrapped 2024' video showcasing initiatives, product growth, and the launch of a new community of builders and creators across 30 city clubs, powered by Onboard. Also highlighted product updates including Onboard Pay and Haven.</p>
-            <a href="https://x.com/YeleBademosi/status/1878771848441467203?s=20" target="_blank" rel="noopener noreferrer" class="btn btn-pill btn-pill-solid">Watch Onboard Recap</a>
+    <article data-cat="articles" class="st-story st-story--periwinkle st-story--reverse" id="polygon-in-africa-2022-h2" tabindex="-1" aria-labelledby="polygon-in-africa-2022-h2-title">
+      <div class="section-inner st-story-inner">
+        <img class="st-story-media" src="assets/images/putting-africa-on-the-web3-map.jpg" alt="Polygon: Putting Africa on the Web3 Map" loading="lazy" decoding="async">
+        <div class="st-story-copy">
+          <span class="work-card-pill st-pill">Article</span>
+          <h2 class="st-story-title" id="polygon-in-africa-2022-h2-title">Polygon in Africa 2022 H2</h2>
+          <p class="st-story-desc">Wrote a comprehensive article showcasing Polygon&#x27;s expansion in Africa. Highlighted sponsorships of events, hackathons and bootcamps that provided valuable resources, support and funds to developers and builders across the continent.</p>
+          
+          <div class="st-story-actions">
+            <a class="st-cta" href="https://medium.com/@ifeoluwawill/polygons-web3-footprints-in-africa-recap-of-the-second-half-of-2022-1fcf4e127c6b" target="_blank" rel="noopener noreferrer">Read the article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
           </div>
         </div>
       </div>
     </article>
 
-    <article class="work-slide work-slide--pale">
-      <div class="section-inner work-slide-inner">
-        <h2 class="section-heading work-slide-title">2022 H2 Polygon in Africa Recap</h2>
-        <div class="work-slide-grid">
-          <div class="img-placeholder work-slide-media" data-label="2022 H2 Polygon in Africa Recap article visual"></div>
-          <div class="story-slide-copy">
-            <p>Wrote a comprehensive article showcasing Polygon's expansion in Africa. Highlighted sponsorships of events, hackathons and bootcamps that provided valuable resources, support and funds to developers and builders across the continent.</p>
-            <a href="https://medium.com/@ifeoluwawill/polygons-web3-footprints-in-africa-recap-of-the-second-half-of-2022-1fcf4e127c6b" target="_blank" rel="noopener noreferrer" class="btn btn-pill btn-pill-solid">Read Recap</a>
+    <article data-cat="others" class="st-story st-story--pale" id="onchain-products-from-africa" tabindex="-1" aria-labelledby="onchain-products-from-africa-title">
+      <div class="section-inner st-story-inner">
+        <img class="st-story-media" src="assets/images/onchain-products-from-africa.jpg" alt="Onchain Products From Africa series cover: FBI x Base" loading="lazy" decoding="async">
+        <div class="st-story-copy">
+          <span class="work-card-pill st-pill">Series</span>
+          <h2 class="st-story-title" id="onchain-products-from-africa-title">Onchain Products From Africa</h2>
+          <p class="st-story-desc">A series I started to showcase onchain products built on Base, highlighting use cases, features, founders and competitive edge. I led creative direction and the team behind it, featuring 20+ African-built products.</p>
+          
+          <div class="st-story-actions">
+            <a class="st-cta" href="https://x.com/wearefbia/status/1929892979226902814?s=20" target="_blank" rel="noopener noreferrer">Read the series <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article data-cat="others" class="st-story st-story--periwinkle st-story--reverse" id="with-love-onboard" tabindex="-1" aria-labelledby="with-love-onboard-title">
+      <div class="section-inner st-story-inner">
+        <img class="st-story-media" src="assets/images/with-love-onboard.jpg" alt="With Love, Onboard campaign visual" loading="lazy" decoding="async">
+        <div class="st-story-copy">
+          <span class="work-card-pill st-pill">Campaign</span>
+          <h2 class="st-story-title" id="with-love-onboard-title">With Love, Onboard</h2>
+          <p class="st-story-desc">A month-long, multi-channel product education campaign tied to Valentine&#x27;s season, running across email, push, in-app and social. It showcased new features through emotionally resonant storytelling, with a thread recap pulling the features and the campaign together.</p>
+          
+          <div class="st-story-actions">
+            <a class="st-cta" href="https://x.com/_WillOG/status/2029953412087881817?s=20" target="_blank" rel="noopener noreferrer">Read the recap <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article data-cat="others" class="st-story st-story--pale" id="2025-h2-onboard-recap" tabindex="-1" aria-labelledby="2025-h2-onboard-recap-title">
+      <div class="section-inner st-story-inner">
+        <img class="st-story-media" src="assets/images/onboard-h2-2025-recap-thumb-wide.jpg" alt="Onboard 2025 H2 recap video cover" loading="lazy" decoding="async">
+        <div class="st-story-copy">
+          <span class="work-card-pill st-pill">Video</span>
+          <h2 class="st-story-title" id="2025-h2-onboard-recap-title">2025 H2 Onboard Recap</h2>
+          <p class="st-story-desc">Co-created a video showing Onboard&#x27;s product progress in the second half of 2025, including the Onboard 3.0 launch that brought USD Global Accounts, cards and stablecoins into one app. Highlights include the free virtual card with Apple and Google Pay, the Naira account and improved UI/UX.</p>
+          
+          <div class="st-story-actions">
+            <a class="st-cta" href="https://x.com/_WillOG/status/2016103794707238989?s=20" target="_blank" rel="noopener noreferrer">Watch the video <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article data-cat="others" class="st-story st-story--periwinkle st-story--reverse" id="2024-onboard-recap" tabindex="-1" aria-labelledby="2024-onboard-recap-title">
+      <div class="section-inner st-story-inner">
+        <img class="st-story-media" src="assets/images/onboard-2024-recap-thumb-wide.jpg" alt="Onboard in 2024 recap video cover" loading="lazy" decoding="async">
+        <div class="st-story-copy">
+          <span class="work-card-pill st-pill">Video</span>
+          <h2 class="st-story-title" id="2024-onboard-recap-title">2024 Onboard Recap</h2>
+          <p class="st-story-desc">Co-created &#x27;Onboard Wrapped 2024&#x27;, a video recap of the year&#x27;s initiatives and product growth, from the launch of Onboard Pay and Haven to the rollout of 30 city clubs.</p>
+          
+          <div class="st-story-actions">
+            <a class="st-cta" href="https://x.com/YeleBademosi/status/1878771848441467203?s=20" target="_blank" rel="noopener noreferrer">Watch the video <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
           </div>
         </div>
       </div>
@@ -140,6 +288,16 @@
 
   </div>
 
+  <!-- VIDEO MODAL -->
+  <div class="video-modal" id="video-modal" aria-hidden="true">
+    <div class="video-modal-backdrop" data-modal-close></div>
+    <div class="video-modal-panel" role="dialog" aria-modal="true" aria-label="Video player">
+      <button type="button" class="video-modal-close" data-modal-close aria-label="Close">&times;</button>
+      <video class="video-modal-player" controls playsinline preload="none"></video>
+      <div class="video-modal-play-icon" aria-hidden="true"></div>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <div class="contact-bar">
     <p>&copy; 2026 Ìfẹ́olúwa Táíwò</p>
@@ -148,6 +306,7 @@
 
 </main>
 
-<script src="js/script.js?v=16"></script>
+<script src="js/script.js?v=104"></script>
+<script src="js/storytelling.js?v=1"></script>
 </body>
 </html>

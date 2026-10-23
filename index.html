@@ -2,12 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-reveal');</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ifeoluwa Taiwo — Marketing Strategist</title>
 <meta name="description" content="Ifeoluwa Taiwo is a Product Marketer building at the intersection of product, branding, and growth marketing.">
-<link rel="stylesheet" href="css/style.css?v=26">
+<link rel="stylesheet" href="css/style.css?v=264">
 </head>
 <body data-page="home">
+
+<div class="page-transition" aria-hidden="true">
+  <div class="transition-card transition-card--accent"></div>
+  <div class="transition-card transition-card--cover">
+    <span class="loader-title"></span>
+  </div>
+</div>
 
 <header class="site-header" id="site-header">
   <div class="header-inner">
@@ -15,12 +23,11 @@
 
     <div class="nav-wrap" id="nav-wrap">
       <nav class="main-nav" id="main-nav">
-        <a href="index.html" class="nav-link" data-page="home">/home</a>
-        <a href="work.html" class="nav-link" data-page="work">/work</a>
-        <a href="events.html" class="nav-link" data-page="events">/events</a>
-        <a href="storytelling.html" class="nav-link" data-page="storytelling">/storytelling</a>
-        <a href="side-quests.html" class="nav-link" data-page="side-quests">/side-quests</a>
-        <a href="contact.html" class="nav-link" data-page="contact">/contact</a>
+        <a href="work.html" class="nav-link" data-page="work">Work</a>
+        <a href="events.html" class="nav-link" data-page="events">Events</a>
+        <a href="storytelling.html" class="nav-link" data-page="storytelling">Storytelling</a>
+        <a href="side-quests.html" class="nav-link" data-page="side-quests">Side-Quests</a>
+        <a href="contact.html" class="nav-link" data-page="contact">Contact</a>
       </nav>
     </div>
 
@@ -32,18 +39,79 @@
 
   <!-- HERO -->
   <section class="hero" id="top">
-    <div class="hero-blob blob-1" aria-hidden="true"></div>
-    <div class="hero-blob blob-2" aria-hidden="true"></div>
-
     <div class="hero-inner">
       <div class="hero-heading">
         <p class="hero-kicker">hi, i'm</p>
-        <h1 class="hero-name">Ifeoluwa</h1>
+        <!-- First/last/o/l letters wrapped so script.js (alignHeroSideElements)
+             can measure their exact rendered position and line the
+             highlight card up with the "I", the left-stack up with
+             the "a", and the photo's head up with the midpoint
+             between "O" and "L", however wide the wordmark renders
+             at any given viewport/font size. -->
+        <h1 class="hero-name"><span class="hero-name-first">I</span>fe<span class="hero-name-o">o</span><span class="hero-name-l">l</span>uw<span class="hero-name-last">a</span></h1>
       </div>
 
+      <!-- Photo. In DOM flow here (not absolutely positioned) so it
+           lands right after the name on mobile, where growxy's own
+           hero puts its photo first, before the copy/CTA/card that
+           follows it. Desktop is unaffected: .hero-left-stack and
+           .hero-highlight-card are position:absolute there regardless
+           of where they sit in the DOM. A real headshot cutout now,
+           not the 3D illustration (kept at hero-portrait.png for
+           reuse on the Side Quests page) — background removed,
+           cropped chest-up. -->
       <div class="hero-row">
         <div class="hero-photo">
-          <img src="assets/images/headshot.png" alt="Portrait of Ifeoluwa Taiwo" width="1377" height="1077" data-cutout>
+          <img src="assets/images/hero-headshot.png" alt="Portrait of Ifeoluwa Taiwo" width="1000" height="950" class="hero-photo-img">
+        </div>
+      </div>
+
+      <!-- One-liner + companies worked at + CTA, left side. -->
+      <div class="hero-left-stack">
+        <div class="hero-oneliner-card">
+          <p class="hero-oneliner">I market products and tell brand stories to drive growth.</p>
+        </div>
+
+        <div class="hero-worked-at">
+          <p class="hero-worked-at-label">Some of the places I've done this</p>
+          <div class="hero-worked-at-logos">
+            <span class="hero-worked-at-logo"><img src="assets/images/logos/onboard.jpg" alt="Onboard"></span>
+            <span class="hero-worked-at-logo"><img src="assets/images/logos/fbi-africa.jpg" alt="FBI Africa"></span>
+            <span class="hero-worked-at-logo"><img src="assets/images/logos/the-graph.jpg" alt="The Graph"></span>
+            <span class="hero-worked-at-logo"><img src="assets/images/logos/blockchain-com.jpg" alt="Blockchain.com"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- A single fixed-size card that cycles through image+caption
+           pairs — an original recreation of the rotating highlight
+           card on growxy.framer.website's landing page (same card
+           split evenly between a photo half and a text half),
+           positioned lower than the name, on the right. -->
+      <div class="hero-highlight-card" id="hero-highlight-card">
+        <div class="hero-highlight-slide is-active">
+          <img src="assets/images/scroll-cards/marketing-adoption.jpg" alt="">
+          <p>Marketing that turns features into adoption</p>
+        </div>
+        <div class="hero-highlight-slide">
+          <img src="assets/images/scroll-cards/content-growth.jpg" alt="">
+          <p>Content that drives curiosity and action</p>
+        </div>
+        <div class="hero-highlight-slide">
+          <img src="assets/images/scroll-cards/product-branding-trust.jpg" alt="">
+          <p>Product branding built on trust and taste</p>
+        </div>
+        <div class="hero-highlight-slide">
+          <img src="assets/images/scroll-cards/partnerships.jpg" alt="">
+          <p>Partnerships that align on shared goals</p>
+        </div>
+        <div class="hero-highlight-slide">
+          <img src="assets/images/scroll-cards/programs-growth.jpg" alt="">
+          <p>Campaigns that grow people and products</p>
+        </div>
+        <div class="hero-highlight-slide">
+          <img src="assets/images/scroll-cards/events-connection.jpg" alt="">
+          <p>Events built for connection and real feedback</p>
         </div>
       </div>
     </div>
@@ -53,67 +121,115 @@
   <section class="who-i-am" id="who-i-am">
     <div class="section-inner who-i-am-inner">
 
-      <p class="who-i-am-tag">Ifeoluwa <strong>Taiwo</strong></p>
-
-      <div class="who-i-am-grid">
-        <div class="who-i-am-portrait">
-          <h2 class="section-heading who-i-am-heading">Who I Am</h2>
-          <img src="assets/images/illustration.png" alt="Illustrated portrait of Ifeoluwa Taiwo" width="1283" height="1193" data-cutout>
-        </div>
-
-        <div class="who-i-am-copy">
-          <p>I am a marketer building at the intersection of product, branding, and growth marketing. I build strategies that move people from awareness to action across B2B and B2C.</p>
-
-          <p>I am passionate about brand storytelling and build and execute strategies that move people from awareness to action, driving product adoption, growing communities, and improving retention through running events, creative marketing campaigns and real-world experiences.</p>
-        </div>
+      <div class="who-i-am-top">
+        <h2 class="who-i-am-tag who-i-am-heading">Ifeoluwa <strong>Taiwo</strong></h2>
       </div>
 
-    </div>
-  </section>
+      <!-- A plain static row — no scroll interaction of any kind.
+           Text (+ button) on the left; an orbiting tool-logo ring on
+           the right (vanilla port of a Framer "Team Section"
+           component — see the .tools-orbit comment further down for
+           details on the swap). -->
+      <div class="who-i-am-pin" data-reveal-pin>
+        <div class="who-i-am-row">
+          <!-- Vanilla port of a Framer "Text Reveal Scroll" component
+               (see initTextRevealScroll in script.js): each paragraph's
+               words start dim and light up one by one as the section
+               scrolls through view. Purely opacity-driven, no other
+               property touched, matching the source exactly. -->
+          <div class="who-i-am-copy">
+            <p data-text-reveal>Across B2C and B2B, my focus has always been products, brand storytelling and growth.</p>
+            <p data-text-reveal>My approach is simple: understand what people actually need, then build the strategy, story and experience that gets them there.</p>
+            <p data-text-reveal>Whether that's a product launch, a rebrand or a campaign, I care about outcomes that are felt and equally measured, driven towards the goals of the business.</p>
+            <a href="work.html" class="btn btn-pill btn-pill-solid who-i-am-btn">View My Work</a>
+          </div>
 
-  <!-- WHAT I DO -->
-  <section class="what-i-do" id="what-i-do">
-    <div class="section-inner">
-      <h2 class="section-heading">What I Do</h2>
+          <!-- Vanilla port of a Framer "Team Section" component — a
+               circular arrangement of avatars in 3 concentric rings,
+               continuously orbiting (alternating clockwise/counter-
+               clockwise per ring), each avatar counter-rotated so it
+               stays upright while it revolves, pulsing halo behind it,
+               name label fading in on hover, hovering any avatar pauses
+               the whole thing. Same mechanics as the source, people
+               swapped for the tools I actually use (logos in
+               assets/images/tools/). See
+               initToolsOrbit in script.js. -->
+          <div class="tools-orbit" id="tools-orbit">
+            <div class="tools-orbit-center" aria-hidden="true"></div>
 
-      <div class="skills-grid">
-        <button type="button" class="skill" data-skill-title="Product Marketing" data-skill-detail="Positioning products, running go-to-market strategies, driving retention, and iterating based on real user insights alongside running marketing automations and customer lifecycle management.">
-          <h3>Product Marketing</h3>
-          <span class="skill-plus" aria-hidden="true">+</span>
-        </button>
-        <button type="button" class="skill" data-skill-title="Brand Storytelling" data-skill-detail="Documenting and curating product growth, brand experiences, and user stories through writing and video to engage audiences emotionally and drive narrative.">
-          <h3>Brand Storytelling</h3>
-          <span class="skill-plus" aria-hidden="true">+</span>
-        </button>
-        <button type="button" class="skill" data-skill-title="Event Strategy &amp; Execution" data-skill-detail="Designing, marketing and running physical and virtual events that create real impact and drive business outcomes.">
-          <h3>Event Strategy &amp; Execution</h3>
-          <span class="skill-plus" aria-hidden="true">+</span>
-        </button>
-        <button type="button" class="skill" data-skill-title="Creative Direction" data-skill-detail="Leading visual and brand direction across campaigns, events, and product launches to craft narratives that connect with users emotionally and communicate product value clearly.">
-          <h3>Creative Direction</h3>
-          <span class="skill-plus" aria-hidden="true">+</span>
-        </button>
-        <button type="button" class="skill" data-skill-title="Sales &amp; Partnerships" data-skill-detail="Leading partnership development and sales conversations that unlock revenue, growth, and strategic value for the business.">
-          <h3>Sales &amp; Partnerships</h3>
-          <span class="skill-plus" aria-hidden="true">+</span>
-        </button>
-        <button type="button" class="skill" data-skill-title="User Research &amp; Discovery" data-skill-detail="Conducting user research to discover what people actually need. Translating findings into actionable insights that shape product strategy and ensure decisions are grounded in real user behaviour and feedback.">
-          <h3>User Research &amp; Discovery</h3>
-          <span class="skill-plus" aria-hidden="true">+</span>
-        </button>
+            <div class="tools-orbit-ring tools-orbit-ring--1">
+              <div class="tools-orbit-item" style="--angle: 0deg">
+                <div class="tools-orbit-avatar">
+                  <div class="tools-orbit-visual"><span class="tools-orbit-chip tools-orbit-chip--logo"><img src="assets/images/tools/canva.svg" alt="" width="26" height="26" loading="lazy"></span></div>
+                  <span class="tools-orbit-label">Canva</span>
+                </div>
+              </div>
+              <div class="tools-orbit-item" style="--angle: 90deg">
+                <div class="tools-orbit-avatar">
+                  <div class="tools-orbit-visual"><span class="tools-orbit-chip tools-orbit-chip--logo"><img src="assets/images/tools/meta-ads.svg" alt="" width="26" height="26" loading="lazy"></span></div>
+                  <span class="tools-orbit-label">Meta Ads</span>
+                </div>
+              </div>
+              <div class="tools-orbit-item" style="--angle: 180deg">
+                <div class="tools-orbit-avatar">
+                  <div class="tools-orbit-visual"><span class="tools-orbit-chip tools-orbit-chip--logo"><img src="assets/images/tools/ga4.svg" alt="" width="26" height="26" loading="lazy"></span></div>
+                  <span class="tools-orbit-label">GA4</span>
+                </div>
+              </div>
+              <div class="tools-orbit-item" style="--angle: 270deg">
+                <div class="tools-orbit-avatar">
+                  <div class="tools-orbit-visual"><span class="tools-orbit-chip tools-orbit-chip--logo"><img src="assets/images/tools/notion.svg" alt="" width="26" height="26" loading="lazy"></span></div>
+                  <span class="tools-orbit-label">Notion</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tools-orbit-ring tools-orbit-ring--2">
+              <div class="tools-orbit-item" style="--angle: 60deg">
+                <div class="tools-orbit-avatar">
+                  <div class="tools-orbit-visual"><span class="tools-orbit-chip tools-orbit-chip--logo"><img src="assets/images/tools/customer-io.svg" alt="" width="26" height="26" loading="lazy"></span></div>
+                  <span class="tools-orbit-label">Customer.io</span>
+                </div>
+              </div>
+              <div class="tools-orbit-item" style="--angle: 180deg">
+                <div class="tools-orbit-avatar">
+                  <div class="tools-orbit-visual"><span class="tools-orbit-chip tools-orbit-chip--logo"><img src="assets/images/tools/sendgrid.svg" alt="" width="26" height="26" loading="lazy"></span></div>
+                  <span class="tools-orbit-label">SendGrid</span>
+                </div>
+              </div>
+              <div class="tools-orbit-item" style="--angle: 300deg">
+                <div class="tools-orbit-avatar">
+                  <div class="tools-orbit-visual"><span class="tools-orbit-chip tools-orbit-chip--logo"><img src="assets/images/tools/firebase.svg" alt="" width="26" height="26" loading="lazy"></span></div>
+                  <span class="tools-orbit-label">Firebase</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tools-orbit-ring tools-orbit-ring--3">
+              <div class="tools-orbit-item" style="--angle: 0deg">
+                <div class="tools-orbit-avatar">
+                  <div class="tools-orbit-visual"><span class="tools-orbit-chip tools-orbit-chip--logo"><img src="assets/images/tools/attio.png" alt="" width="26" height="26" loading="lazy"></span></div>
+                  <span class="tools-orbit-label">Attio</span>
+                </div>
+              </div>
+              <div class="tools-orbit-item" style="--angle: 120deg">
+                <div class="tools-orbit-avatar">
+                  <div class="tools-orbit-visual"><span class="tools-orbit-chip tools-orbit-chip--logo"><img src="assets/images/tools/google-workspace.svg" alt="" width="26" height="26" loading="lazy"></span></div>
+                  <span class="tools-orbit-label">Google Workspace</span>
+                </div>
+              </div>
+              <div class="tools-orbit-item" style="--angle: 240deg">
+                <div class="tools-orbit-avatar">
+                  <div class="tools-orbit-visual"><span class="tools-orbit-chip tools-orbit-chip--logo"><img src="assets/images/tools/claude-code.svg" alt="" width="26" height="26" loading="lazy"></span></div>
+                  <span class="tools-orbit-label">Claude Code</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
-
-  <!-- SKILL DETAIL MODAL -->
-  <div class="skill-modal" id="skill-modal" aria-hidden="true">
-    <div class="skill-modal-backdrop" data-modal-close></div>
-    <div class="skill-modal-panel" role="dialog" aria-modal="true" aria-labelledby="skill-modal-title">
-      <button type="button" class="skill-modal-close" data-modal-close aria-label="Close">&times;</button>
-      <h3 id="skill-modal-title" class="skill-modal-title"></h3>
-      <p class="skill-modal-body"></p>
-    </div>
-  </div>
 
   <!-- I'VE WORKED AT -->
   <section class="experience" id="experience">
@@ -122,10 +238,10 @@
 
       <div class="experience-grid">
         <button type="button" class="exp-card"
-          data-exp-company="Onboard Global" data-exp-role="Product Marketing Manager" data-exp-date="2025 &ndash; Date" data-exp-logo="OG"
-          data-exp-detail="I started out as a Marketing Associate, taking ownership of building the community of users and also shuffling through different segments of the entire marketing function with keen interest in the product.||I later got into managing the product marketing end-to-end from GTM launches to driving feature adoption, product education, activation and user retention.">
+          data-exp-company="Onboard Global" data-exp-role="Product Marketing Manager" data-exp-date="2025 &ndash; Date"
+          data-exp-detail="I started as a Marketing Associate, rebuilding the community of users, before moving fully into managing product marketing end-to-end, from GTM launches to feature adoption and retention. I managed the Onboard Test Pilots, our community of product testers, 2 of whom have since secured other paid roles.||I led our brand repositioning as a global neobank offering USD / EUR / GBP accounts, rebranding our mobile store assets and website pages, resulting in a 412% increase in views with an 82% engagement rate in the first week of our consumer site refresh.||For Onboard Business, I led product, content and brand marketing across our launch into B2B payments, and we drove $20M+ in transaction volume within the first three months.">
           <div class="exp-head">
-            <div class="exp-logo" data-label="OG" aria-hidden="true"></div>
+            <div class="exp-logo" aria-hidden="true"><img src="assets/images/logos/onboard.jpg" alt=""></div>
             <div>
               <h3>Onboard Global</h3>
               <p class="exp-role">Product Marketing Manager</p>
@@ -136,13 +252,13 @@
         </button>
 
         <button type="button" class="exp-card"
-          data-exp-company="FBI Africa" data-exp-role="Founder's Office / Marketing Generalist" data-exp-date="2024 &ndash; 2025" data-exp-logo="FBI"
-          data-exp-detail="I led programs and campaigns to support Base adoption in Africa, for creators, builders and products.||I secured partnerships, led creative direction, marketing and operations, managed social media, launched product content series, and co-organised a Base Batch IRL event while also testing emerging products and providing hands-on support to builders and creators.">
+          data-exp-company="FBI Africa" data-exp-role="Marketing Generalist" data-exp-date="2024 &ndash; 2025"
+          data-exp-detail="I led programs and campaigns to support Base adoption in Africa, for creators, builders and products, securing partnerships and leading creative direction, marketing and operations.||I led the Onchain Design Sprint, resulting in 7+ designers securing paid roles across web3 products.||I co-organised the Stablecoin Sprint, generating 100k+ impressions and onboarding 100+ active users across 3 products. I also led the team behind &ldquo;Onchain Products From Africa,&rdquo; a product education series featuring 20+ African-built onchain products.">
           <div class="exp-head">
-            <div class="exp-logo" data-label="FBI" aria-hidden="true"></div>
+            <div class="exp-logo" aria-hidden="true"><img src="assets/images/logos/fbi-africa.jpg" alt=""></div>
             <div>
               <h3>FBI Africa</h3>
-              <p class="exp-role">Founder's Office / Marketing Generalist</p>
+              <p class="exp-role">Marketing Generalist</p>
               <p class="exp-date">2024 &ndash; 2025</p>
             </div>
           </div>
@@ -150,10 +266,10 @@
         </button>
 
         <button type="button" class="exp-card"
-          data-exp-company="The Graph" data-exp-role="Advocate" data-exp-date="2023 &ndash; 2024" data-exp-logo="TG"
-          data-exp-detail="I supported builders indexing their projects (virtually and in-person), led community discussions on expanding The Graph's presence in Africa, and spoke at events representing the protocol.||I also created educational content (articles, explainer graphics) to help developers understand the value of indexing for their products.">
+          data-exp-company="The Graph" data-exp-role="Advocate" data-exp-date="2023 &ndash; 2024"
+          data-exp-detail="I created educational content, including articles and explainer graphics, and supported builders indexing their projects, both virtually and in-person, to help developers understand and adopt indexing for their products.||I co-hosted The Graph's Africa birthday celebration in Lagos, drawing 120+ attendees and marking the official launch of The Graph Africa.||I also led community discussions on expanding The Graph's presence in Africa and spoke at events to provide further resources to the builder community.">
           <div class="exp-head">
-            <div class="exp-logo" data-label="TG" aria-hidden="true"></div>
+            <div class="exp-logo" aria-hidden="true"><img src="assets/images/logos/the-graph.jpg" alt=""></div>
             <div>
               <h3>The Graph</h3>
               <p class="exp-role">Advocate</p>
@@ -164,10 +280,10 @@
         </button>
 
         <button type="button" class="exp-card"
-          data-exp-company="Blockchain.com" data-exp-role="Community Moderator" data-exp-date="2022 &ndash; 2023" data-exp-logo="BC"
-          data-exp-detail="I managed community operations across Africa, creating content that drove engagement and brand presence.||I hosted bi-weekly sessions on product features and Web3 trends, prepared community growth reports, and built genuine relationships within the community.">
+          data-exp-company="Blockchain.com" data-exp-role="Community Moderator" data-exp-date="2022 &ndash; 2023"
+          data-exp-detail="At launch, our team pulled in 2,100+ members within 48 hours.||As part of the community moderation team, I helped manage operations across Africa, creating content that drove engagement and brand presence. I provided hands-on support to users, escalating product issues to the engineering and support teams as needed, and hosted bi-weekly sessions on product features and ongoing web3 trends.">
           <div class="exp-head">
-            <div class="exp-logo" data-label="BC" aria-hidden="true"></div>
+            <div class="exp-logo" aria-hidden="true"><img src="assets/images/logos/blockchain-com.jpg" alt=""></div>
             <div>
               <h3>Blockchain.com</h3>
               <p class="exp-role">Community Moderator</p>
@@ -205,79 +321,82 @@
         <a href="work.html" class="btn btn-pill btn-pill-light">View All Work</a>
       </div>
 
-      <div class="work-marquee marquee">
-        <div class="work-marquee-track marquee-track">
-          <a href="work.html" class="work-card">
-            <div class="img-placeholder" data-label="Onchain Design Sprint"></div>
-            <h3>Onchain Design Sprint</h3>
-            <p>Organised a 2-week design sprint in collaboration with Dacoit Design and other renowned brands to create opportunities for African designers to break into web3 brand and product design.</p>
-          </a>
-
-          <a href="work.html" class="work-card">
-            <div class="img-placeholder" data-label="Onboard Test Pilots"></div>
-            <h3>Onboard Test Pilots</h3>
-            <p>Created a community of product testers and built the feedback loop between users and the product team that improved product decisions and reduced bug complaints.</p>
-          </a>
-
-          <a href="work.html" class="work-card">
-            <div class="img-placeholder" data-label="Stablecoin Sprint"></div>
-            <h3>Stablecoin Sprint</h3>
-            <p>Co-organised and led creative direction for this sprint in partnership with Base West Africa, Uglycash, and cNGN to increase stablecoin education and adoption in Africa.</p>
-          </a>
-
-          <a href="work.html" class="work-card">
-            <div class="img-placeholder" data-label="Virtual USD Card"></div>
-            <h3>Virtual USD Card</h3>
-            <p>Owned community onboarding and co-led product marketing for the Flex card launch, and led education for the upgrade to a new card with better features and lower fees.</p>
-          </a>
-
-          <a href="work.html" class="work-card">
-            <div class="img-placeholder" data-label="Base Batch"></div>
-            <h3>Base Batch</h3>
-            <p>Organised numerous virtual events with invited guests to guide African builders participating in different tracks for Base Batch 001 and 002.</p>
-          </a>
-
-          <a href="work.html" class="work-card">
-            <div class="img-placeholder" data-label="EUR/GBP Global Accounts"></div>
+      <div class="work-grid">
+        <div class="work-grid-row">
+          <a href="project-eur-gbp-global-accounts.html" class="work-card">
+            <img class="img-placeholder" src="assets/images/eur-gbp-global-accounts.jpg?v=2" alt="EUR &amp; GBP accounts are here">
+            <span class="work-card-pill">GTM &amp; Product Launch</span>
             <h3>EUR/GBP Global Accounts</h3>
-            <p>Handled end-to-end product marketing for the launch of our EUR and GBP global accounts, from positioning through to activation.</p>
+            <p>Owned end-to-end product marketing for the launch of EUR and GBP accounts, from positioning through to...</p>
+            <div class="work-card-results">
+              <div class="work-card-stat"><strong>300+</strong><span>New accounts created in the first month</span></div>
+              <div class="work-card-stat"><strong>$117K+</strong><span>In deposits within the first month</span></div>
+            </div>
           </a>
 
-          <!-- duplicate set for a seamless loop -->
-          <a href="work.html" class="work-card" aria-hidden="true" tabindex="-1">
-            <div class="img-placeholder" data-label="Onchain Design Sprint"></div>
-            <h3>Onchain Design Sprint</h3>
-            <p>Organised a 2-week design sprint in collaboration with Dacoit Design and other renowned brands to create opportunities for African designers to break into web3 brand and product design.</p>
+          <a href="project-onboard-business-pivot.html" class="work-card">
+            <img class="img-placeholder" src="assets/images/onboard-b2b-pivot.jpg" alt="Onboard B2B: one account for all your global business payments">
+            <span class="work-card-pill">Market Entry &amp; Positioning</span>
+            <h3>Onboard Business Pivot</h3>
+            <p>Led product, content and brand marketing across our launch into B2B payments, driving $20M+ in transaction volume within...</p>
+            <div class="work-card-results">
+              <div class="work-card-stat"><strong>$20M+</strong><span>Transaction volume in 3 months</span></div>
+              <div class="work-card-stat"><strong>4</strong><span>Global products launched</span></div>
+            </div>
           </a>
+        </div>
 
-          <a href="work.html" class="work-card" aria-hidden="true" tabindex="-1">
-            <div class="img-placeholder" data-label="Onboard Test Pilots"></div>
-            <h3>Onboard Test Pilots</h3>
-            <p>Created a community of product testers and built the feedback loop between users and the product team that improved product decisions and reduced bug complaints.</p>
+        <div class="work-grid-row work-grid-row--landscape">
+          <a href="project-onchain-design-sprint.html" class="work-card work-card--landscape">
+            <img class="img-placeholder" src="assets/images/onchain-design-sprint-hero.webp" alt="Onchain Design Sprint: a 10-day internship programme, July 13 to 22, 2025">
+            <div class="work-card-body">
+              <span class="work-card-pill">Partnerships &amp; Talent Program</span>
+              <h3>Onchain Design Sprint</h3>
+              <p>Organised a 2-week design sprint in collaboration with Dacoit Design and other brands to create opportunities fo...</p>
+              <div class="work-card-results">
+                <div class="work-card-stat"><strong>7</strong><span>Designers secured paid roles</span></div>
+                <div class="work-card-stat"><strong>100+</strong><span>Designers trained by industry-leading mentors</span></div>
+              </div>
+            </div>
           </a>
+        </div>
 
-          <a href="work.html" class="work-card" aria-hidden="true" tabindex="-1">
-            <div class="img-placeholder" data-label="Stablecoin Sprint"></div>
+        <div class="work-grid-row work-grid-row--landscape work-grid-row--extra">
+          <a href="project-consumer-product-refresh.html" class="work-card work-card--landscape">
+            <img class="img-placeholder" src="assets/images/consumer-personal-page.webp" alt="Onboard consumer website homepage: Your Money, Minus the Worry">
+            <div class="work-card-body">
+              <span class="work-card-pill">Branding &amp; Content</span>
+              <h3>Consumer Product Refresh</h3>
+              <p>Repositioned Onboard as a stablecoin neobank for global professionals, leading creative direction across...</p>
+              <div class="work-card-results">
+                <div class="work-card-stat"><strong>412%</strong><span>Increase in website views in first week</span></div>
+                <div class="work-card-stat"><strong>82%</strong><span>Engagement rate increase in first week</span></div>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <div class="work-grid-row work-grid-row--extra">
+          <a href="project-stablecoin-sprint.html" class="work-card">
+            <img class="img-placeholder" src="assets/images/stablecoin-sprint.jpg?v=2" alt="Stablecoin Sprint featuring 10+ African products">
+            <span class="work-card-pill">Campaigns &amp; Activation</span>
             <h3>Stablecoin Sprint</h3>
-            <p>Co-organised and led creative direction for this sprint in partnership with Base West Africa, Uglycash, and cNGN to increase stablecoin education and adoption in Africa.</p>
+            <p>Co-organised and led creative direction. Powered by Base West Africa, cNGN and Uglycash, stablecoin education and adoption...</p>
+            <div class="work-card-results">
+              <div class="work-card-stat"><strong>121k+</strong><span>Total impressions on X</span></div>
+              <div class="work-card-stat"><strong>70+</strong><span>Active users onboarded across 3 products</span></div>
+            </div>
           </a>
 
-          <a href="work.html" class="work-card" aria-hidden="true" tabindex="-1">
-            <div class="img-placeholder" data-label="Virtual USD Card"></div>
-            <h3>Virtual USD Card</h3>
-            <p>Owned community onboarding and co-led product marketing for the Flex card launch, and led education for the upgrade to a new card with better features and lower fees.</p>
-          </a>
-
-          <a href="work.html" class="work-card" aria-hidden="true" tabindex="-1">
-            <div class="img-placeholder" data-label="Base Batch"></div>
-            <h3>Base Batch</h3>
-            <p>Organised numerous virtual events with invited guests to guide African builders participating in different tracks for Base Batch 001 and 002.</p>
-          </a>
-
-          <a href="work.html" class="work-card" aria-hidden="true" tabindex="-1">
-            <div class="img-placeholder" data-label="EUR/GBP Global Accounts"></div>
-            <h3>EUR/GBP Global Accounts</h3>
-            <p>Handled end-to-end product marketing for the launch of our EUR and GBP global accounts, from positioning through to activation.</p>
+          <a href="project-onboard-test-pilots.html" class="work-card">
+            <img class="img-placeholder" src="assets/images/onboard-test-pilots.jpg?v=2" alt="Onboard Test Pilots cover">
+            <span class="work-card-pill">Product Feedback &amp; Iteration</span>
+            <h3>Onboard Test Pilots</h3>
+            <p>Managed a community of product testers and built the feedback loop between users and the product and engineering teams, optimising...</p>
+            <div class="work-card-results">
+              <div class="work-card-stat"><strong>4</strong><span>Major product features tested and optimised</span></div>
+              <div class="work-card-stat"><strong>2</strong><span>Paid roles secured by Test Pilots</span></div>
+            </div>
           </a>
         </div>
       </div>
@@ -292,69 +411,79 @@
         <h2 class="section-heading">Events</h2>
         <a href="events.html" class="btn btn-pill btn-pill-solid">View All Events</a>
       </div>
+    </div>
 
-      <div class="events-grid">
-        <article class="event-card">
-          <div class="img-placeholder" data-label="Sip &amp; Ship With Onboard"></div>
-          <h3>Sip &amp; Ship With Onboard</h3>
-          <p>In collaboration with Dacoit Design, I ideated and executed a 3-week design sprint for Onchain Design Sprint to create opportunities for African designers to break into Web3 product design.</p>
-        </article>
-
-        <article class="event-card event-card--accent">
-          <div class="img-placeholder img-placeholder--accent" data-label="FBI Africa Meetup"></div>
-          <h3>FBI Africa Meetup</h3>
-          <p>Planned, marketed and organised the launch event of a collective of builders and creators on Base community in West Africa.</p>
-        </article>
-
-        <article class="event-card">
-          <div class="img-placeholder" data-label="The Graph Birthday Celebration"></div>
-          <h3>The Graph Birthday Celebration</h3>
-          <p>Co-organised the 3rd birthday celebration that happened in Lagos. Coordinated logistics for attendees, marketed the event, created content, and provided technical support.</p>
-        </article>
-      </div>
-
-      <!-- Mobile only: auto-scrolling, draggable version of the same cards -->
-      <div class="events-marquee marquee">
-        <div class="events-marquee-track marquee-track">
-          <a href="events.html" class="event-card">
-            <div class="img-placeholder" data-label="Sip &amp; Ship With Onboard"></div>
-            <h3>Sip &amp; Ship With Onboard</h3>
-            <p>In collaboration with Dacoit Design, I ideated and executed a 3-week design sprint for Onchain Design Sprint to create opportunities for African designers to break into Web3 product design.</p>
+    <!-- Sticky, scroll-driven full-bleed gallery — an original recreation
+         of Framer's "ImageScroller" component: scrolling through this
+         tall track advances which image/caption is pinned on screen,
+         cross-fading between them, with a thumbnail dock to jump
+         straight to any one (see initEventsScroller in script.js). -->
+    <div class="events-scroller" id="events-scroller">
+      <div class="events-scroller-sticky">
+        <div class="events-scroller-slide is-active" data-index="0">
+          <a href="events.html" class="events-scroller-slide-link">
+            <div class="events-scroller-media events-scroller-media--img">
+              <img class="events-scroller-photo" src="assets/images/event-sip-and-ship.webp" alt="Sip and Ship With Onboard poster, Lagos, 30th July 2025" loading="eager" decoding="async">
+            </div>
           </a>
-
-          <a href="events.html" class="event-card event-card--accent">
-            <div class="img-placeholder img-placeholder--accent" data-label="FBI Africa Meetup"></div>
-            <h3>FBI Africa Meetup</h3>
-            <p>Planned, marketed and organised the launch event of a collective of builders and creators on Base community in West Africa.</p>
+          <div class="events-scroller-caption"><h3>Sip &amp; Ship With Onboard</h3></div>
+        </div>
+        <div class="events-scroller-slide" data-index="1">
+          <a href="events.html" class="events-scroller-slide-link">
+            <div class="events-scroller-media events-scroller-media--img">
+              <img class="events-scroller-photo" src="assets/images/event-fbi-africa.webp" alt="FBI in Africa community launch and meetup poster" loading="lazy" decoding="async">
+            </div>
           </a>
-
-          <a href="events.html" class="event-card">
-            <div class="img-placeholder" data-label="The Graph Birthday Celebration"></div>
-            <h3>The Graph Birthday Celebration</h3>
-            <p>Co-organised the 3rd birthday celebration that happened in Lagos. Coordinated logistics for attendees, marketed the event, created content, and provided technical support.</p>
+          <div class="events-scroller-caption"><h3>FBI Africa Meetup</h3></div>
+        </div>
+        <div class="events-scroller-slide" data-index="2">
+          <a href="events.html" class="events-scroller-slide-link">
+            <div class="events-scroller-media events-scroller-media--img">
+              <img class="events-scroller-photo" src="assets/images/event-graph-birthday.webp" alt="The Graph Network 3-Year Birthday Celebration stage in Lagos" loading="lazy" decoding="async">
+            </div>
           </a>
-
-          <!-- duplicate set for a seamless loop -->
-          <a href="events.html" class="event-card" aria-hidden="true" tabindex="-1">
-            <div class="img-placeholder" data-label="Sip &amp; Ship With Onboard"></div>
-            <h3>Sip &amp; Ship With Onboard</h3>
-            <p>In collaboration with Dacoit Design, I ideated and executed a 3-week design sprint for Onchain Design Sprint to create opportunities for African designers to break into Web3 product design.</p>
+          <div class="events-scroller-caption"><h3>The Graph Birthday Celebration</h3></div>
+        </div>
+        <div class="events-scroller-slide" data-index="3">
+          <a href="events.html" class="events-scroller-slide-link">
+            <div class="events-scroller-media events-scroller-media--img">
+              <img class="events-scroller-photo" src="assets/images/graph-advocate/speaking.webp" alt="Speaking at a WeaveDB Campus Meetup" loading="lazy" decoding="async">
+            </div>
           </a>
-
-          <a href="events.html" class="event-card event-card--accent" aria-hidden="true" tabindex="-1">
-            <div class="img-placeholder img-placeholder--accent" data-label="FBI Africa Meetup"></div>
-            <h3>FBI Africa Meetup</h3>
-            <p>Planned, marketed and organised the launch event of a collective of builders and creators on Base community in West Africa.</p>
+          <div class="events-scroller-caption"><h3>The Graph Advocate</h3></div>
+        </div>
+        <div class="events-scroller-slide" data-index="4">
+          <a href="events.html" class="events-scroller-slide-link">
+            <div class="events-scroller-media events-scroller-media--img">
+              <img class="events-scroller-photo" src="assets/images/event-onchain-festival.webp" alt="Onchain Festival x Onboard Global: Creators Challenge Deep Dive poster" loading="lazy" decoding="async">
+            </div>
           </a>
+          <div class="events-scroller-caption"><h3>Onchain Festival</h3></div>
+        </div>
 
-          <a href="events.html" class="event-card" aria-hidden="true" tabindex="-1">
-            <div class="img-placeholder" data-label="The Graph Birthday Celebration"></div>
-            <h3>The Graph Birthday Celebration</h3>
-            <p>Co-organised the 3rd birthday celebration that happened in Lagos. Coordinated logistics for attendees, marketed the event, created content, and provided technical support.</p>
-          </a>
+        <div class="events-scroller-dock">
+          <button type="button" class="events-scroller-thumb is-active" data-index="0" aria-label="Jump to Sip &amp; Ship With Onboard">
+            <span class="events-scroller-thumb-outline" aria-hidden="true"></span>
+            <img class="events-scroller-thumb-media" src="assets/images/event-sip-and-ship.webp" alt="" loading="lazy" decoding="async">
+          </button>
+          <button type="button" class="events-scroller-thumb" data-index="1" aria-label="Jump to FBI Africa Meetup">
+            <span class="events-scroller-thumb-outline" aria-hidden="true"></span>
+            <img class="events-scroller-thumb-media" src="assets/images/event-fbi-africa.webp" alt="" loading="lazy" decoding="async">
+          </button>
+          <button type="button" class="events-scroller-thumb" data-index="2" aria-label="Jump to The Graph Birthday Celebration">
+            <span class="events-scroller-thumb-outline" aria-hidden="true"></span>
+            <img class="events-scroller-thumb-media" src="assets/images/event-graph-birthday.webp" alt="" loading="lazy" decoding="async">
+          </button>
+          <button type="button" class="events-scroller-thumb" data-index="3" aria-label="Jump to The Graph Advocate">
+            <span class="events-scroller-thumb-outline" aria-hidden="true"></span>
+            <img class="events-scroller-thumb-media" src="assets/images/graph-advocate/speaking.webp" alt="" loading="lazy" decoding="async">
+          </button>
+          <button type="button" class="events-scroller-thumb" data-index="4" aria-label="Jump to Onchain Festival">
+            <span class="events-scroller-thumb-outline" aria-hidden="true"></span>
+            <img class="events-scroller-thumb-media" src="assets/images/event-onchain-festival.webp" alt="" loading="lazy" decoding="async">
+          </button>
         </div>
       </div>
-
     </div>
   </section>
 
@@ -366,53 +495,78 @@
         <a href="storytelling.html" class="btn btn-pill btn-pill-solid">View Stories</a>
       </div>
 
-      <div class="storytelling-marquee marquee">
-        <div class="storytelling-marquee-track marquee-track">
-          <a href="storytelling.html" class="work-card">
-            <div class="img-placeholder img-placeholder--v1" data-label="Onboard 3.0 Recap"></div>
-            <h3>Onboard 3.0 Recap</h3>
-          </a>
-          <a href="storytelling.html" class="work-card">
-            <div class="img-placeholder img-placeholder--v2" data-label="Product Highlights"></div>
-            <h3>Product Highlights</h3>
-          </a>
-          <a href="storytelling.html" class="work-card">
-            <div class="img-placeholder img-placeholder--v3" data-label="Putting Africa on the Web3 Map"></div>
-            <h3>Putting Africa on the Web3 Map</h3>
-          </a>
-          <a href="storytelling.html" class="work-card">
-            <div class="img-placeholder img-placeholder--v4" data-label="Onchain Products From Africa"></div>
-            <h3>Onchain Products From Africa</h3>
-          </a>
-          <a href="storytelling.html" class="work-card">
-            <div class="img-placeholder img-placeholder--v5" data-label="With Love, Onboard"></div>
-            <h3>With Love, Onboard</h3>
-          </a>
+      <div class="storytelling-gallery">
+        <a href="storytelling.html#onboard-b2b-sales-deck" class="storytelling-tile storytelling-tile--wide">
+          <img src="assets/images/onboard-b2b-sales-deck.jpg" alt="Onboard Business sales deck cover slide" style="aspect-ratio: 960 / 540;">
+          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
+          <h3 class="storytelling-tile-caption">Onboard B2B Sales Deck</h3>
+        </a>
+        <a href="storytelling.html#onboard-3-0-recap" class="storytelling-tile storytelling-tile--narrow">
+          <span class="work-card-media work-card-media--video" style="aspect-ratio: 484 / 272;">
+            <img src="assets/images/onboard-h2-2025-recap-thumb-wide.jpg?v=2" alt="What we've been up to since we launched Onboard 3.0">
+          </span>
+          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
+          <h3 class="storytelling-tile-caption">Onboard 3.0 Recap</h3>
+        </a>
 
-          <!-- duplicate set for a seamless loop -->
-          <a href="storytelling.html" class="work-card" aria-hidden="true" tabindex="-1">
-            <div class="img-placeholder img-placeholder--v1" data-label="Onboard 3.0 Recap"></div>
-            <h3>Onboard 3.0 Recap</h3>
-          </a>
-          <a href="storytelling.html" class="work-card" aria-hidden="true" tabindex="-1">
-            <div class="img-placeholder img-placeholder--v2" data-label="Product Highlights"></div>
-            <h3>Product Highlights</h3>
-          </a>
-          <a href="storytelling.html" class="work-card" aria-hidden="true" tabindex="-1">
-            <div class="img-placeholder img-placeholder--v3" data-label="Putting Africa on the Web3 Map"></div>
-            <h3>Putting Africa on the Web3 Map</h3>
-          </a>
-          <a href="storytelling.html" class="work-card" aria-hidden="true" tabindex="-1">
-            <div class="img-placeholder img-placeholder--v4" data-label="Onchain Products From Africa"></div>
-            <h3>Onchain Products From Africa</h3>
-          </a>
-          <a href="storytelling.html" class="work-card" aria-hidden="true" tabindex="-1">
-            <div class="img-placeholder img-placeholder--v5" data-label="With Love, Onboard"></div>
-            <h3>With Love, Onboard</h3>
-          </a>
-        </div>
+        <a href="storytelling.html#onboard-blog" class="storytelling-tile storytelling-tile--narrow">
+          <img src="assets/images/onboard-blog.jpg" alt="Onboard blog featured articles grid" style="aspect-ratio: 1600 / 912;">
+          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
+          <h3 class="storytelling-tile-caption">Onboard Blog</h3>
+        </a>
+        <a href="storytelling.html#onchain-products-from-africa" class="storytelling-tile storytelling-tile--narrow">
+          <img src="assets/images/onchain-products-from-africa.jpg" alt="Onchain Products From Africa series cover: FBI x Base" style="aspect-ratio: 1600 / 900;">
+          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
+          <h3 class="storytelling-tile-caption">African Onchain Products</h3>
+        </a>
+        <a href="storytelling.html#quarterly-product-report" class="storytelling-tile storytelling-tile--narrow">
+          <img src="assets/images/q1-2026-product-report.jpg" alt="Onboard Q1 2026 Product Report cover slide" style="aspect-ratio: 960 / 540;">
+          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
+          <h3 class="storytelling-tile-caption">Quarterly Product Report</h3>
+        </a>
+
+        <a href="storytelling.html#with-love-onboard" class="storytelling-tile storytelling-tile--half">
+          <img src="assets/images/with-love-onboard.jpg" alt="With Love, Onboard campaign visual" style="aspect-ratio: 1600 / 900;">
+          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
+          <h3 class="storytelling-tile-caption">With Love, Onboard</h3>
+        </a>
+        <a href="storytelling.html#the-graph" class="storytelling-tile storytelling-tile--half">
+          <img src="assets/images/the-graph.jpg" alt="Medium articles by Ifeoluwa on The Graph" style="aspect-ratio: 1600 / 899;">
+          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
+          <h3 class="storytelling-tile-caption">The Graph Articles</h3>
+        </a>
+
+        <a href="storytelling.html#onboard-wrapped-2024" class="storytelling-tile storytelling-tile--half">
+          <span class="work-card-media work-card-media--video" style="aspect-ratio: 484 / 303;">
+            <img src="assets/images/onboard-2024-recap-thumb-wide.jpg" alt="Onboard in 2024 recap cover">
+          </span>
+          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
+          <h3 class="storytelling-tile-caption">Onboard Wrapped 2024</h3>
+        </a>
+        <a href="storytelling.html#q3-2026-product-report" class="storytelling-tile storytelling-tile--half">
+          <img src="assets/images/q3-2026-product-report.webp" alt="Onboard Q3 2026 Product Report cover slide" style="aspect-ratio: 1600 / 900;">
+          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
+          <h3 class="storytelling-tile-caption">Q3 2026 Product Report</h3>
+        </a>
       </div>
 
+    </div>
+  </section>
+
+  <!-- WHAT I DO -->
+  <section class="pill-strip-section" id="what-i-do">
+    <div class="section-inner">
+      <p class="pill-strip-label">What I Do</p>
+    </div>
+    <div class="pill-strip-track" id="pill-strip-track">
+      <div class="pill-strip-inner">
+        <span class="pill-strip-pill">Product Marketing</span>
+        <span class="pill-strip-pill">Brand Storytelling</span>
+        <span class="pill-strip-pill">Creative Direction</span>
+        <span class="pill-strip-pill">Partnerships</span>
+        <span class="pill-strip-pill">User Research &amp; Discovery</span>
+        <span class="pill-strip-pill">Event Strategy &amp; Execution</span>
+      </div>
     </div>
   </section>
 
@@ -432,6 +586,14 @@
         </div>
 
         <div class="contact-side">
+          <!-- Moved here from the "Who I Am" teaser above (that
+               section now shows tool logos instead — see
+               .who-i-am-tools-grid). Same desaturated treatment as
+               before. -->
+          <div class="contact-photo">
+            <img src="assets/images/who-i-am-photo.png" alt="Ifeoluwa Taiwo" class="contact-photo-img" width="780" height="861">
+          </div>
+
           <h2 class="section-heading contact-tag">Work<br>With Me!</h2>
 
           <div class="social-icons">
@@ -451,22 +613,101 @@
       <div class="brands-strip">
         <p class="brands-label">Brands I've Worked With</p>
         <div class="brands-logos">
-          <div class="exp-logo exp-logo--lg" data-label="Onboard" aria-hidden="true"></div>
-          <div class="exp-logo exp-logo--lg" data-label="FBI Africa" aria-hidden="true"></div>
-          <div class="exp-logo exp-logo--lg" data-label="The Graph" aria-hidden="true"></div>
-          <div class="exp-logo exp-logo--lg" data-label="Blockchain.com" aria-hidden="true"></div>
+          <div class="exp-logo exp-logo--lg" aria-label="Onboard"><img src="assets/images/logos/onboard.jpg" alt=""></div>
+          <div class="exp-logo exp-logo--lg" aria-label="FBI Africa"><img src="assets/images/logos/fbi-africa.jpg" alt=""></div>
+          <div class="exp-logo exp-logo--lg" aria-label="The Graph"><img src="assets/images/logos/the-graph.jpg" alt=""></div>
+          <div class="exp-logo exp-logo--lg" aria-label="Blockchain.com"><img src="assets/images/logos/blockchain-com.jpg" alt=""></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERACTIVE FOOTER
+       Vanilla rebuild of a Framer "Interactive Footer" component,
+       matching its exact arrangement: Silver Atmosphere background →
+       Sculpture Spotlight glow → a big Contact CTA link → divider →
+       a Directory-and-Character block (Explore/Follow link columns,
+       z-index above the character; the character floats centered
+       behind them, oversized, on its own levitation shadow) →
+       divider → a Legal row (copyright + Privacy/Terms). Only swap
+       from the source: the character itself. The original uses
+       illustrated artwork; this is a Minion instead, built from
+       plain CSS shapes rather than an image asset, wired into the
+       same eye-tracking/blink/tilt rig (see initFooterMascot in
+       script.js) the source's character used. -->
+  <footer class="site-footer" id="site-footer">
+    <div class="footer-atmosphere" aria-hidden="true"></div>
+    <div class="footer-spotlight" aria-hidden="true"></div>
+
+    <a href="mailto:thewilltaiwo@gmail.com" class="footer-cta" data-footer-link>
+      <span class="footer-cta-text">Let's talk.</span>
+      <span class="footer-cta-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M8 7H17V16"/></svg>
+      </span>
+    </a>
+
+    <div class="footer-divider" aria-hidden="true"></div>
+
+    <div class="footer-directory">
+      <div class="footer-columns">
+        <div class="footer-col">
+          <p class="footer-col-label">Explore</p>
+          <a href="work.html" class="footer-link" data-footer-link>Work</a>
+          <a href="events.html" class="footer-link" data-footer-link>Events</a>
+          <a href="storytelling.html" class="footer-link" data-footer-link>Storytelling</a>
+          <a href="side-quests.html" class="footer-link" data-footer-link>Side-Quests</a>
+          <a href="contact.html" class="footer-link" data-footer-link>Contact</a>
+        </div>
+
+        <div class="footer-col footer-col--follow">
+          <p class="footer-col-label">Follow</p>
+          <a href="#" class="footer-link" aria-label="LinkedIn" data-footer-link>LinkedIn</a>
+          <a href="#" class="footer-link" aria-label="X (Twitter)" data-footer-link>X (Twitter)</a>
+          <a href="#" class="footer-link" aria-label="Instagram" data-footer-link>Instagram</a>
+        </div>
+      </div>
+
+      <div class="footer-mascot-shadow" aria-hidden="true"></div>
+
+      <div class="footer-mascot-stage" aria-hidden="true">
+        <div class="footer-mascot" id="footer-mascot">
+          <div class="minion-hair"></div>
+          <div class="footer-face">
+            <div class="footer-eye" data-eye>
+              <div class="minion-goggle">
+                <div class="footer-sclera"><div class="footer-pupil"></div></div>
+              </div>
+            </div>
+            <div class="minion-goggle-strap"></div>
+            <div class="footer-eye" data-eye>
+              <div class="minion-goggle">
+                <div class="footer-sclera"><div class="footer-pupil"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="minion-mouth"></div>
+          <div class="minion-overalls">
+            <div class="minion-pocket"></div>
+            <div class="minion-strap minion-strap--left"></div>
+            <div class="minion-strap minion-strap--right"></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="contact-bar">
-      <p>&copy; 2026 Ìfẹ́olúwa Táíwò</p>
-      <p>Extra rights reserved. I built this myself.</p>
+    <div class="footer-divider" aria-hidden="true"></div>
+
+    <div class="footer-legal">
+      <a href="#" class="footer-copyright" data-footer-link>&copy; 2026 Ìfẹ́olúwa Táíwò</a>
+      <div class="footer-legal-links">
+        <a href="#" class="footer-legal-link" data-footer-link>Privacy</a>
+        <a href="#" class="footer-legal-link" data-footer-link>Terms</a>
+      </div>
     </div>
-  </section>
+  </footer>
 
 </main>
 
-<script src="js/script.js?v=16"></script>
+<script src="js/script.js?v=104"></script>
 </body>
 </html>
