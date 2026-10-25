@@ -21,7 +21,9 @@
 <meta name="twitter:title" content="EUR/GBP Global Accounts — Ifeoluwa Taiwo">
 <meta name="twitter:description" content="Turning currency friction into Onboard's neobank moment — owning the launch of EUR and GBP accounts.">
 <meta name="twitter:image" content="https://ifeoluwaport.vercel.app/assets/images/og-image.jpg">
-<link rel="stylesheet" href="css/style.css?v=303">
+<link rel="stylesheet" href="css/style.css?v=327">
+<link rel="stylesheet" href="css/case-toc.css?v=1">
+<link rel="stylesheet" href="css/signpost.css?v=13">
 </head>
 <!-- CASE STUDY PAGE TEMPLATE
      One page per Featured Project, modeled on sanjaya.framer.ai/projects.
@@ -70,7 +72,7 @@
        4. THE HERO VISUAL all inside one full-viewport landing section
        (sized like a standard laptop landing page, content centered in
        it), so nothing here needs scrolling to see. -->
-  <section class="cs-hero">
+  <section class="cs-hero" id="overview" data-toc="Overview">
     <div class="section-inner">
       <div class="cs-hero-logo exp-logo" aria-label="Onboard"><img width="160" height="160" src="assets/images/logos/onboard.jpg" alt="Onboard logo"></div>
       <div class="cs-hero-top">
@@ -109,7 +111,7 @@
 
   <!-- 5. CHALLENGES — a big square image on the left, as conspicuous
        as the hero image, with a small "Challenge" tag above the quote. -->
-  <section class="cs-pullquote-section">
+  <section class="cs-pullquote-section" id="challenge" data-toc="Challenge">
     <div class="section-inner">
       <div class="cs-pullquote-row">
         <div class="cs-pullquote-slides" data-slideshow data-interval="2000">
@@ -126,7 +128,7 @@
 
   <!-- 6. OUR APPROACH — full-width text with "What I Did" as the fuller
        bullet list (no side image). -->
-  <section class="cs-approach-section">
+  <section class="cs-approach-section" id="our-approach" data-toc="Our Approach">
     <div class="section-inner">
       <p class="cs-section-label">Our Approach</p>
       <h2 class="cs-section-heading">Designing a Direct Path From Earning to Spending</h2>
@@ -149,7 +151,7 @@
   <!-- LAUNCH CREATIVE — the five launch posters in one straight horizontal
        line that scrolls by itself and can be dragged (initAutoStrips),
        straight on from Our Approach. -->
-  <section class="cs-posters-section">
+  <section class="cs-posters-section" id="launch-creative" data-toc="Launch Creative">
     <div class="section-inner cs-posters-inner">
       <div class="cs-screens-viewport cs-posters-viewport" data-autoscroll aria-label="Launch posters, scrolling automatically; drag to move">
         <div class="cs-screens-track">
@@ -164,7 +166,7 @@
   </section>
 
   <!-- 7. THE RESULTS — single centred column, no side image (.cs-results-solo). -->
-  <section class="cs-results-section">
+  <section class="cs-results-section" id="the-results" data-toc="The Results">
     <div class="section-inner">
       <div class="cs-results-solo">
         <p class="cs-section-label">The Results</p>
@@ -268,8 +270,74 @@
     <p>Extra rights reserved. I built this myself.</p>
   </div>
 
+  <!-- SIGNPOST FOOTER -->
+  <footer class="signpost-footer" id="site-footer">
+    <div class="sp-grid">
+      <nav class="sp-post" aria-label="Footer">
+        <svg class="sp-finial" viewBox="0 0 40 44" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 3 L37 34 L3 34 Z"/><path d="M20 3 L20 43"/><circle cx="20" cy="23.5" r="10.5"/></g></svg>
+        <svg class="sp-spark sp-spark--a" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5 13.9 8 20.2 4.2 16.4 10.5 22.5 12 16.4 13.5 20.2 19.8 13.9 16 12 22.5 10.1 16 3.8 19.8 7.6 13.5 1.5 12 7.6 10.5 3.8 4.2 10.1 8Z" fill="currentColor"/></svg>
+        <svg class="sp-spark sp-spark--b" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5 13.9 8 20.2 4.2 16.4 10.5 22.5 12 16.4 13.5 20.2 19.8 13.9 16 12 22.5 10.1 16 3.8 19.8 7.6 13.5 1.5 12 7.6 10.5 3.8 4.2 10.1 8Z" fill="currentColor"/></svg>
+        <ul class="sp-signs" id="sp-signs">
+          <li><a class="sp-sign sp-sign--left" href="work.html" style="--rot:-2deg;--x:-8px;--from:-70px;--delay:0ms"><span class="sp-face sp-c-pale"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 22 12 12 22 2 12Z" fill="currentColor"/></svg><span>Work</span></span></a></li>
+          <li><a class="sp-sign sp-sign--right" href="events.html" style="--rot:1.5deg;--x:10px;--from:70px;--delay:90ms"><span class="sp-face sp-c-blue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5 13.9 8 20.2 4.2 16.4 10.5 22.5 12 16.4 13.5 20.2 19.8 13.9 16 12 22.5 10.1 16 3.8 19.8 7.6 13.5 1.5 12 7.6 10.5 3.8 4.2 10.1 8Z" fill="currentColor"/></svg><span>Events</span></span></a></li>
+          <li><a class="sp-sign sp-sign--left" href="storytelling.html" style="--rot:-1.5deg;--x:-6px;--from:-70px;--delay:180ms"><span class="sp-face sp-c-peri"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v12H10l-5 5v-5H3Z" fill="currentColor"/></svg><span>Storytelling</span></span></a></li>
+          <li><a class="sp-sign sp-sign--right" href="side-quests.html" style="--rot:2deg;--x:8px;--from:70px;--delay:270ms"><span class="sp-face sp-c-indigo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 14.8 8.6 21.5 9.3 16.5 13.8 17.9 20.4 12 17 6.1 20.4 7.5 13.8 2.5 9.3 9.2 8.6Z" fill="currentColor"/></svg><span>Side-Quests</span></span></a></li>
+          <li><a class="sp-sign sp-sign--left" href="#" rel="noopener" style="--rot:-2deg;--x:-10px;--from:-70px;--delay:360ms"><span class="sp-face sp-c-white"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 8.5H3.56V20.5H6.94V8.5Z" fill="currentColor"/><path d="M5.25 7.03C6.35 7.03 7.25 6.13 7.25 5.03C7.25 3.92 6.35 3.03 5.25 3.03C4.14 3.03 3.25 3.92 3.25 5.03C3.25 6.13 4.14 7.03 5.25 7.03Z" fill="currentColor"/><path d="M20.5 20.5H17.13V14.5C17.13 13 17.1 11.13 15.06 11.13C13 11.13 12.69 12.71 12.69 14.39V20.5H9.31V8.5H12.56V10.03H12.6C13.06 9.17 14.17 8.27 15.83 8.27C19.25 8.27 20.5 10.5 20.5 13.87V20.5Z" fill="currentColor"/></svg><span>LinkedIn</span></span></a></li>
+          <li><a class="sp-sign sp-sign--right" href="#" rel="noopener" style="--rot:1.5deg;--x:9px;--from:70px;--delay:450ms"><span class="sp-face sp-c-blue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 2H22L14.5 10.6L23.3 22H16.4L11 15.2L4.8 22H1.7L9.7 12.8L1.3 2H8.4L13.3 8.2L18.9 2ZM17.7 20H19.6L7 3.9H5L17.7 20Z" fill="currentColor"/></svg><span>X</span></span></a></li>
+        </ul>
+      </nav>
+
+      <div class="sp-right">
+        <div class="sp-bubble">
+          <h2>Are you building and in need of a <span class="sp-hl">product</span> marketer, <span class="sp-hl">go-to-market</span> strategist or a <span class="sp-hl">brand</span> marketer?</h2>
+          <p>I would love to hear about it.</p>
+          <div class="sp-cta">
+            <a class="sp-btn sp-btn--solid" href="mailto:hi@ifeoluwa.xyz">Email me</a>
+            <a class="sp-btn sp-btn--icon" href="#" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 8.5H3.56V20.5H6.94V8.5Z" fill="currentColor"/><path d="M5.25 7.03C6.35 7.03 7.25 6.13 7.25 5.03C7.25 3.92 6.35 3.03 5.25 3.03C4.14 3.03 3.25 3.92 3.25 5.03C3.25 6.13 4.14 7.03 5.25 7.03Z" fill="currentColor"/><path d="M20.5 20.5H17.13V14.5C17.13 13 17.1 11.13 15.06 11.13C13 11.13 12.69 12.71 12.69 14.39V20.5H9.31V8.5H12.56V10.03H12.6C13.06 9.17 14.17 8.27 15.83 8.27C19.25 8.27 20.5 10.5 20.5 13.87V20.5Z" fill="currentColor"/></svg></a>
+          <a class="sp-btn sp-btn--icon" href="#" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 2H22L14.5 10.6L23.3 22H16.4L11 15.2L4.8 22H1.7L9.7 12.8L1.3 2H8.4L13.3 8.2L18.9 2ZM17.7 20H19.6L7 3.9H5L17.7 20Z" fill="currentColor"/></svg></a>
+          </div>
+        </div>
+
+        <div class="sp-rotator" id="hero-highlight-card" aria-label="Highlights">
+          <div class="hero-highlight-slide is-active">
+            <img loading="lazy" decoding="async" width="300" height="375" src="assets/images/scroll-cards/marketing-adoption.jpg" alt="">
+            <p>Marketing that turns features into adoption</p>
+          </div>
+          <div class="hero-highlight-slide">
+            <img loading="lazy" decoding="async" width="300" height="375" src="assets/images/scroll-cards/content-growth.jpg" alt="">
+            <p>Content that drives curiosity and action</p>
+          </div>
+          <div class="hero-highlight-slide">
+            <img loading="lazy" decoding="async" width="300" height="375" src="assets/images/scroll-cards/product-branding-trust.jpg" alt="">
+            <p>Product branding built on trust and taste</p>
+          </div>
+          <div class="hero-highlight-slide">
+            <img loading="lazy" decoding="async" width="300" height="375" src="assets/images/scroll-cards/partnerships.jpg" alt="">
+            <p>Partnerships that align on shared goals</p>
+          </div>
+          <div class="hero-highlight-slide">
+            <img loading="lazy" decoding="async" width="300" height="375" src="assets/images/scroll-cards/programs-growth.jpg" alt="">
+            <p>Campaigns that grow people and products</p>
+          </div>
+          <div class="hero-highlight-slide">
+            <img loading="lazy" decoding="async" width="300" height="375" src="assets/images/scroll-cards/events-connection.jpg" alt="">
+            <p>Events built for connection and real feedback</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sp-base">
+      <span class="sp-credit">&copy; 2026 &Igrave;f&#7865;&#769;ol&uacute;wa T&aacute;&iacute;w&ograve; <span class="sp-credit-note">&middot; Extra rights reserved. I built this myself</span></span>
+      <a class="sp-top" href="#top">Back to top &uarr;</a>
+    </div>
+  </footer>
+
 </main>
 
-<script src="js/script.js?v=114"></script>
+<script src="js/script.js?v=120"></script>
+<script src="js/case-toc.js?v=1"></script>
+<script src="js/signpost.js?v=1"></script>
+<script src="js/music-keep.js?v=4"></script>
 </body>
 </html>

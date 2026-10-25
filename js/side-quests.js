@@ -42,7 +42,7 @@
   var illos = Array.prototype.slice.call(document.querySelectorAll('.sq2-illo'));
   var layer = document.querySelector('.sq2-illos');
   var gallery = document.querySelector('.sq2-gallery');
-  var galleryRow = document.querySelector('.sq2-row');
+  var galleryRow = document.querySelector('.sqw-stage');
 
   // Default spots: only the empty blue bands of the landing screen, never on a photo.
   // "top" = between the nav and the photos, "bottom" = just below the photos.
@@ -52,7 +52,7 @@
       if (el.hasAttribute('data-moved')) return;
       var x = parseFloat(el.getAttribute('data-x')), y = parseFloat(el.getAttribute('data-y'));
       var top = el.getAttribute('data-band') === 'bottom'
-        ? gallery.offsetTop + galleryRow.offsetTop + galleryRow.offsetHeight + y
+        ? gallery.offsetTop + galleryRow.offsetHeight * 0.8 + y
         : y;
       el.style.left = (x * (layer.clientWidth - el.offsetWidth) / 100) + 'px';
       el.style.top = top + 'px';
@@ -109,150 +109,212 @@
     el.addEventListener('touchmove', function (e) { if (down) e.preventDefault(); }, { passive: false });
   });
 
-  var cursor = null;
-  var boost = 1;
-
-  // Confetti pop where a tile is tapped or clicked.
-  function burst(x, y) {
-    if (reduce.matches || !document.body.animate) return;
-    var cols = ['#ffd23f', '#ff6b5a', '#b8f53a', '#ffffff', '#0052ff'];
-    for (var i = 0; i < 16; i++) {
-      var p = document.createElement('span');
-      var size = 6 + Math.random() * 8;
-      p.style.cssText = 'position:fixed;left:' + x + 'px;top:' + y + 'px;width:' + size + 'px;height:' + (Math.random() > 0.5 ? size : size * 0.45) +
-        'px;border-radius:' + (Math.random() > 0.5 ? '50%' : '2px') + ';background:' + cols[i % cols.length] + ';pointer-events:none;z-index:90;';
-      document.body.appendChild(p);
-      var ang = Math.random() * Math.PI * 2, dist = 50 + Math.random() * 110;
-      var dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist - 30;
-      var anim = p.animate([
-        { transform: 'translate(-50%,-50%) scale(1) rotate(0deg)', opacity: 1 },
-        { transform: 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + (dy + 70) + 'px)) scale(0.6) rotate(' + (Math.random() * 540 - 270) + 'deg)', opacity: 0 }
-      ], { duration: 700 + Math.random() * 400, easing: 'cubic-bezier(.2,.7,.3,1)' });
-      anim.onfinish = (function (el) { return function () { el.remove(); }; })(p);
+  // ---------- Lightbox: click a picture to see it large ----------
+  var lb = null, lbImg = null, lbReturn = null;
+  function openLightbox(img) {
+    if (!img) return;
+    if (!lb) {
+      lb = document.createElement('div');
+      lb.className = 'sq2-lb';
+      lb.hidden = true;
+      lb.setAttribute('role', 'dialog');
+      lb.setAttribute('aria-modal', 'true');
+      lb.setAttribute('aria-label', 'Picture');
+      lbImg = document.createElement('img');
+      lb.appendChild(lbImg);
+      lb.addEventListener('click', closeLightbox);
+      document.body.appendChild(lb);
     }
+    lbImg.src = img.currentSrc || img.src;
+    lbImg.alt = img.alt || '';
+    lbReturn = document.activeElement;
+    lb.hidden = false;
+    void lb.offsetWidth;
+    lb.classList.add('is-open');
   }
+  function closeLightbox() {
+    if (!lb || lb.hidden) return;
+    lb.classList.remove('is-open');
+    setTimeout(function () { lb.hidden = true; }, reduce.matches ? 0 : 200);
+    if (lbReturn && lbReturn.focus) lbReturn.focus({ preventScroll: true });
+  }
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLightbox(); });
 
-  // The rows speed up while the page is being scrolled, then settle back.
+  // ---------- Ferris wheel gallery (port of the 21st.dev "Ferris Wheel Gallery") ----------
+  // Ten pictures ride a wheel; the one at the top is "on view" and shown beside it, at its own
+  // true shape. The section pins while the page scrolls, and scrolling turns the wheel one picture
+  // at a time. The wheel can also be dragged (that scrolls the page by the same amount).
   (function () {
-    var lastY = window.scrollY;
+    var root = document.getElementById('sqw');
+    if (!root) return;
+    var mount = root.querySelector('.sqw-mount');
+    var data = Array.prototype.slice.call(root.querySelectorAll('.sqw-data li')).map(function (li) {
+      return { title: li.getAttribute('data-title'), src: li.getAttribute('data-src'), alt: li.getAttribute('data-alt'),
+               w: +li.getAttribute('data-w') || 1, h: +li.getAttribute('data-h') || 1 };
+    });
+    var n = data.length;
+    if (!n) return;
+    var step = 360 / n, EASE = 0.1;
+    var shown = -1, angle = 0, running = false, dragging = false, suppress = 0;
+
+    function clamp(v, a, b) { return Math.min(b, Math.max(a, v)); }
+
+    // ----- build -----
+    var rim = '';
+    for (var k = 0; k < 24; k++) {
+      rim += '<span class="sqw-light" style="left:' + (50 + Math.sin(k * Math.PI / 12) * 50) + '%;top:' + (50 - Math.cos(k * Math.PI / 12) * 50) + '%"></span>';
+    }
+    var cars = '';
+    data.forEach(function (d, i) {
+      var a = -i * step * Math.PI / 180;
+      cars += '<span class="sqw-spoke" style="transform:rotate(' + (-90 - i * step) + 'deg)"></span>' +
+        '<div class="sqw-anchor" style="left:' + (50 + Math.sin(a) * 50) + '%;top:' + (50 - Math.cos(a) * 50) + '%"><div class="sqw-counter">' +
+        '<div class="sqw-hang"><div class="sqw-pendulum"><span class="sqw-rope"></span>' +
+        '<button type="button" class="sqw-car" aria-label="View ' + d.title + ', ' + (i + 1) + ' of ' + n + '"><span class="sqw-thumb"><img src="' + d.src + '" alt="" draggable="false" decoding="async"></span></button>' +
+        '</div></div></div></div>';
+    });
+    mount.innerHTML =
+      '<div class="sqw-grid" role="region" aria-roledescription="carousel" aria-label="Side-quests gallery">' +
+        '<div class="sqw-left">' +
+          '<div class="sqw-stage">' +
+            '<div class="sqw-square">' +
+              '<svg class="sqw-stand" viewBox="0 0 400 400" fill="none" aria-hidden="true"><path d="M200 184 146 362M200 184 254 362M124 362H276" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>' +
+              '<div class="sqw-wheel"><span class="sqw-ring2"></span>' + rim + cars + '</div>' +
+              '<div class="sqw-hub" aria-hidden="true"><b>' + (n < 10 ? '0' : '') + n + '</b><i>QUESTS</i></div>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="sqw-detail">' +
+          '<button type="button" class="sqw-photo" aria-label="Open this picture large"><span class="sqw-photo-a"><img alt="" draggable="false"></span><span class="sqw-photo-b"><img alt="" draggable="false"></span></button>' +
+          '<h3 class="sqw-name"></h3>' +
+        '</div>' +
+        '<span class="sqw-live" role="status" aria-live="polite"></span>' +
+      '</div>';
+
+    var wheel = mount.querySelector('.sqw-wheel');
+    var counters = Array.prototype.slice.call(mount.querySelectorAll('.sqw-counter'));
+    var carsEl = Array.prototype.slice.call(mount.querySelectorAll('.sqw-car'));
+    var stage = mount.querySelector('.sqw-stage');
+    var photo = mount.querySelector('.sqw-photo');
+    var imgA = mount.querySelector('.sqw-photo-a img'), imgB = mount.querySelector('.sqw-photo-b img');
+    var spanA = imgA.parentNode, spanB = imgB.parentNode;
+    var name = mount.querySelector('.sqw-name'), live = mount.querySelector('.sqw-live');
+
+    function paint(a) {
+      wheel.style.transform = 'rotate(' + a + 'deg)';
+      for (var i = 0; i < counters.length; i++) counters[i].style.transform = 'rotate(' + (-a) + 'deg)';
+    }
+    function showDetail(i) {
+      var d = data[i], prev = shown;
+      imgB.src = imgA.src || d.src;
+      imgA.src = d.src;
+      imgA.alt = d.alt || d.title;
+      photo.style.setProperty('--ar', (d.w / d.h).toFixed(4));
+      name.textContent = d.title;
+      carsEl.forEach(function (c, k) {
+        c.classList.toggle('is-on', k === i);
+        if (k === i) c.setAttribute('aria-current', 'true'); else c.removeAttribute('aria-current');
+      });
+      if (prev >= 0 && !reduce.matches && spanA.animate) {
+        spanA.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 360, easing: 'ease-out' });
+        spanB.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 360, easing: 'ease-out' });
+      }
+      shown = i;
+      live.textContent = (i + 1) + ' of ' + n + ': ' + d.title;
+    }
+
+    // ----- endless turning: page scroll, drag + fling, and a gentle idle drift all spin it, either way -----
+    var tAngle = 0, vel = 0, lastY = window.scrollY, idleAt = 0, visible = false, hover = false;
+    var PX_PER_PICTURE = 320, DRIFT = 7;                      // scroll distance per picture; idle drift in degrees per second
+    var lastT = performance.now();
+
+    function frame(now) {
+      var dt = Math.min(0.05, (now - lastT) / 1000); lastT = now;
+      if (!dragging) {
+        if (Math.abs(vel) > 0.02) { tAngle += vel; vel *= 0.94; idleAt = now; }          // fling coasting to a stop
+        else if (!reduce.matches && !hover && now - idleAt > 1200) tAngle += DRIFT * dt;  // never fully stops
+      }
+      angle += (tAngle - angle) * (reduce.matches ? 1 : (dragging ? 0.35 : 0.14));
+      paint(angle);
+      var idx = ((Math.round(angle / step) % n) + n) % n;
+      if (idx !== shown) showDetail(idx);
+      if (running) requestAnimationFrame(frame);
+    }
+    function start() { if (!running) { running = true; lastT = performance.now(); requestAnimationFrame(frame); } }
+    function stop() { running = false; }
+    function turnTo(i) {                                       // shortest way round to picture i
+      var cur = ((Math.round(tAngle / step) % n) + n) % n, d = i - cur;
+      if (d > n / 2) d -= n; else if (d < -n / 2) d += n;
+      vel = 0; tAngle = Math.round(tAngle / step) * step + d * step; idleAt = performance.now();
+    }
     window.addEventListener('scroll', function () {
-      var d = Math.abs(window.scrollY - lastY);
-      lastY = window.scrollY;
-      if (!reduce.matches) boost = Math.min(5, boost + d * 0.05);
+      var y = window.scrollY, dy = y - lastY; lastY = y;
+      if (!visible || dragging) return;
+      tAngle += (dy / PX_PER_PICTURE) * step;
+      idleAt = performance.now();
     }, { passive: true });
-    (function decay() {
-      boost = 1 + (boost - 1) * 0.94;
-      requestAnimationFrame(decay);
-    })();
-  })();
+    if (window.IntersectionObserver) {
+      new IntersectionObserver(function (es) { visible = es[0].isIntersecting; visible ? start() : stop(); }, { rootMargin: '150px' }).observe(root);
+    } else { visible = true; start(); }
+    stage.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') hover = true; });
+    stage.addEventListener('pointerleave', function () { hover = false; });
 
-  // A "drag" bubble that follows the mouse over the gallery.
-  (function () {
-    var gallery = document.querySelector('.sq2-gallery');
-    if (!gallery || !window.matchMedia('(hover: hover) and (pointer: fine)').matches || reduce.matches) return;
-    cursor = document.createElement('div');
-    cursor.className = 'sq2-cursor';
-    cursor.setAttribute('aria-hidden', 'true');
-    cursor.textContent = 'drag';
-    document.body.appendChild(cursor);
-    var rows = gallery.querySelector('.sq2-rows');
-    rows.addEventListener('pointermove', function (e) {
-      if (e.pointerType !== 'mouse') return;
-      cursor.style.transform = 'translate(' + (e.clientX + 16) + 'px,' + (e.clientY + 16) + 'px)';
-      cursor.classList.add('is-on');
-    });
-    rows.addEventListener('pointerleave', function () { cursor.classList.remove('is-on'); });
-  })();
-
-  function setUpRow(row) {
-    var track = row.querySelector('.sq2-track');
-    if (!track) return;
-    var dir = parseFloat(row.getAttribute('data-dir')) || -1;          // -1: moves left, 1: moves right
-    var speed = parseFloat(row.getAttribute('data-speed')) || 22;      // px per second
-    var seeds = Array.prototype.slice.call(track.children);
-    var loopWidth = 0, offset = 0, dragging = false, paused = false, inView = true, moved = false;
-
-    function wrap(v) { return loopWidth > 0 ? ((v % loopWidth) + loopWidth) % loopWidth : v; }
-    function apply() { track.style.transform = 'translate3d(' + (-offset) + 'px,0,0)'; }
-
-    function build() {
-      Array.prototype.slice.call(track.querySelectorAll('[data-clone]')).forEach(function (n) { n.remove(); });
-      var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
-      var w = seeds.reduce(function (s, el) { return s + el.getBoundingClientRect().width + gap; }, 0);
-      loopWidth = w;
-      var copies = Math.max(2, Math.ceil((row.clientWidth * 2) / w) + 1);
-      for (var i = 0; i < copies; i++) {
-        seeds.forEach(function (el) {
-          var c = el.cloneNode(true);
-          c.setAttribute('data-clone', '');
-          c.setAttribute('aria-hidden', 'true');
-          c.setAttribute('tabindex', '-1');
-          track.appendChild(c);
-        });
+    showDetail(0); paint(0);
+    carsEl.forEach(function (c, i) { c.addEventListener('click', function () { if (performance.now() >= suppress) turnTo(i); }); });
+    photo.addEventListener('click', function () { openLightbox(imgA); });
+    root.addEventListener('keydown', function (e) {
+      if (e.altKey || e.ctrlKey || e.metaKey) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        vel = 0; tAngle = Math.round(tAngle / step) * step + (e.key === 'ArrowRight' ? step : -step); idleAt = performance.now();
       }
+    });
+
+    // ----- drag: grab the wheel and turn it either way, as far as you like; it keeps coasting when let go -----
+    var drag = null;
+    function pointerAngle(e) {
+      var r = wheel.getBoundingClientRect();
+      var dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+      return { a: Math.atan2(dy, dx) * 180 / Math.PI, r: Math.hypot(dx, dy) };
     }
-
-    if (reduce.matches) {
-      // Manual scroll only: native overflow scrolling, no clones, no motion.
-      track.style.transform = 'none';
-      return;
-    }
-
-    build();
-    offset = dir < 0 ? 0 : wrap(loopWidth * 0.4);
-    apply();
-    window.addEventListener('resize', function () { build(); offset = wrap(offset); apply(); });
-    new IntersectionObserver(function (es) { inView = es[0].isIntersecting; }, { rootMargin: '100px' }).observe(row);
-
-    var last = performance.now();
-    (function tick(now) {
-      var dt = Math.min((now - last) / 1000, 0.1);
-      last = now;
-      if (inView && !dragging && !paused && loopWidth > 0) {
-        offset = wrap(offset - dir * speed * boost * dt);
-        apply();
+    stage.addEventListener('pointerdown', function (e) {
+      if (e.button !== 0 || !e.isPrimary) return;
+      drag = { id: e.pointerId, x: e.clientX, y: e.clientY, last: pointerAngle(e).a, on: false, touch: e.pointerType !== 'mouse', v: 0, t: performance.now() };
+    });
+    stage.addEventListener('pointermove', function (e) {
+      if (!drag || drag.id !== e.pointerId) return;
+      if (!drag.on) {
+        var mx = e.clientX - drag.x, my = e.clientY - drag.y;
+        if (Math.hypot(mx, my) < 6) return;
+        if (drag.touch && Math.abs(my) > Math.abs(mx)) { drag = null; return; }   // vertical swipe = normal page scroll
+        drag.on = true; dragging = true; vel = 0; drag.last = pointerAngle(e).a;
+        stage.setPointerCapture(e.pointerId);
+        stage.classList.add('is-dragging');
       }
-      requestAnimationFrame(tick);
-    })(last);
-
-    // Drag / swipe sideways; resumes on release.
-    var startX = 0, startOffset = 0, lastX = 0, lastT = 0, velocity = 0, momentum = null;
-    row.addEventListener('pointerdown', function (e) {
-      dragging = true; moved = false;
-      if (momentum) { cancelAnimationFrame(momentum); momentum = null; }
-      startX = lastX = e.clientX; startOffset = offset; lastT = performance.now(); velocity = 0;
-      row.classList.add('is-dragging');
-      if (cursor) cursor.textContent = 'grab';
-      try { row.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+      var p = pointerAngle(e);
+      if (p.r < 24) return;
+      var d = p.a - drag.last;
+      if (d > 180) d -= 360; else if (d < -180) d += 360;
+      drag.last = p.a;
+      tAngle += d;
+      drag.v = drag.v * 0.6 + d * 0.4;                          // smoothed speed of the last few moves
+      drag.t = performance.now();
+      e.preventDefault();
     });
-    row.addEventListener('pointermove', function (e) {
-      if (!dragging) return;
-      if (Math.abs(e.clientX - startX) > 6) moved = true;
-      offset = wrap(startOffset - (e.clientX - startX));
-      apply();
-      var now = performance.now(), d = now - lastT;
-      if (d > 0) { velocity = -((e.clientX - lastX) / d) * 16; lastX = e.clientX; lastT = now; }
-    });
-    function end(e) {
-      if (!dragging) return;
+    function endDrag(e) {
+      var d = drag; drag = null;
+      if (!d || !d.on) return;
+      if (stage.hasPointerCapture && stage.hasPointerCapture(e.pointerId)) stage.releasePointerCapture(e.pointerId);
+      stage.classList.remove('is-dragging');
+      suppress = performance.now() + 250;
       dragging = false;
-      row.classList.remove('is-dragging');
-      if (cursor) cursor.textContent = 'drag';
-      if (!moved) burst(e.clientX, e.clientY);
-      if (Math.abs(velocity) > 0.3) {
-        (function glide() {
-          offset = wrap(offset + velocity); apply();
-          velocity *= 0.94;
-          momentum = Math.abs(velocity) > 0.3 ? requestAnimationFrame(glide) : null;
-        })();
-      }
+      vel = performance.now() - d.t < 90 ? clamp(d.v, -14, 14) : 0;   // fling only if let go while still moving
+      idleAt = performance.now();
+      if (reduce.matches) tAngle = Math.round(tAngle / step) * step;
     }
-    row.addEventListener('pointerup', end);
-    row.addEventListener('pointercancel', end);
-    row.addEventListener('dragstart', function (e) { e.preventDefault(); });
-  }
-
-  Array.prototype.slice.call(document.querySelectorAll('.sq2-row')).forEach(setUpRow);
+    stage.addEventListener('pointerup', endDrag);
+    stage.addEventListener('pointercancel', endDrag);
+  })();
 
   // ---------- Story: hover/tap/focus a highlighted word to show its quest card ----------
   var pop = document.getElementById('sq2-pop');
@@ -315,22 +377,11 @@
   (function () {
     var root = document.getElementById('sq2-music');
     if (!root) return;
-    var SONGS = [
-      ['Did You See', 'J Hus', '3rk6_Ax0mQo'],
-      ['I Like Me Better', 'Lauv', 'BcqxLCWn-CE'],
-      ['Drive', 'Black Coffee & David Guetta', 'vu1QsEUVLQs'],
-      ['Rapid Fire', 'Cruel Santino', 'hMuFO9nhtfA'],
-      ['Space Song', 'Beach House', 'RBtlPT23PTM'],
-      ['Levitating', 'Dua Lipa', 'TUVcZfQe-Kw'],
-      ['In The End', 'Linkin Park', 'eVTXPUF4Oz4'],
-      ['Levels', 'Avicii', '_ovdm2yX4MA'],
-      ['Way Maker', 'Sinach', 'QM8jQHE5AAk'],
-      ['Last Last', 'Burna Boy', '421w1j87fEM']
-    ];
+    var SONGS = window.SQ_SONGS;   // the playlist lives in js/music-keep.js, so other pages can resume it
     var titleEl = document.getElementById('sq2-song-title');
     var artistEl = document.getElementById('sq2-song-artist');
     var playBtn = document.getElementById('sq2-play');
-    var player = null, current = 0, apiLoading = false, queued = null, playing = false;
+    var player = null, current = Math.floor(Math.random() * SONGS.length), apiLoading = false, queued = null, playing = false;
 
     function show() {
       titleEl.textContent = SONGS[current][0];
@@ -381,5 +432,83 @@
     document.getElementById('sq2-next').addEventListener('click', function () { start(current + 1); });
     document.getElementById('sq2-prev').addEventListener('click', function () { start(current - 1); });
     show();
+
+    // Used by the "still want to listen?" prompt when the visitor leaves for another page.
+    window.sqMusic = {
+      playing: function () { return playing; },
+      keep: function () {
+        var t = 0;
+        try { t = player.getCurrentTime(); } catch (e) {}
+        if (window.sqMusicStore) window.sqMusicStore.write({ i: current, t: Math.floor(t), at: Date.now() });
+      },
+      stop: function () { try { player.stopVideo(); } catch (e) {} if (window.sqMusicStore) window.sqMusicStore.write(null); }
+    };
   })();
 })();
+
+  // "Listen to music with me": a nudge above the player that presses play for the visitor.
+  (function () {
+    var cta = document.getElementById('sq2-cta'), player = document.getElementById('sq2-music'), play = document.getElementById('sq2-play');
+    if (!cta || !player || !play) return;
+    cta.addEventListener('click', function () { if (!player.classList.contains('is-playing')) play.click(); });
+    function sync() { cta.classList.toggle('is-quiet', player.classList.contains('is-playing')); }
+    if (window.MutationObserver) new MutationObserver(sync).observe(player, { attributes: true, attributeFilter: ['class'] });
+    sync();
+  })();
+
+  // ---------- "Still want to listen?" when leaving for another page while music plays ----------
+  (function () {
+    var dlg = null, pending = null, back = null;
+    function build() {
+      dlg = document.createElement('div');
+      dlg.className = 'sq2-ask';
+      dlg.hidden = true;
+      dlg.setAttribute('role', 'dialog');
+      dlg.setAttribute('aria-modal', 'true');
+      dlg.setAttribute('aria-labelledby', 'sq2-ask-t');
+      dlg.innerHTML =
+        '<div class="sq2-ask-card">' +
+          '<h2 id="sq2-ask-t">Still want to listen?</h2>' +
+          '<p>Keep the music going while you look around the rest of the site?</p>' +
+          '<div class="sq2-ask-btns">' +
+            '<button type="button" class="sq2-ask-yes">Yes, keep playing</button>' +
+            '<button type="button" class="sq2-ask-no">No, stop it</button>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(dlg);
+      dlg.querySelector('.sq2-ask-yes').addEventListener('click', function () { go(true); });
+      dlg.querySelector('.sq2-ask-no').addEventListener('click', function () { go(false); });
+      dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
+    }
+    function open(url) {
+      if (!dlg) build();
+      pending = url; back = document.activeElement;
+      dlg.hidden = false;
+      void dlg.offsetWidth;
+      dlg.classList.add('is-open');
+      dlg.querySelector('.sq2-ask-yes').focus();
+    }
+    function close() {
+      if (!dlg) return;
+      dlg.classList.remove('is-open'); dlg.hidden = true; pending = null;
+      if (back && back.focus) back.focus({ preventScroll: true });
+    }
+    function go(keep) {
+      var url = pending;
+      if (keep) window.sqMusic.keep(); else window.sqMusic.stop();
+      dlg.hidden = true;
+      if (url) window.location.href = url;
+    }
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && dlg && !dlg.hidden) close(); });
+    document.addEventListener('click', function (e) {
+      if (!window.sqMusic || !window.sqMusic.playing()) return;
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest ? e.target.closest('a[href]') : null;
+      if (!a || a.target === '_blank' || a.hasAttribute('download')) return;
+      var u;
+      try { u = new URL(a.href, location.href); } catch (err) { return; }
+      if (u.origin !== location.origin || (u.pathname === location.pathname && u.search === location.search)) return;   // other sites, or same page (#anchors)
+      e.preventDefault();
+      open(u.href);
+    }, true);
+  })();

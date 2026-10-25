@@ -514,6 +514,11 @@ html.js-reveal .reveal-heading.is-visible .reveal-word {
    of contrast keeps it from reading flat once the color's gone. */
 .hero-photo-img {
   filter: grayscale(1) contrast(1.05);
+  /* The image carries 9% extra canvas on the right (the full sleeve). Drawn
+     wider than its box and left to overflow, so the photo box, and
+     everything positioned from it, stays exactly where it was. */
+  width: 109%;
+  max-width: none;
 }
 
 /* One-liner + logos, stacked on the left side of the hero. right is
@@ -529,11 +534,31 @@ html.js-reveal .reveal-heading.is-visible .reveal-word {
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
+  /* One compact frosted box holding the one-liner, the label and the logos. */
+  width: max-content;
+  max-width: calc(100% - 8px);
+  margin-top: -16px; /* sits a touch higher, beside the face rather than down at the shoulder */
+  padding: 14px 18px 16px;
+  border-radius: 18px;
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
+  border: 1.5px solid rgba(191, 212, 255, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 14px 34px rgba(4, 0, 60, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
+.hero-left-stack .hero-worked-at {
+  align-self: stretch;
+  padding-top: 10px;
+  border-top: 1px solid rgba(191, 212, 255, 0.28);
+}
+.hero-left-stack .hero-worked-at-label,
+.hero-left-stack .hero-worked-at-logos { max-width: none; }
+.hero-left-stack .hero-worked-at-label { margin-bottom: 9px; white-space: nowrap; }
+.hero-left-stack .hero-oneliner { text-wrap: balance; }
 
 .hero-oneliner-card {
   display: inline-block;
-  max-width: 360px;
+  max-width: 292px;
   margin-bottom: 0;
 }
 
@@ -601,29 +626,47 @@ html.js-reveal .reveal-heading.is-visible .reveal-word {
    growxy.framer.website's landing page: split evenly into a photo
    half and a text half, sitting lower than the name, on the right
    (see initHeroHighlightCard in script.js for the cycling itself). */
-.hero-highlight-card {
+.hero-cta {
   position: absolute;
-  /* Same top as .hero-left-stack, and a height tuned to land on the
-     same bottom line as its logo row too — top and bottom of the
-     card match top and bottom of the text/logo column beside it.
-     left is set at runtime by alignHeroSideElements (script.js) to
-     line up with the wordmark's "I"; right:0 here is just the
-     fallback before that runs. */
+  /* top/right are set at runtime by alignHeroSideElements (script.js), in line
+     with the wordmark; these are only the pre-JS fallback. */
   top: clamp(120px, 16vw, 190px);
   right: 0;
   z-index: 5;
-  /* 226px is the smallest this can go and still keep every rotating
-     caption (see the six .hero-highlight-slide p's) to 3 lines —
-     "Product branding built on trust and taste" and "Campaigns that
-     grow people and products" both wrap to 4 just a little below
-     this. */
-  width: min(226px, 26vw);
-  height: min(94px, 10.5vw);
-  background: #fff;
-  border-radius: 14px;
-  padding: 4px;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(230px, 25vw);
+  min-width: 190px;
 }
+/* Each button is its own box in the same template as the one-liner box: same
+   glass background, outline, radius and padding. */
+.hero-cta-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 18px;
+  border-radius: 18px;
+  /* The exact glass of the one-liner box. */
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
+  border: 1.5px solid rgba(191, 212, 255, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 14px 34px rgba(4, 0, 60, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(1rem, 1.7vw, 1.2rem);
+  line-height: 1.4;
+  white-space: nowrap;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.hero-cta-btn:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(150deg, #0a62ff, #0052ff);
+  border-color: rgba(191, 212, 255, 0.7);
+}
+.hero-cta-btn:focus-visible { outline: 3px solid var(--periwinkle); outline-offset: 3px; }
 .hero-highlight-slide {
   position: absolute;
   inset: 4px;
@@ -673,11 +716,12 @@ html.js-reveal .reveal-heading.is-visible .reveal-word {
      that once it finishes. */
   .hero-photo-img { animation: heroPhotoIn 1.05s cubic-bezier(0.19, 1, 0.22, 1) both 0.55s; }
   .hero-left-stack { animation: heroFadeUp 0.8s cubic-bezier(0.19, 1, 0.22, 1) both 0.6s; }
-  .hero-highlight-card { animation: heroFadeUp 0.8s cubic-bezier(0.19, 1, 0.22, 1) both 0.7s; }
+  /* On each button, not the wrapper: an animated wrapper would cut the buttons' backdrop blur off from the hero. */
+  .hero-cta-btn { animation: heroFadeUp 0.8s cubic-bezier(0.19, 1, 0.22, 1) both 0.7s; }
 }
 
 @media (max-width: 900px) and (prefers-reduced-motion: no-preference) {
-  .hero-kicker, .hero-name, .hero-photo-img, .hero-left-stack, .hero-highlight-card {
+  .hero-kicker, .hero-name, .hero-photo-img, .hero-left-stack, .hero-cta-btn {
     animation-duration: 0.4s;
     animation-delay: 0s;
   }
@@ -690,9 +734,9 @@ html.js-reveal .reveal-heading.is-visible .reveal-word {
    WHO I AM
 ============================================ */
 .who-i-am {
-  background: var(--pale);
+  background: #fff;
   color: var(--navy);
-  padding: var(--section-pad) 0 24px;
+  padding: 96px 0 8px;
   position: relative;
 }
 
@@ -750,15 +794,20 @@ html.js-reveal .reveal-heading.is-visible .reveal-word {
   .js-reveal .who-i-am::after { content: ''; display: block; height: 70vh; }
   .js-reveal .who-i-am-inner {
     position: sticky;
+    /* Locks right under the nav, so About follows the hero with no band of
+       empty space between them. */
     top: 0;
-    min-height: 100vh;
+    min-height: 0;
     box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     padding-top: 96px;
     padding-bottom: 24px;
   }
+}
+
+/* Phones/tablets only (the desktop pin needs sticky, which clip doesn't break
+   anyway): stop the orbit's moving labels widening the page sideways. */
+@media (max-width: 900px) {
+  .who-i-am { overflow-x: clip; }
 }
 
 /* Stands in for the section's old "Who I Am" heading — same big
@@ -1530,8 +1579,8 @@ body.modal-open { overflow: hidden; }
    EXPERIENCE (I'VE WORKED AT)
 ============================================ */
 .experience {
-  background: var(--periwinkle);
-  padding: var(--section-pad) 0;
+  background: #fff;
+  padding: 56px 0;
 }
 
 .experience-grid {
@@ -1546,7 +1595,7 @@ body.modal-open { overflow: hidden; }
   position: relative;
   display: block;
   width: 100%;
-  background: rgba(255, 255, 255, 0.55);
+  background: var(--pale);
   border: none;
   border-radius: 18px;
   padding: 22px 56px 22px 22px;
@@ -1556,7 +1605,7 @@ body.modal-open { overflow: hidden; }
   transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
 }
 .exp-card:hover {
-  background: #fff;
+  background: var(--periwinkle);
   transform: translateY(-3px);
   box-shadow: 0 14px 26px rgba(12, 0, 84, 0.16);
 }
@@ -1671,7 +1720,7 @@ body.modal-open { overflow: hidden; }
    WORK
 ============================================ */
 .work {
-  background: #d6e4ff;
+  background: var(--pale);
   padding: var(--section-pad) 0;
 }
 .work .section-heading--light { color: var(--blue); }
@@ -1760,6 +1809,8 @@ body.modal-open { overflow: hidden; }
   transition: background-color 0.3s ease;
   will-change: transform;
 }
+.work .work-card { background: #fff; }
+.work .work-card:hover { background: var(--periwinkle); }
 .work-card:hover { background: var(--periwinkle); }
 .work-card-pill { transition: background-color 0.3s ease, color 0.3s ease; }
 .work-card:hover .work-card-pill { background: var(--blue); color: #fff; }
@@ -3443,7 +3494,7 @@ img.cs-results-media {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  padding: 150px 24px 104px;
+  padding: 196px 24px 136px;
   overflow: hidden;
   background: transparent;
 }
@@ -3546,7 +3597,7 @@ img.cs-results-media {
   /* Narrow screens: the title goes across the top, the picture sits below it. */
   .events-scroller-caption { align-items: flex-start; justify-content: center; padding: 140px 24px 20px; }
   .events-scroller-caption h3 { text-align: center; max-width: 22ch; font-size: clamp(1.1rem, 4.6vw, 1.6rem); }
-  .events-scroller-media--img { padding: 190px 20px 96px; }
+  .events-scroller-media--img { padding: 226px 20px 124px; }
 }
 img.events-scroller-thumb-media { object-fit: cover; }
 
@@ -4349,6 +4400,13 @@ img.img-placeholder {
 
   .hero-photo { width: min(360px, 60vw); margin: 0 auto 28px; }
 
+  /* Centred on the page in the stacked layout: the "hi, i'm" line, and the figure
+     itself. The photo file carries 9% extra canvas on the right (the sleeve), and
+     the head sits at 53.15% of the box, so the image is pulled left by 3.15% to put
+     the head exactly on the centre line. */
+  .hero-kicker { text-align: center; }
+  .hero-photo-img { margin-left: -3.15%; }
+
   .hero-heading { margin-bottom: 0; }
 
   /* position:relative (not static) so these keep their z-index and
@@ -4359,14 +4417,16 @@ img.img-placeholder {
      still honours them, and they're carrying desktop's floating
      offsets otherwise. */
   .hero-left-stack,
-  .hero-highlight-card {
+  .hero-cta {
     position: relative;
     top: auto;
     right: auto;
     margin: 0 0 14px;
   }
   .hero-left-stack { align-items: flex-start; }
-  .hero-highlight-card { width: min(400px, 91vw); height: 112px; }
+  /* Compact, regular-sized boxes side by side (same 18px corners). */
+  .hero-cta { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 10px; width: auto; min-width: 0; }
+  .hero-cta-btn { padding: 10px 18px; font-size: 0.95rem; }
 
   .experience-grid { grid-template-columns: 1fr; }
 
@@ -4416,11 +4476,10 @@ img.img-placeholder {
     width: 100%;
     max-width: 100%;
     margin: 12px 0 18px;
-    overflow: hidden;
   }
   .hero-photo { width: min(340px, 86vw); margin: 0 auto; }
   /* Card sits below the photo in normal flow so it never covers the face. */
-  .hero-highlight-card { order: 4; align-self: center; margin: 0 0 24px; }
+  .hero-cta { order: 4; align-self: center; margin: 0 0 24px; }
   .hero { padding-bottom: 0; }
 
   .work-card { width: 250px; }

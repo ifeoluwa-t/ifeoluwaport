@@ -1,0 +1,14 @@
+/* Line-field layer behind the hero content (see js/hero-lines.js). Sits above the
+   animated gradient (z-index:0, later in DOM) and below .hero-inner (z-index:1). */
+.hero-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Side Quests: same line field behind the wheel; the content sits above it. */
+.sq2-gallery > .hero-lines { z-index: 0; }
+.sq2-gallery .sqw { position: relative; z-index: 1; }

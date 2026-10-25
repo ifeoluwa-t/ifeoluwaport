@@ -1,0 +1,283 @@
+/* ============================================
+   SIGNPOST FOOTER (homepage, very bottom)
+   A pole with tilted arrow-shaped signs that slide in as links, a ring-patterned
+   speech bubble beside it. Palette = brand variables only.
+============================================ */
+.signpost-footer {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(72px, 10vw, 128px) 20px 28px;
+  color: #fff;
+  background:
+    radial-gradient(ellipse 900px 420px at 15% 0%, rgba(0, 82, 255, 0.4), transparent 70%),
+    var(--navy);
+}
+
+.sp-grid {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: clamp(48px, 7vw, 96px);
+}
+
+/* ---------- the post ---------- */
+.sp-post {
+  position: relative;
+  order: 2;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 66px 0 40px;
+}
+.sp-post::before { /* the wand: tapers towards the top, with a darker handle at the base */
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 48px;
+  bottom: 14px;
+  width: 18px;
+  transform: translateX(-50%);
+  clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%);
+  background: linear-gradient(to bottom, var(--periwinkle) 0 82%, var(--blue) 82% 100%);
+}
+.sp-post::after { /* ground shadow */
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 220px;
+  height: 22px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+}
+.sp-finial { /* the cursor's shape (triangle, circle, line) crowning the wand */
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 44px;
+  height: 48px;
+  transform: translateX(-50%);
+  color: var(--periwinkle);
+  overflow: visible;
+}
+
+.sp-signs {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sp-sign {
+  --rot: 0deg;
+  --x: 0px;
+  --from: -60px;
+  --delay: 0ms;
+  display: block;
+  filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.35));
+  transform: translateX(calc(var(--x) + var(--from))) rotate(calc(var(--rot) * 2.2));
+  opacity: 0;
+  transition:
+    transform 0.8s cubic-bezier(0.19, 1, 0.22, 1) var(--delay),
+    opacity 0.5s ease var(--delay);
+}
+.sp-signs.is-in .sp-sign {
+  opacity: 1;
+  transform: translateX(var(--x)) rotate(var(--rot));
+}
+.sp-signs.is-in .sp-sign:hover {
+  transform: translateX(var(--x)) rotate(0deg) translateY(-4px) scale(1.04);
+  transition-delay: 0ms;
+  transition-duration: 0.25s;
+}
+.sp-sign:focus-visible { outline: 3px solid #fff; outline-offset: 6px; }
+
+.sp-face {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-width: 250px;
+  padding: 15px 34px;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.2vw, 1.9rem);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.sp-sign--left  .sp-face { padding-left: 54px;  clip-path: polygon(16% 0, 100% 0, 100% 100%, 16% 100%, 0 50%); }
+.sp-sign--right .sp-face { padding-right: 54px; clip-path: polygon(0 0, 84% 0, 100% 50%, 84% 100%, 0 100%); }
+.sp-face svg { width: 0.8em; height: 0.8em; flex-shrink: 0; }
+
+/* colours: all brand */
+.sp-c-pale   { --bg: var(--pale);       --fg: var(--navy); }
+.sp-c-blue   { --bg: var(--blue);       --fg: #fff; }
+.sp-c-peri   { --bg: var(--periwinkle); --fg: var(--navy); }
+.sp-c-indigo { --bg: var(--indigo);     --fg: #fff; }
+.sp-c-white  { --bg: #fff;              --fg: var(--navy); }
+.sp-face { background: var(--bg); color: var(--fg); }
+.sp-sign:hover .sp-face { background: var(--fg); color: var(--bg); }
+
+/* sparkles instead of clouds */
+.sp-spark { position: absolute; width: 34px; height: 34px; color: var(--periwinkle); pointer-events: none; }
+.sp-spark--a { left: -64px; top: 24%; }
+.sp-spark--b { right: -70px; top: 62%; width: 26px; height: 26px; color: var(--blue); }
+@media (prefers-reduced-motion: no-preference) {
+  .sp-spark { animation: spTwinkle 3.2s ease-in-out infinite; }
+  .sp-spark--b { animation-delay: 1.4s; }
+}
+@keyframes spTwinkle { 0%, 100% { transform: scale(0.8) rotate(0deg); opacity: 0.6; } 50% { transform: scale(1.1) rotate(20deg); opacity: 1; } }
+
+/* ---------- right column: bubble + rotating highlights ---------- */
+.sp-right { order: 1; display: flex; flex-direction: column; gap: 48px; }
+
+.sp-rotator {
+  position: relative;
+  height: 150px;
+  padding: 12px;
+  border-radius: 24px;
+  background: var(--blue);
+  color: #fff;
+}
+.sp-rotator::before { /* concentric rings, from the opposite corner to the second card */
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: repeating-radial-gradient(circle at 0 100%, transparent 0 28px, rgba(255, 255, 255, 0.2) 28px 32px);
+  pointer-events: none;
+}
+.sp-rotator::after { /* tail */
+  content: '';
+  position: absolute;
+  right: 36px;
+  bottom: -18px;
+  width: 0;
+  height: 0;
+  border-right: 0 solid transparent;
+  border-left: 26px solid transparent;
+  border-top: 22px solid var(--blue);
+}
+.sp-rotator .hero-highlight-slide {
+  inset: 12px;
+  gap: 18px;
+}
+.sp-rotator .hero-highlight-slide img {
+  border-radius: 14px;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.55); /* thin pale edge; pictures keep their original colours */
+}
+.sp-rotator .hero-highlight-slide p {
+  padding-right: 8px;
+  font-weight: 600;
+  font-size: clamp(1.05rem, 1.7vw, 1.3rem);
+  line-height: 1.25;
+  color: #fff;
+}
+
+/* ---------- the speech bubble ---------- */
+.sp-bubble {
+  position: relative;
+  padding: clamp(28px, 4vw, 44px);
+  border-radius: 24px;
+  overflow: visible;
+  background: var(--pale);
+  color: var(--navy);
+}
+.sp-bubble::before { /* concentric rings */
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: repeating-radial-gradient(circle at 100% 0, transparent 0 28px, rgba(191, 212, 255, 0.9) 28px 32px);
+  pointer-events: none;
+}
+.sp-bubble::after { /* tail */
+  content: '';
+  position: absolute;
+  left: 36px;
+  bottom: -18px;
+  width: 0;
+  height: 0;
+  border-left: 0 solid transparent;
+  border-right: 26px solid transparent;
+  border-top: 22px solid var(--pale);
+}
+.sp-bubble > * { position: relative; }
+.sp-bubble h2 {
+  margin: 0 0 12px;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: clamp(1.45rem, 2.5vw, 2.05rem);
+  line-height: 1.18;
+  letter-spacing: -0.3px;
+  color: var(--navy);
+}
+.sp-bubble h2 .sp-hl { color: var(--blue); }
+.sp-bubble p {
+  margin: 0 0 24px;
+  max-width: 460px;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.6;
+}
+.sp-cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.sp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 26px;
+  border-radius: 999px;
+  border: 2px solid var(--navy);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1rem;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+.sp-btn--solid { background: var(--navy); color: #fff; box-shadow: 0 5px 0 rgba(12, 0, 84, 0.35); }
+.sp-btn--ghost { background: #fff; color: var(--navy); }
+.sp-btn--icon { justify-content: center; width: 50px; height: 50px; padding: 0; background: #fff; color: var(--navy); }
+.sp-btn--icon svg { width: 22px; height: 22px; }
+.sp-btn:hover { transform: translateY(-3px); background: var(--blue); border-color: var(--blue); color: #fff; }
+
+/* ---------- bottom strip ---------- */
+.sp-base {
+  max-width: 1180px;
+  margin: clamp(56px, 8vw, 96px) auto 0;
+  padding-top: 20px;
+  border-top: 2px solid rgba(191, 212, 255, 0.35);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  justify-content: space-between;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+.sp-credit-note { color: var(--periwinkle); }
+.sp-base a { color: #fff; font-weight: 600; }
+.sp-base a:hover { color: var(--periwinkle); }
+
+@media (max-width: 900px) {
+  .sp-top { display: none; } /* no back-to-top link on phones/tablets */
+  .sp-grid { grid-template-columns: 1fr; gap: 72px; }
+  .sp-post, .sp-right { order: 0; }
+  .sp-spark--a { left: -30px; }
+  .sp-spark--b { right: -30px; }
+}
+@media (max-width: 420px) {
+  .sp-face { min-width: 210px; padding: 13px 26px; gap: 10px; }
+  .sp-sign--left  .sp-face { padding-left: 44px; }
+  .sp-sign--right .sp-face { padding-right: 44px; }
+}
+
+/* Reduced motion: signs are simply there. */
+@media (prefers-reduced-motion: reduce) {
+  .sp-sign { opacity: 1; transform: translateX(var(--x)) rotate(var(--rot)); transition: none; }
+}

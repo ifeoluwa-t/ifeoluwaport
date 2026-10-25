@@ -35,9 +35,8 @@
 .sq2-gallery {
   background: var(--blue);
   position: relative;
-  padding: 112px 0 clamp(120px, 13vw, 170px);
-  overflow: hidden;
-  --row-h: clamp(300px, 55svh, 580px);
+  padding: 0 0 clamp(120px, 13vw, 170px);
+  overflow: clip; /* not hidden: the wheel below is position: sticky */
 }
 .sq2-gallery-head {
   padding: 0 24px;
@@ -67,56 +66,6 @@
   pointer-events: none;
   z-index: 6;
 }
-.sq2-rows { display: flex; flex-direction: column; gap: 0; }
-.sq2-row {
-  height: var(--row-h);
-  overflow: hidden;
-  touch-action: pan-y;
-  cursor: grab;
-  /* Room for the rotation and the hover scale so nothing clips. */
-  padding: 4px 0;
-  box-sizing: content-box;
-}
-.sq2-row.is-dragging { cursor: grabbing; }
-.sq2-track {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 100%;
-  width: max-content;
-  padding: 0 12px;
-  will-change: transform;
-}
-
-.sq2-tile {
-  position: relative;
-  flex: 0 0 auto;
-  height: calc(var(--row-h) * var(--hs, 1));
-  outline: none;
-  z-index: 1;
-}
-.sq2-tile--l { aspect-ratio: 4 / 3; }
-.sq2-tile--p { aspect-ratio: 3 / 4; }
-.sq2-tile--s { aspect-ratio: 1 / 1; }
-
-.sq2-tile-media.img-placeholder {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  aspect-ratio: auto;
-  margin: 0;
-  border-radius: var(--r, 20px);
-  overflow: hidden;
-}
-.sq2-tile img.sq2-tile-media {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; border-radius: var(--r, 20px);
-}
-.sq2-tile .sq2-sticker { position: absolute; top: 10px; left: 10px; z-index: 2; }
-.sq2-tile:nth-child(even) .sq2-sticker { left: auto; right: 10px; }
-.sq2-tile:nth-child(n) .sq2-sticker.sq2-sticker--left { left: 10px; right: auto; }
-
 /* ---------- PART 2: story ---------- */
 .sq2-story {
   background: var(--pale);
@@ -250,20 +199,15 @@ img.sq2-pop-media { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit
   .sq2-story-photo { max-width: 360px; }
 }
 @media (max-width: 640px) {
-  .sq2-gallery { padding-top: 104px; --row-h: clamp(215px, 38svh, 340px); }
-  .sq2-track { gap: 6px; }
   .sq2-doodle--arrow { left: -14px; }
   .sq2-doodle--star { right: -8px; }
   .sq2-doodle--squiggle { left: -10px; }
 }
 
-/* ---------- Reduced motion: no auto-scroll, no rotation, manual scroll only ---------- */
+/* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .sq2-row { overflow-x: auto; scrollbar-width: none; cursor: auto; }
-  .sq2-row::-webkit-scrollbar { display: none; }
-  .sq2-track { transform: none !important; }
-  .sq2-tile, .sq2-btn { transform: none !important; }
-  .sq2-tile, .sq2-btn, .sq2-social, .sq2-pop { transition: none; }
+  .sq2-btn { transform: none !important; }
+  .sq2-btn, .sq2-social, .sq2-pop { transition: none; }
 }
 
 /* Copyright bar: a deeper shade so it reads as separate from the blue closing block (this page only). */
@@ -397,3 +341,179 @@ body[data-page="side-quests"] main { position: relative; }
 .sq2-music-ctrl button:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
 .sq2-yt-holder { position: fixed; left: -9999px; top: 0; width: 200px; height: 200px; overflow: hidden; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .sq2-music.is-playing .sq2-eq i { animation: none; transform: scaleY(0.7); } }
+
+/* ---------- Lightbox for gallery pictures ---------- */
+.sq2-lb {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: rgba(7, 0, 46, 0.86);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  cursor: zoom-out;
+}
+.sq2-lb[hidden] { display: none; }
+.sq2-lb.is-open { opacity: 1; }
+.sq2-lb img {
+  max-width: 90vw;
+  max-height: 88vh;
+  border-radius: 20px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+  transform: scale(0.88);
+  transition: transform 0.35s cubic-bezier(0.2, 1.1, 0.3, 1);
+}
+.sq2-lb.is-open img { transform: scale(1); }
+@media (prefers-reduced-motion: reduce) { .sq2-lb, .sq2-lb img { transition: none; } }
+
+/* ---------- Ferris wheel gallery (port of the 21st.dev Ferris Wheel Gallery) ---------- */
+.sq2-gallery { padding-top: 0; }
+.sqw { position: relative; color: #fff; }
+.sqw-pin {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 28px 32px;
+  box-sizing: border-box;
+}
+.sqw-head { text-align: center; margin: 0 0 6px; font-size: clamp(2rem, 4.2vw, 3.2rem); }
+.sqw-mount { width: 100%; max-width: 1320px; margin: 0 auto; min-height: 0; }
+.sqw-grid { display: grid; gap: 14px; align-items: center; position: relative; }
+@media (min-width: 900px) { .sqw-grid { grid-template-columns: auto auto; justify-content: center; gap: clamp(20px, 3vw, 48px); margin-top: -12px; } }
+
+.sqw-stage {
+  position: relative;
+  margin: 0 auto 0 0;
+  width: min(100%, 860px, calc(100svh - 290px));
+  overflow: visible;
+  border-radius: 24px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+  cursor: grab;
+}
+.sqw-stage.is-dragging { cursor: grabbing; }
+@media (min-width: 900px) { .sqw-stage { margin: 0; width: min(46vw, 860px, calc(100svh - 290px)); } .sqw-hint { width: min(46vw, 860px, calc(100svh - 290px)); } }
+@media (max-width: 899px) { .sqw-stage { margin: 0 auto; width: min(100%, 40svh); } }
+.sqw-square { position: relative; aspect-ratio: 1; container-type: inline-size; }
+.sqw-square::before {
+  /* A plain blue disc behind the wheel, so the background lines don't run through its middle. */
+  content: '';
+  position: absolute;
+  left: 14%; top: 4%; width: 72%; height: 72%;
+  border-radius: 50%;
+  background: var(--blue);
+}
+.sqw-stand { position: absolute; inset: 0; width: 100%; height: 100%; color: rgba(255, 255, 255, 0.35); pointer-events: none; }
+.sqw-wheel {
+  position: absolute; left: 14%; top: 4%; width: 72%; height: 72%;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  will-change: transform;
+}
+.sqw-ring2 { position: absolute; inset: 6%; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.22); }
+.sqw-light {
+  position: absolute; width: 4px; height: 4px; border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--sq-yellow); opacity: 0.8;
+}
+.sqw-spoke {
+  position: absolute; left: 50%; top: 50%; width: 50%; height: 1px;
+  transform-origin: left center; background: rgba(255, 255, 255, 0.22);
+}
+.sqw-anchor { position: absolute; width: 27%; z-index: 10; }
+.sqw-counter { position: relative; transform-origin: top left; }
+.sqw-hang { position: absolute; left: 0; top: 0; width: 100%; transform: translateX(-50%); }
+.sqw-pendulum { position: relative; transform-origin: top center; }
+.sqw-rope { display: block; width: 2px; height: 10px; margin: 0 auto; border-radius: 2px; background: rgba(255, 255, 255, 0.5); }
+.sqw-car {
+  position: relative; display: block; width: 100%;
+  padding: 4px; border: 2px solid transparent; border-radius: 8px;
+  background: #fff; color: var(--navy);
+  box-shadow: 0 6px 14px -6px rgba(7, 0, 46, 0.55);
+  cursor: inherit; font: inherit;
+  transition: transform 0.32s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.sqw-car.is-on { transform: scale(1.12); border-color: var(--sq-yellow); box-shadow: 0 0 0 3px rgba(255, 210, 63, 0.35), 0 8px 18px -6px rgba(7, 0, 46, 0.6); z-index: 2; }
+.sqw-car:focus-visible { outline: 2px solid var(--sq-yellow); outline-offset: 3px; }
+.sqw-thumb { display: block; aspect-ratio: 1.15; overflow: hidden; border-radius: 4px; background: var(--periwinkle); }
+.sqw-thumb img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.sqw-hub {
+  position: absolute; left: 50%; top: 40%; width: 14%; aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border-radius: 50%; background: #fff; color: var(--navy);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 6px 16px rgba(7, 0, 46, 0.35);
+  pointer-events: none;
+}
+.sqw-hub b { font-size: clamp(0.9rem, 3.4cqw, 1.3rem); font-weight: 600; line-height: 1; }
+.sqw-hub i { margin-top: 3px; font-style: normal; font-size: clamp(5px, 1.4cqw, 8px); letter-spacing: 0.12em; font-weight: 600; color: var(--blue); }
+.sqw-hint { margin: 2px 0 0; width: min(100%, 860px, calc(100svh - 290px)); text-align: center; font-size: 11px; letter-spacing: 0.03em; color: rgba(255, 255, 255, 0.7); }
+@media (max-width: 899px) { .sqw-hint { margin: 2px auto 0; } }
+
+.sqw-left { min-width: 0; }
+.sqw-detail { display: flex; flex-direction: column; align-items: center; gap: 16px; min-width: 0; }
+/* Fixed column (as wide as the widest picture, a square) so the wheel never shifts as pictures change shape. */
+@media (min-width: 900px) { .sqw-detail { width: min(48svh, 480px, 30vw); } }
+@media (max-width: 899px) { .sqw-detail { flex-direction: column; justify-content: center; align-items: center; gap: 10px; } .sqw-name { order: -1; } }
+/* The picture box takes each image's true shape (--ar = width / height), as large as fits. */
+.sqw-photo {
+  --ar: 1;
+  position: relative; display: block; flex: none;
+  width: min(calc(48svh * var(--ar)), 480px, 30vw);
+  aspect-ratio: var(--ar);
+  padding: 0; border: 0; overflow: hidden;
+  border-radius: 18px; background: var(--periwinkle);
+  box-shadow: 0 18px 40px -18px rgba(7, 0, 46, 0.6);
+  cursor: zoom-in;
+}
+@media (max-width: 899px) { .sqw-photo { width: min(70%, calc(24svh * var(--ar))); } }
+.sqw-photo span { position: absolute; inset: 0; }
+.sqw-photo .sqw-photo-b { opacity: 0; } /* the previous picture, only shown while fading out */
+.sqw-photo img { width: 100%; height: 100%; object-fit: cover; }
+.sqw-photo:focus-visible { outline: 3px solid var(--sq-yellow); outline-offset: 3px; }
+.sqw-name { margin: 0; text-align: center; font-family: var(--font-display); font-weight: 400; font-size: clamp(1.3rem, 2.6vw, 2rem); line-height: 1.05; color: var(--sq-yellow); }
+@media (max-width: 899px) { .sqw-name { text-align: center; font-size: 1.25rem; } }
+.sqw-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.sqw-pin .sq2-music { margin: 12px auto 0; flex: none; }
+@media (prefers-reduced-motion: reduce) { .sqw-car { transition: none; } }
+
+/* "Listen to music with me" nudge above the player. */
+.sq2-cta {
+  display: flex; align-items: center; gap: 8px;
+  margin: 12px auto 0; padding: 8px 16px;
+  border: 0; border-radius: 999px;
+  background: var(--sq-yellow); color: var(--navy);
+  font-family: var(--font-body); font-weight: 600; font-size: 0.85rem;
+  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+.sq2-cta:hover { background: #fff; transform: translateY(-1px); }
+.sq2-cta:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.sq2-cta svg { animation: sq2-nudge 1.4s ease-in-out infinite; }
+.sq2-cta.is-quiet { opacity: 0; pointer-events: none; }
+.sqw-pin .sq2-cta + .sq2-music { margin-top: 8px; }
+@keyframes sq2-nudge { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(3px); } }
+@media (prefers-reduced-motion: reduce) { .sq2-cta svg { animation: none; } }
+
+/* "Still want to listen?" prompt */
+.sq2-ask { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(7, 0, 46, 0.7); opacity: 0; transition: opacity 0.2s ease; }
+.sq2-ask[hidden] { display: none; }
+.sq2-ask.is-open { opacity: 1; }
+.sq2-ask-card { width: min(380px, 100%); padding: 26px 24px 22px; border-radius: 22px; background: #fff; color: var(--navy); text-align: center; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4); }
+.sq2-ask-card h2 { margin: 0 0 8px; font-family: var(--font-display); font-weight: 400; font-size: 1.9rem; line-height: 1.05; color: var(--blue); }
+.sq2-ask-card p { margin: 0 0 20px; font-size: 0.95rem; line-height: 1.45; }
+.sq2-ask-btns { display: flex; flex-direction: column; gap: 10px; }
+.sq2-ask-btns button { padding: 12px 18px; border: 0; border-radius: 999px; font-family: var(--font-body); font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease; }
+.sq2-ask-yes { background: var(--blue); color: #fff; }
+.sq2-ask-yes:hover { background: var(--indigo); }
+.sq2-ask-no { background: var(--pale); color: var(--navy); }
+.sq2-ask-no:hover { background: var(--periwinkle); }
+.sq2-ask-btns button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .sq2-ask { transition: none; } }

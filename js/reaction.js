@@ -7,12 +7,9 @@
   const titleEl = el('rx-title');
   const bigEl = el('rx-big');
   const subEl = el('rx-sub');
-  const btnEl = el('rx-btn');
   const compareEl = el('rx-compare');
   const teaseEl = el('rx-tease');
   const liveEl = el('rx-live');
-  const statsEl = el('rx-stats');
-  const playersEl = el('rx-players');
   const claimEl = el('rx-claim');
   const claimText = el('rx-claim-text');
   const claimName = el('rx-claim-name');
@@ -74,7 +71,6 @@
     bigEl.hidden = !o.big;
     subEl.textContent = o.sub || '';
     subEl.hidden = !o.sub;
-    btnEl.hidden = !o.btn;
     panel.setAttribute('aria-label', o.label);
     liveEl.textContent = o.live || '';
   }
@@ -83,25 +79,12 @@
     const avg = mine.length ? Math.round(mine.reduce((a, b) => a + b, 0) / mine.length) : null;
     const best = mine.length ? Math.min.apply(null, mine) : null;
     const online = !!(global && global.count > 0);
-    statsEl.classList.toggle('is-offline', !online);
-    el('rx-stat-everyone').hidden = !online;
-    el('rx-stat-fastest').hidden = !online;
-    el('rx-stat-typical').hidden = online;
-    if (online) {
-      el('rx-everyone').textContent = global.average + ' ms';
-      el('rx-fastest').textContent = global.fastest + ' ms';
-    }
-    el('rx-mine').textContent = avg == null ? '—' : avg + ' ms';
-    el('rx-best').textContent = best == null ? 'Play to set a best' : 'Best: ' + best + ' ms';
-
-    const n = global && global.players;
-    playersEl.hidden = !(n > 0);
-    if (n > 0) {
-      playersEl.textContent = '';
-      const chip = document.createElement('span');
-      chip.textContent = '👥 ' + n.toLocaleString() + (n === 1 ? ' person has' : ' people have') + ' tried this';
-      playersEl.appendChild(chip);
-    }
+    const ms = (v) => (v == null ? '—' : v + ' ms');
+    el('rx-mine').textContent = ms(avg);
+    el('rx-best').textContent = ms(best);
+    el('rx-players-count').textContent = online && global.players > 0 ? global.players.toLocaleString() : '—';
+    el('rx-everyone').textContent = online ? ms(global.average) : '—';
+    el('rx-fastest').textContent = online ? ms(global.fastest) : '—';
   }
 
   /* ---------- leaderboard: horizontally scrolling strip ---------- */
@@ -267,7 +250,7 @@
     const line = compareLine(ms); // against the average as it was before this attempt
     const prev = mine.slice();
     const v = verdict(ms);
-    setState('result', { big: ms + ' ms', title: v, btn: true, label: 'Result ' + ms + ' milliseconds. Press to try again.', live: ms + ' milliseconds. ' + v });
+    setState('result', { big: ms + ' ms', title: v, sub: 'Tap to go again.', label: 'Result ' + ms + ' milliseconds. Press to try again.', live: ms + ' milliseconds. ' + v });
     compareEl.textContent = line;
     teaseEl.textContent = teaseLine(ms, prev);
     if (ms <= MAX_VALID) {

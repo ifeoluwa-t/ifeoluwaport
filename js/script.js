@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const last = document.querySelector('.hero-name-last');
     const oLetter = document.querySelector('.hero-name-o');
     const lLetter = document.querySelector('.hero-name-l');
-    const card = document.querySelector('.hero-highlight-card');
+    const card = document.querySelector('.hero-cta');
     const stack = document.querySelector('.hero-left-stack');
     const row = document.querySelector('.hero-row');
     const photo = document.querySelector('.hero-photo');
@@ -350,7 +350,9 @@ document.addEventListener('DOMContentLoaded', () => {
          width, not its bounding-box center — lands on the midpoint
          between "O" and "L". */
       const APEX_FRACTION = 0.5315;
-      const target = (oRect.right + lRect.left) / 2;
+      /* The page's own centre line (the hero container is centred), so the
+         head and "hi, i'm" sit exactly in the middle of the page. */
+      const target = (innerRect.left + innerRect.right) / 2;
       const desiredLeft = target - photoWidth * APEX_FRACTION;
       photo.style.transform = `translateX(${desiredLeft - naturalRect.left}px)`;
 
@@ -1188,35 +1190,30 @@ document.addEventListener('DOMContentLoaded', () => {
   initFlipCards();
 
   /* ---------- Text reveal on scroll ----------
-     Vanilla port of a Framer "Text Reveal Scroll" component (no
-     framer-motion, no React — the original itself is plain DOM +
-     rAF under the hood): words split into their own spans, starting
-     dim, lit up one by one as a single scroll-position window is
-     crossed. Only opacity is ever touched — same as the source, no
-     blur/transform. Math and defaults (90%/30%/0.2) are ported as-is.
-     [data-text-reveal] elements that share a parent are treated as
-     ONE continuous sequence — the reveal runs from the first word of
-     the first element to the last word of the last (progress is
-     measured from the first element's top to the last element's
-     bottom), not as separate per-element triggers — so the three
-     .who-i-am-copy paragraphs read as a single flowing block instead
-     of three independent staggered reveals. TWEAK HERE: START_OFFSET/
-     END_OFFSET (viewport % from the top where the reveal starts/
-     completes) and DIM_OPACITY (opacity of not-yet-revealed words).
-     Word-based rather than the source's char-based default — better
-     fit for multi-sentence body copy; switch the split regex below to
-     characters if a punchier, per-letter reveal is wanted instead. */
+     Port of the Framer "ScrollRevealText" component (Characters mode, "Default"
+     preset). The text is split into characters; each one fades (opacity .3 -> 1),
+     changes colour (hidden -> revealed, via color-mix) and slides in from 7px to
+     the left, one after another in a rolling wave:
+       time        = progress * (DUR + (units - 1) * STAGGER)
+       unit p      = clamp((time - index * STAGGER) / DUR, 0, 1)
+     [data-text-reveal] elements sharing a parent read as ONE continuous sequence.
+     Progress comes from the locked About panel on desktop (0 when it locks, 1 when
+     it releases) and from the viewport window OFFSET_START -> OFFSET_END (% of the
+     screen height, the component's own 80 -> 20) everywhere else. With reduced
+     motion the text is left plain and fully readable. */
   function initTextRevealScroll() {
     const targets = Array.from(document.querySelectorAll('[data-text-reveal]'));
-    if (!targets.length || prefersReducedMotion.matches) return; // reduced motion: leave the plain, fully-readable text alone
+    if (!targets.length || prefersReducedMotion.matches) return;
 
-    const DIM_OPACITY = 0.2;
-    const START_OFFSET = 90;
-    const END_OFFSET = 30;
+    const STAGGER = 0.2;
+    const DUR = 0.7;
+    const X_OFFSET = 7;               // px each character slides in from
+    const OFFSET_START = 80;
+    const OFFSET_END = 20;
+    const COLOR_HIDDEN = '#bfd4ff';   // brand periwinkle
+    const COLOR_REVEALED = '#0c0054'; // brand navy
 
-    // Group elements by parent — siblings reveal together as one
-    // sequence; a differently-parented element elsewhere on the page
-    // gets its own independent instance.
+    // Siblings reveal together as one sequence.
     const groups = new Map();
     targets.forEach((el) => {
       const key = el.parentElement;
@@ -1225,80 +1222,75 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const instances = Array.from(groups.values()).map((elements) => {
-      const spans = [];
+      const chars = [];
+      let unit = 0;
       elements.forEach((root) => {
-        const chunks = root.textContent.split(/(\s+)/);
+        const text = root.textContent;
         root.textContent = '';
-        chunks.forEach((chunk) => {
-          if (chunk === '') return;
-          if (/^\s+$/.test(chunk)) {
-            root.appendChild(document.createTextNode(chunk));
-            return;
-          }
-          const span = document.createElement('span');
-          span.textContent = chunk;
-          span.style.display = 'inline';
-          span.style.opacity = DIM_OPACITY;
-          if (root.hasAttribute('data-reveal-blur')) span.style.filter = 'blur(6px)';
-          span.style.willChange = 'opacity, filter';
-          root.appendChild(span);
-          spans.push(span);
+        root.setAttribute('aria-label', text.trim());
+        text.split(/(\s+)/).forEach((token) => {
+          if (token === '') return;
+          if (/^\s+$/.test(token)) { root.appendChild(document.createTextNode(token)); return; }
+          // Each word is one unbreakable unit, so lines only ever wrap between words.
+          const word = document.createElement('span');
+          word.setAttribute('aria-hidden', 'true');
+          word.style.whiteSpace = 'nowrap';
+          Array.from(token).forEach((ch) => {
+            const span = document.createElement('span');
+            span.textContent = ch;
+            span.style.display = 'inline-block';
+            span.style.willChange = 'transform, opacity, color';
+            span.style.opacity = '0.3';
+            span.style.color = COLOR_HIDDEN;
+            span.style.transform = 'translateX(' + (-X_OFFSET) + 'px)';
+            word.appendChild(span);
+            chars.push({ el: span, unit: unit++ });
+          });
+          root.appendChild(word);
         });
       });
-      return { elements, spans, visibleSet: new Set(), visible: true };
+      return { elements, chars, units: unit, visible: true, visibleSet: new Set() };
     });
 
-    let ticking = false;
+    function apply(inst, progress) {
+      const totalTime = DUR + (inst.units - 1) * STAGGER;
+      const time = progress * totalTime;
+      inst.chars.forEach((c) => {
+        const p = inst.units <= 1 ? progress : Math.max(0, Math.min(1, (time - c.unit * STAGGER) / DUR));
+        c.el.style.opacity = (0.3 + p * 0.7).toFixed(3);
+        c.el.style.transform = 'translateX(' + (-X_OFFSET + X_OFFSET * p).toFixed(1) + 'px)';
+        c.el.style.color = 'color-mix(in srgb, ' + COLOR_REVEALED + ' ' + Math.round(p * 100) + '%, ' + COLOR_HIDDEN + ')';
+      });
+    }
 
-    function computeReveal() {
+    let ticking = false;
+    function compute() {
       ticking = false;
       const vh = window.innerHeight;
-
-      instances.forEach(({ elements, spans, visible }) => {
-        if (!visible || !spans.length) return;
-        // Optional per-block override (viewport % from the top).
-        const startPx = vh * (parseFloat(elements[0].dataset.revealStart) || START_OFFSET) / 100;
-        const endPx = vh * (parseFloat(elements[0].dataset.revealEnd) || END_OFFSET) / 100;
-        // The whole group's progress is driven by its first element's
-        // top and last element's bottom, so mid-group elements (e.g.
-        // paragraph 2 of 3) don't restart or skip the sequence.
-        const firstRect = elements[0].getBoundingClientRect();
-        const lastRect = elements[elements.length - 1].getBoundingClientRect();
+      instances.forEach((inst) => {
+        if (!inst.visible) return;
         let progress;
-        const pin = elements[0].closest('[data-reveal-pin]');
+        const pin = inst.elements[0].closest('[data-reveal-pin]');
         if (pin && window.innerWidth > 900) {
-          // Locked: the whole section stays on screen while the pin's scroll
-          // distance passes, and the words light up across exactly that distance.
+          // Locked panel: starts as it locks under the nav, finishes as it releases.
           const pinRect = pin.getBoundingClientRect();
-          const inner = pin.firstElementChild;
-          const runway = Math.max(1, pinRect.height - inner.getBoundingClientRect().height);
-          progress = Math.min(1, Math.max(0, -pinRect.top / runway));
+          const panel = pin.firstElementChild;
+          const runway = Math.max(1, pinRect.height - panel.getBoundingClientRect().height);
+          const stickyTop = parseFloat(getComputedStyle(panel).top) || 0;
+          progress = (stickyTop - pinRect.top) / runway;
         } else {
-          const totalRange = (lastRect.bottom - firstRect.top) + (startPx - endPx);
-          const scrolled = startPx - firstRect.top;
-          progress = Math.min(1, Math.max(0, totalRange > 0 ? scrolled / totalRange : 0));
+          const rect = inst.elements[0].parentElement.getBoundingClientRect();
+          const range = (OFFSET_START - OFFSET_END) / 100 * vh;
+          progress = (OFFSET_START / 100 * vh - rect.top) / range;
         }
-
-        const blur = elements[0].hasAttribute('data-reveal-blur') ? 6 : 0;
-        const total = spans.length;
-        const litCount = Math.floor(progress * total);
-        const frac = progress * total - litCount;
-
-        spans.forEach((span, i) => {
-          let opacity;
-          if (i < litCount) opacity = 1;
-          else if (i === litCount) opacity = DIM_OPACITY + frac * (1 - DIM_OPACITY);
-          else opacity = DIM_OPACITY;
-          span.style.opacity = opacity.toFixed(3);
-          if (blur) span.style.filter = opacity >= 0.999 ? 'none' : 'blur(' + (blur * (1 - opacity) / (1 - DIM_OPACITY)).toFixed(2) + 'px)';
-        });
+        apply(inst, Math.min(1, Math.max(0, progress)));
       });
     }
 
     function onScroll() {
       if (ticking) return;
       ticking = true;
-      requestAnimationFrame(computeReveal);
+      requestAnimationFrame(compute);
     }
 
     const io = new IntersectionObserver((entries) => {
@@ -1315,7 +1307,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);
-    computeReveal();
+    compute();
   }
 
   initTextRevealScroll();

@@ -1,0 +1,136 @@
+/* ============================================
+   "IN THIS FILE" — case-study contents (built by js/case-toc.js)
+   Wide screens: always-open sidebar down the left. Narrower: a small
+   "In this file" button that opens the same list on demand, so nothing
+   ever sits on top of the page content uninvited.
+============================================ */
+.cs-toc-toggle,
+.cs-toc {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+}
+.cs-toc-on .cs-toc-toggle,
+.cs-toc-on .cs-toc.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
+
+.cs-toc-toggle {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  z-index: 90;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border: none;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 0 0 2px var(--navy), 0 10px 24px rgba(10, 0, 84, 0.18);
+  color: var(--navy);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+}
+.cs-toc-toggle svg { width: 14px; height: 14px; }
+
+.cs-toc {
+  position: fixed;
+  left: 16px;
+  bottom: 66px;
+  z-index: 90;
+  width: min(250px, calc(100vw - 32px));
+  max-height: calc(100vh - 160px);
+  overflow-y: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 16px 14px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 0 0 2px var(--navy), 0 18px 40px rgba(10, 0, 84, 0.2);
+  transform: translateY(8px);
+}
+.cs-toc.is-open { transform: none; }
+
+.cs-toc-back {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 8px;
+  padding: 7px 14px 7px 10px;
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px var(--navy);
+  background: #fff;
+  color: var(--navy);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  transition: transform 0.2s ease;
+}
+.cs-toc-back svg { width: 14px; height: 14px; transition: transform 0.2s ease; }
+.cs-toc-back:hover { transform: translateY(-1px); }
+.cs-toc-back:hover svg { transform: translateX(-2px); }
+
+.cs-toc-label {
+  display: block;
+  margin: 0 0 8px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(12, 0, 84, 0.6);
+}
+.cs-toc-list { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; margin: 0; padding: 0; list-style: none; }
+.cs-toc-link {
+  display: block;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(12, 0, 84, 0.65);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.cs-toc-link:hover { color: var(--navy); background: rgba(191, 212, 255, 0.45); }
+.cs-toc-link.is-active { background: var(--blue); color: #fff; }
+
+/* Anchored sections stop clear of the fixed nav. */
+[data-toc] { scroll-margin-top: 90px; }
+
+/* Wide enough to sit in the left margin without touching the content:
+   an always-open sidebar, near the top like a table of contents. */
+@media (min-width: 1580px) {
+  .cs-toc-toggle { display: none; }
+  .cs-toc {
+    left: 24px;
+    top: 120px;
+    bottom: auto;
+    width: 200px;
+    max-height: calc(100vh - 150px);
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+    padding: 0;
+    transform: none;
+  }
+  .cs-toc-on .cs-toc { opacity: 1; visibility: visible; pointer-events: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-toc-toggle, .cs-toc, .cs-toc-back, .cs-toc-back svg { transition: none; }
+}
