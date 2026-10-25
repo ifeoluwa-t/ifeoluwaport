@@ -1,0 +1,267 @@
+/* ============================================
+   REACTION SPEED TEST (homepage, bottom)
+   Colours come from the site palette (--blue, --indigo, --navy,
+   --periwinkle, --pale). The panel's background has NO transition on
+   purpose: the switch to blue must be instant or it skews the timing.
+============================================ */
+.reaction {
+  background: var(--pale);
+  padding: var(--section-pad) 0;
+}
+
+.rx-heading {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.rx-players {
+  margin: -12px 0 24px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--navy);
+}
+.rx-players[hidden] { display: none; }
+.rx-players span {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 0 0 2px var(--periwinkle);
+}
+
+.rx-panel {
+  position: relative;
+  width: 100%;
+  min-height: 300px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 32px 24px;
+  border-radius: 28px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  color: #fff;
+  background: linear-gradient(135deg, var(--blue), var(--indigo));
+}
+.rx-panel:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; }
+
+.rx-panel[data-state="idle"]    { background: linear-gradient(135deg, var(--periwinkle), var(--pale)); color: var(--navy); box-shadow: inset 0 0 0 2px var(--periwinkle); }
+.rx-panel[data-state="waiting"] { background: var(--navy); color: #fff; }
+.rx-panel[data-state="go"]      { background: var(--blue); color: #fff; }
+.rx-panel[data-state="result"]  { background: linear-gradient(135deg, var(--blue), var(--indigo)); color: #fff; }
+.rx-panel[data-state="soon"]    { background: var(--indigo); color: #fff; }
+
+.rx-title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: clamp(1.3rem, 3.2vw, 2rem);
+  line-height: 1.2;
+}
+.rx-big {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3.4rem, 12vw, 6.5rem);
+  line-height: 1;
+  letter-spacing: 1px;
+}
+.rx-sub {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  opacity: 0.9;
+}
+.rx-btn {
+  margin-top: 8px;
+  padding: 12px 28px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--blue);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1rem;
+}
+.rx-panel [hidden] { display: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .rx-panel[data-state="result"] .rx-big { animation: rxPop 0.35s cubic-bezier(0.19, 1, 0.22, 1); }
+}
+@keyframes rxPop { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.rx-compare {
+  min-height: 1.6em;
+  margin: 16px 0 0;
+  text-align: center;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--navy);
+}
+
+.rx-tease {
+  min-height: 1.4em;
+  margin: 4px 0 0;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: rgba(12, 0, 84, 0.7);
+}
+
+.rx-claim {
+  max-width: 560px;
+  margin: 18px auto 0;
+  padding: 16px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 0 0 2px var(--blue);
+  text-align: center;
+}
+.rx-claim[hidden] { display: none; }
+.rx-claim-text {
+  margin: 0 0 12px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--navy);
+}
+.rx-claim-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.rx-claim-input {
+  flex: 1 1 160px;
+  min-width: 0;
+  padding: 11px 16px;
+  border-radius: 999px;
+  border: 2px solid var(--periwinkle);
+  background: var(--pale);
+  color: var(--navy);
+  font-family: var(--font-body);
+  font-size: 1rem; /* 16px+ so iOS doesn't zoom on focus */
+}
+.rx-claim-input:focus { outline: none; border-color: var(--blue); }
+.rx-claim-save,
+.rx-claim-skip {
+  padding: 11px 20px;
+  border-radius: 999px;
+  border: 2px solid var(--blue);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.rx-claim-save { background: var(--blue); color: #fff; }
+.rx-claim-save:hover { background: var(--navy); border-color: var(--navy); }
+.rx-claim-save:disabled { opacity: 0.6; cursor: default; }
+.rx-claim-skip { background: transparent; color: var(--blue); }
+.rx-claim-msg { margin: 10px 0 0; min-height: 1.2em; font-family: var(--font-body); font-size: 0.9rem; color: var(--navy); }
+.rx-claim-msg.is-error { color: #b00020; }
+
+.rx-board { margin-top: 20px; }
+.rx-board[hidden] { display: none; }
+.rx-board-title {
+  margin: 0 0 10px;
+  text-align: center;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: rgba(12, 0, 84, 0.6);
+}
+.rx-board-view {
+  overflow: hidden;
+  border-radius: 999px;
+  background: #fff;
+  padding: 10px 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.rx-board-track {
+  display: flex;
+  width: max-content;
+  gap: 12px;
+  padding: 0 12px 0 0; /* trailing 12px keeps -50% exactly one loop */
+}
+.rx-board-view.is-moving .rx-board-track { animation: rxScroll var(--rx-dur, 30s) linear infinite; }
+.rx-board-view.is-moving:hover .rx-board-track { animation-play-state: paused; }
+@keyframes rxScroll { to { transform: translateX(-50%); } }
+/* Reduced motion: no marquee — the strip just scrolls sideways by hand. */
+.rx-board-view.is-static { overflow-x: auto; -webkit-mask-image: none; mask-image: none; border-radius: 20px; scrollbar-width: thin; }
+.rx-board-item {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--pale);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--navy);
+  white-space: nowrap;
+}
+.rx-board-rank { font-family: var(--font-display); font-size: 1.2rem; color: var(--blue); }
+.rx-board-ms { font-family: var(--font-display); font-size: 1.1rem; color: var(--blue); }
+.rx-board-item:nth-child(-n+3) { box-shadow: 0 0 0 2px var(--blue); }
+.rx-board-empty { margin: 0; padding: 4px 16px; text-align: center; font-family: var(--font-body); color: rgba(12, 0, 84, 0.7); }
+
+.rx-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+.rx-stats.is-offline { grid-template-columns: repeat(2, 1fr); }
+.rx-stat {
+  background: #fff;
+  border-radius: 20px;
+  padding: 16px 10px;
+  text-align: center;
+}
+.rx-stat[hidden] { display: none; }
+.rx-stat-label {
+  margin: 0 0 6px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: rgba(12, 0, 84, 0.6);
+}
+.rx-stat-value {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2.3rem);
+  line-height: 1.1;
+  color: var(--blue);
+}
+.rx-stat-note {
+  margin: 4px 0 0;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  color: rgba(12, 0, 84, 0.65);
+}
+
+.rx-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .rx-players { margin: -8px 0 18px; }
+  .rx-panel { min-height: 240px; border-radius: 24px; padding: 24px 16px; }
+  .rx-stats { gap: 8px; }
+  .rx-stat { padding: 12px 6px; border-radius: 16px; }
+  .rx-stat-label { font-size: 0.62rem; letter-spacing: 0.3px; }
+}

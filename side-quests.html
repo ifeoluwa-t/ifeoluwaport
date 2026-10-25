@@ -6,8 +6,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Side-Quests | Ifeoluwa Taiwo</title>
 <meta name="description" content="What Ifeoluwa Taiwo gets up to outside of marketing: music, books, comics, sport, birthdays, photography, design and health.">
-<link rel="stylesheet" href="css/style.css?v=264">
-<link rel="stylesheet" href="css/side-quests.css?v=18">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ifeoluwa Taiwo">
+<meta property="og:title" content="Side-Quests | Ifeoluwa Taiwo">
+<meta property="og:description" content="What Ifeoluwa Taiwo gets up to outside of marketing: music, books, comics, sport, birthdays, photography, design and health.">
+<meta property="og:url" content="https://ifeoluwaport.vercel.app/side-quests.html">
+<meta property="og:image" content="https://ifeoluwaport.vercel.app/assets/images/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Side-Quests | Ifeoluwa Taiwo">
+<meta name="twitter:description" content="What Ifeoluwa Taiwo gets up to outside of marketing: music, books, comics, sport, birthdays, photography, design and health.">
+<meta name="twitter:image" content="https://ifeoluwaport.vercel.app/assets/images/og-image.jpg">
+<link rel="stylesheet" href="css/style.css?v=303">
+<link rel="stylesheet" href="css/side-quests.css?v=21">
 </head>
 <body data-page="side-quests">
 
@@ -28,11 +43,13 @@
         <a href="events.html" class="nav-link" data-page="events">Events</a>
         <a href="storytelling.html" class="nav-link" data-page="storytelling">Storytelling</a>
         <a href="side-quests.html" class="nav-link" data-page="side-quests">Side-Quests</a>
-        <a href="contact.html" class="nav-link" data-page="contact">Contact</a>
       </nav>
     </div>
 
-    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">/menu</button>
+    <div class="nav-actions">
+      <a href="mailto:hi@ifeoluwa.xyz" class="nav-mail">hi@ifeoluwa.xyz</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">/menu</button>
+    </div>
   </div>
 </header>
 
@@ -81,6 +98,27 @@
             </div>
         </div>
       </div>
+
+    <!-- Now-playing bar: one song per genre (YouTube, loaded only when play is pressed). Prev / play-pause / next. -->
+    <div class="sq2-music" id="sq2-music" role="region" aria-label="Music player">
+      <span class="sq2-music-icon" aria-hidden="true">
+        <span class="sq2-eq"><i></i><i></i><i></i><i></i></span>
+      </span>
+      <span class="sq2-music-text" aria-live="polite">
+        <strong id="sq2-song-title">Did You See</strong>
+        <em id="sq2-song-artist">J Hus</em>
+      </span>
+      <span class="sq2-music-ctrl">
+        <button type="button" id="sq2-prev" aria-label="Previous song"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h2.4v14H6zM20 5.4v13.2a.8.8 0 0 1-1.25.66L9.6 12.66a.8.8 0 0 1 0-1.32l9.15-6.6A.8.8 0 0 1 20 5.4z"/></svg></button>
+        <button type="button" id="sq2-play" class="sq2-play" aria-label="Play">
+          <svg class="i-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+          <svg class="i-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z"/></svg>
+        </button>
+        <button type="button" id="sq2-next" aria-label="Next song"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.6 5H18v14h-2.4zM4 5.4v13.2a.8.8 0 0 0 1.25.66l9.15-6.6a.8.8 0 0 0 0-1.32L5.25 4.74A.8.8 0 0 0 4 5.4z"/></svg></button>
+      </span>
+      <!-- The YouTube player lives here, kept out of sight: this bar is audio-only. -->
+      <div class="sq2-yt-holder" aria-hidden="true"><div id="sq2-yt"></div></div>
+    </div>
     </div>
   </section>
 
@@ -184,7 +222,7 @@
   <section class="sq2-closing sq2-dark">
     <div class="section-inner sq2-closing-inner">
       <h2 class="sq2-closing-heading">Got a side-quest idea? Let's talk.</h2>
-      <a class="sq2-btn" href="contact.html">Get in touch</a>
+      <a class="sq2-btn" href="mailto:hi@ifeoluwa.xyz">Get in touch</a>
       <div class="sq2-socials">
         <a class="sq2-social" href="https://www.instagram.com/will.og_/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
         <a class="sq2-social" href="https://www.tiktok.com/@will.og_" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.53.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
@@ -202,7 +240,7 @@
 
 </main>
 
-<script src="js/script.js?v=104"></script>
-<script src="js/side-quests.js?v=5"></script>
+<script src="js/script.js?v=114"></script>
+<script src="js/side-quests.js?v=7"></script>
 </body>
 </html>

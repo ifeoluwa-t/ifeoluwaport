@@ -310,4 +310,76 @@
   }
   document.addEventListener('click', function (e) { if (pop && !pop.contains(e.target)) hidePop(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hidePop(); });
+
+  // ---------- Now-playing bar: prev / play-pause / next, one song per genre ----------
+  (function () {
+    var root = document.getElementById('sq2-music');
+    if (!root) return;
+    var SONGS = [
+      ['Did You See', 'J Hus', '3rk6_Ax0mQo'],
+      ['I Like Me Better', 'Lauv', 'BcqxLCWn-CE'],
+      ['Drive', 'Black Coffee & David Guetta', 'vu1QsEUVLQs'],
+      ['Rapid Fire', 'Cruel Santino', 'hMuFO9nhtfA'],
+      ['Space Song', 'Beach House', 'RBtlPT23PTM'],
+      ['Levitating', 'Dua Lipa', 'TUVcZfQe-Kw'],
+      ['In The End', 'Linkin Park', 'eVTXPUF4Oz4'],
+      ['Levels', 'Avicii', '_ovdm2yX4MA'],
+      ['Way Maker', 'Sinach', 'QM8jQHE5AAk'],
+      ['Last Last', 'Burna Boy', '421w1j87fEM']
+    ];
+    var titleEl = document.getElementById('sq2-song-title');
+    var artistEl = document.getElementById('sq2-song-artist');
+    var playBtn = document.getElementById('sq2-play');
+    var player = null, current = 0, apiLoading = false, queued = null, playing = false;
+
+    function show() {
+      titleEl.textContent = SONGS[current][0];
+      artistEl.textContent = SONGS[current][1];
+    }
+    function setPlaying(on) {
+      playing = on;
+      root.classList.toggle('is-playing', on);
+      playBtn.setAttribute('aria-label', on ? 'Pause' : 'Play');
+    }
+    function loadApi(cb) {
+      if (window.YT && window.YT.Player) return cb();
+      queued = cb;
+      if (apiLoading) return;
+      apiLoading = true;
+      window.onYouTubeIframeAPIReady = function () { if (queued) queued(); };
+      var t = document.createElement('script');
+      t.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(t);
+    }
+    function start(i) {
+      current = (i + SONGS.length) % SONGS.length;
+      show();
+      var id = SONGS[current][2];
+      if (player && player.loadVideoById) { player.loadVideoById(id); setPlaying(true); return; }
+      loadApi(function () {
+        if (player) { player.loadVideoById(SONGS[current][2]); return; }
+        player = new YT.Player('sq2-yt', {
+          videoId: SONGS[current][2],
+          width: '200', height: '200',
+          playerVars: { autoplay: 1, rel: 0, playsinline: 1, modestbranding: 1 },
+          events: {
+            onReady: function (e) { e.target.playVideo(); },
+            onStateChange: function (e) {
+              if (e.data === 0) start(current + 1);                  // ended: next song
+              else if (e.data === 1 || e.data === 3) setPlaying(true);
+              else if (e.data === 2) setPlaying(false);
+            },
+            onError: function () { start(current + 1); }              // not playable: skip on
+          }
+        });
+      });
+    }
+    playBtn.addEventListener('click', function () {
+      if (!player) { start(current); return; }                       // first press loads the player
+      if (playing) player.pauseVideo(); else player.playVideo();
+    });
+    document.getElementById('sq2-next').addEventListener('click', function () { start(current + 1); });
+    document.getElementById('sq2-prev').addEventListener('click', function () { start(current - 1); });
+    show();
+  })();
 })();

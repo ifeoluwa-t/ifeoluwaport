@@ -745,23 +745,96 @@ document.addEventListener('DOMContentLoaded', () => {
     const root = document.getElementById('tools-orbit');
     if (!root) return;
 
-    const avatars = root.querySelectorAll('.tools-orbit-avatar');
+    /* The rings are turned here (not by CSS keyframes) so a chip can be dragged
+       round its ring. Each ring has its own phase in degrees; every chip is
+       counter-rotated by its ring's phase plus its own fixed offset so it
+       always stays upright. Default motion: ring 1 and 3 clockwise, ring 2
+       anticlockwise, one turn per 36 seconds. */
+    const rings = Array.from(root.querySelectorAll('.tools-orbit-ring')).map((el, i) => ({
+      el,
+      dir: i === 1 ? -1 : 1,
+      phase: 0,
+      avatars: Array.from(el.querySelectorAll('.tools-orbit-item')).map((item) => ({
+        el: item.querySelector('.tools-orbit-avatar'),
+        angle: parseFloat(item.style.getPropertyValue('--angle')) || 0
+      }))
+    }));
+    const DEG_PER_SEC = 360 / 36;
+
+    function render() {
+      rings.forEach((r) => {
+        r.el.style.transform = 'rotate(' + r.phase + 'deg)';
+        r.avatars.forEach((a) => {
+          a.el.style.transform = 'translate(-50%, -50%) rotate(' + (-a.angle - r.phase) + 'deg)';
+        });
+      });
+    }
+    render();
+
     let hovered = false;
     let visible = true;
+    let dragging = false;
 
     function sync() {
-      root.classList.toggle('is-paused', hovered || !visible);
+      root.classList.toggle('is-paused', hovered || dragging || !visible);
     }
 
-    avatars.forEach((avatar) => {
+    root.querySelectorAll('.tools-orbit-avatar').forEach((avatar) => {
       avatar.addEventListener('mouseenter', () => { hovered = true; sync(); });
       avatar.addEventListener('mouseleave', () => { hovered = false; sync(); });
+
+      // Drag a chip round the circle: only the angle around the centre matters, so a
+      // chip can never leave its ring. Every ring turns by the same angle, so the
+      // rest follow the direction it is dragged in. Letting go resumes the default drift.
+      let lastAngle = 0;
+      const pointerAngle = (e) => {
+        const r = root.getBoundingClientRect();
+        return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI;
+      };
+      avatar.addEventListener('pointerdown', (e) => {
+        dragging = true;
+        lastAngle = pointerAngle(e);
+        avatar.classList.add('is-dragged');
+        try { avatar.setPointerCapture(e.pointerId); } catch (err) { /* pointer already gone */ }
+        sync();
+      });
+      avatar.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const a = pointerAngle(e);
+        let d = a - lastAngle;
+        if (d > 180) d -= 360;
+        if (d < -180) d += 360;
+        lastAngle = a;
+        rings.forEach((r) => { r.phase += d; });
+        render();
+      });
+      const end = () => {
+        if (!dragging) return;
+        dragging = false;
+        avatar.classList.remove('is-dragged');
+        sync();
+      };
+      avatar.addEventListener('pointerup', end);
+      avatar.addEventListener('pointercancel', end);
+      avatar.addEventListener('dragstart', (e) => e.preventDefault());
     });
 
     new IntersectionObserver((entries) => {
       visible = entries[0].isIntersecting;
       sync();
     }, { rootMargin: '100px 0px 100px 0px', threshold: 0 }).observe(root);
+
+    let last = performance.now();
+    function tick(now) {
+      const dt = Math.min((now - last) / 1000, 0.1);
+      last = now;
+      if (!prefersReducedMotion.matches && visible && !hovered && !dragging) {
+        rings.forEach((r) => { r.phase += r.dir * DEG_PER_SEC * dt; });
+        render();
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
   }
 
   initToolsOrbit();
@@ -1166,7 +1239,8 @@ document.addEventListener('DOMContentLoaded', () => {
           span.textContent = chunk;
           span.style.display = 'inline';
           span.style.opacity = DIM_OPACITY;
-          span.style.willChange = 'opacity';
+          if (root.hasAttribute('data-reveal-blur')) span.style.filter = 'blur(6px)';
+          span.style.willChange = 'opacity, filter';
           root.appendChild(span);
           spans.push(span);
         });
@@ -1179,11 +1253,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function computeReveal() {
       ticking = false;
       const vh = window.innerHeight;
-      const startPx = vh * START_OFFSET / 100;
-      const endPx = vh * END_OFFSET / 100;
 
       instances.forEach(({ elements, spans, visible }) => {
         if (!visible || !spans.length) return;
+        // Optional per-block override (viewport % from the top).
+        const startPx = vh * (parseFloat(elements[0].dataset.revealStart) || START_OFFSET) / 100;
+        const endPx = vh * (parseFloat(elements[0].dataset.revealEnd) || END_OFFSET) / 100;
         // The whole group's progress is driven by its first element's
         // top and last element's bottom, so mid-group elements (e.g.
         // paragraph 2 of 3) don't restart or skip the sequence.
@@ -1192,20 +1267,19 @@ document.addEventListener('DOMContentLoaded', () => {
         let progress;
         const pin = elements[0].closest('[data-reveal-pin]');
         if (pin && window.innerWidth > 900) {
-          // Pinned: the row stays put while the pin's runway scrolls by, so the
-          // words light up slowly, finishing exactly as the pin releases.
+          // Locked: the whole section stays on screen while the pin's scroll
+          // distance passes, and the words light up across exactly that distance.
           const pinRect = pin.getBoundingClientRect();
-          const row = pin.firstElementChild;
-          const stickyTop = parseFloat(getComputedStyle(row).top) || 0;
-          const runway = Math.max(1, pinRect.height - row.getBoundingClientRect().height);
-          const lead = vh * 0.3; // start lighting words a little before the row pins
-          progress = Math.min(1, Math.max(0, (stickyTop + lead - pinRect.top) / (runway + lead)));
+          const inner = pin.firstElementChild;
+          const runway = Math.max(1, pinRect.height - inner.getBoundingClientRect().height);
+          progress = Math.min(1, Math.max(0, -pinRect.top / runway));
         } else {
           const totalRange = (lastRect.bottom - firstRect.top) + (startPx - endPx);
           const scrolled = startPx - firstRect.top;
           progress = Math.min(1, Math.max(0, totalRange > 0 ? scrolled / totalRange : 0));
         }
 
+        const blur = elements[0].hasAttribute('data-reveal-blur') ? 6 : 0;
         const total = spans.length;
         const litCount = Math.floor(progress * total);
         const frac = progress * total - litCount;
@@ -1216,6 +1290,7 @@ document.addEventListener('DOMContentLoaded', () => {
           else if (i === litCount) opacity = DIM_OPACITY + frac * (1 - DIM_OPACITY);
           else opacity = DIM_OPACITY;
           span.style.opacity = opacity.toFixed(3);
+          if (blur) span.style.filter = opacity >= 0.999 ? 'none' : 'blur(' + (blur * (1 - opacity) / (1 - DIM_OPACITY)).toFixed(2) + 'px)';
         });
       });
     }
