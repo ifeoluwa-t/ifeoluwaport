@@ -502,18 +502,23 @@ body[data-page="side-quests"] main { position: relative; }
 @keyframes sq2-nudge { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(3px); } }
 @media (prefers-reduced-motion: reduce) { .sq2-cta svg { animation: none; } }
 
-/* "Still want to listen?" prompt */
-.sq2-ask { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(7, 0, 46, 0.7); opacity: 0; transition: opacity 0.2s ease; }
-.sq2-ask[hidden] { display: none; }
-.sq2-ask.is-open { opacity: 1; }
-.sq2-ask-card { width: min(380px, 100%); padding: 26px 24px 22px; border-radius: 22px; background: #fff; color: var(--navy); text-align: center; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4); }
-.sq2-ask-card h2 { margin: 0 0 8px; font-family: var(--font-display); font-weight: 400; font-size: 1.9rem; line-height: 1.05; color: var(--blue); }
-.sq2-ask-card p { margin: 0 0 20px; font-size: 0.95rem; line-height: 1.45; }
-.sq2-ask-btns { display: flex; flex-direction: column; gap: 10px; }
-.sq2-ask-btns button { padding: 12px 18px; border: 0; border-radius: 999px; font-family: var(--font-body); font-weight: 600; font-size: 0.92rem; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease; }
-.sq2-ask-yes { background: var(--blue); color: #fff; }
-.sq2-ask-yes:hover { background: var(--indigo); }
-.sq2-ask-no { background: var(--pale); color: var(--navy); }
-.sq2-ask-no:hover { background: var(--periwinkle); }
-.sq2-ask-btns button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
-@media (prefers-reduced-motion: reduce) { .sq2-ask { transition: none; } }
+/* The music bar stays fixed at the bottom of the screen, always on top, like the navigation bar */
+.sq2-music-slot { display: flex; justify-content: center; margin-top: 12px; }
+.sq2-music-slot { min-height: 50px; }
+body > .sq2-music {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  margin: 0;
+  transform: translateX(-50%);
+  z-index: 9990;
+  box-shadow: 0 10px 30px rgba(7, 0, 46, 0.35);
+}
+/* leave room at the very bottom of the page so the bar never covers the footer's last line */
+body[data-page="side-quests"] .signpost-footer { padding-bottom: 84px; }
+body[data-page="side-quests"] .games { padding-bottom: 96px; }
+@media (max-width: 640px) {
+  body > .sq2-music { bottom: 14px; }
+  /* the sound switch sits just above the music bar on phones */
+  body[data-page="side-quests"] .fx-sound { bottom: 74px; }
+}

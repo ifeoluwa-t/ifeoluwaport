@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Lost side-quest | Ifeoluwa Taiwo</title>
+<meta name="description" content="This page has not been written yet.">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="stylesheet" href="/css/style.css?v=336">
+<link rel="stylesheet" href="/css/fx.css?v=5">
+<style>
+  body { background: var(--pale); min-height: 100vh; display: flex; flex-direction: column; }
+  .nf-top { padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; max-width: 1240px; width: 100%; margin: 0 auto; box-sizing: border-box; }
+  .nf-top .brand, .nf-top .nav-mail { position: static; }
+  .nf { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px 20px 64px; color: var(--navy); }
+  .nf .nf-code { display: flex; gap: clamp(6px, 2vw, 18px); font-family: var(--font-display); font-size: clamp(6rem, 24vw, 15rem); line-height: 0.9; color: var(--blue); margin: 0; max-width: none; }
+  .nf-code span { display: inline-block; cursor: pointer; transition: transform 0.4s cubic-bezier(0.25, 1.6, 0.4, 1); }
+  .nf-code span:hover { transform: translateY(-14px) rotate(-6deg); }
+  .nf-code span.is-hop { animation: nf-hop 0.7s cubic-bezier(0.25, 1.6, 0.4, 1); }
+  @keyframes nf-hop { 0% { transform: translateY(0); } 40% { transform: translateY(-40px) rotate(8deg); } 100% { transform: translateY(0); } }
+  .nf h1 { margin: 22px 0 8px; font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem, 5vw, 3rem); line-height: 1.05; }
+  .nf p { margin: 0 0 26px; max-width: 460px; font-size: 1.02rem; line-height: 1.55; color: rgba(12, 0, 84, 0.78); }
+  .nf-btns { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .nf-btn { padding: 13px 24px; border-radius: 999px; font-weight: 600; font-size: 0.95rem; text-decoration: none; background: var(--blue); color: #fff; }
+  .nf-btn:hover { background: var(--indigo); }
+  .nf-btn--alt { background: #fff; color: var(--navy); box-shadow: 0 0 0 2px var(--navy); }
+  .nf-btn--alt:hover { background: var(--periwinkle); }
+</style>
+</head>
+<body data-page="not-found">
+
+<header class="nf-top">
+  <a href="/index.html" class="brand">IFEOLUWA<span>.</span></a>
+  <a href="mailto:hi@ifeoluwa.xyz" class="nav-mail">hi@ifeoluwa.xyz</a>
+</header>
+
+<main class="nf">
+  <p class="nf-code" aria-hidden="true"><span>4</span><span>0</span><span>4</span></p>
+  <h1 id="nf-title">This side-quest hasn't been written yet.</h1>
+  <p id="nf-line">Either the page doesn't exist, or I haven't built it yet. Let's get you back on the main road.</p>
+  <div class="nf-btns">
+    <a class="nf-btn" href="/index.html">Take me home</a>
+    <a class="nf-btn nf-btn--alt" href="/work.html">See my work</a>
+    <a class="nf-btn nf-btn--alt" href="/side-quests.html">Try a side-quest</a>
+  </div>
+</main>
+
+<script>
+  // The digits hop when you tap them, and the line changes each visit.
+  var lines = [
+    ["This side-quest hasn't been written yet.", "Either the page doesn't exist, or I haven't built it yet. Let's get you back on the main road."],
+    ["Wrong turn, but a good one.", "There's nothing here. The good stuff is a click away though."],
+    ["I looked everywhere. Even under the playlist.", "This page is not on the map. Let's try somewhere that is."],
+    ["Prescription not found.", "The pharmacist in me checked twice. Nothing here, but the rest of the shelf is stocked."]
+  ];
+  var pick = lines[Math.floor(Math.random() * lines.length)];
+  document.getElementById('nf-title').textContent = pick[0];
+  document.getElementById('nf-line').textContent = pick[1];
+  Array.prototype.forEach.call(document.querySelectorAll('.nf-code span'), function (s) {
+    s.addEventListener('click', function () {
+      s.classList.remove('is-hop'); void s.offsetWidth; s.classList.add('is-hop');
+      if (window.fx) window.fx.sound('click');
+    });
+  });
+</script>
+<script src="/js/fx.js?v=6"></script>
+</body>
+</html>

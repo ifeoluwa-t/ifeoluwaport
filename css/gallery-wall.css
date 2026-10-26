@@ -1,0 +1,90 @@
+/* Brand storytelling (landing page): two rows of project cards drifting in opposite directions,
+   full width of the screen. Built by js/gallery-wall.js. */
+.brand-storytelling { overflow-x: clip; }
+.gw {
+  position: relative;
+  /* Same width as the navigation bar: its left and right edges line up with the logo and the email pill */
+  width: min(calc(100vw - 40px), 1240px);
+  margin: 8px 0 0 calc(50% - min(calc(100vw - 40px), 1240px) / 2);
+  padding: 22px 0 28px;
+  overflow: hidden;
+  border-radius: 24px;
+  background: #d6e4ff;   /* a solid blue panel; cards slip in and out at its edges */
+  color: var(--navy);
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+}
+.gw.is-dragging { cursor: grabbing; }
+.gw-row { position: relative; overflow: visible; margin-bottom: 22px; }
+.gw-row:last-child { margin-bottom: 0; }
+.gw-track {
+  display: flex;
+  gap: 22px;
+  width: max-content;
+  will-change: transform;
+}
+.gw-item {
+  display: block;
+  flex: none;
+  padding: 10px 10px 12px;
+  border-radius: 16px;
+  background: #fff;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(10, 0, 84, 0.1);
+  outline: none;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+.gw-media {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 9px;
+  background: var(--periwinkle);
+}
+.gw-media img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.gw-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 0 2px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--navy);
+}
+/* What kind of piece it is (Deck, Article, Video...) */
+.gw-pill {
+  flex: none;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--pale);
+  color: var(--blue);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.gw-title { min-width: 0; }
+/* Hovering a card turns it a soft periwinkle; the tag keeps its own colour */
+@media (hover: hover) {
+  .gw-item:hover, .gw-item:focus-visible { background: var(--periwinkle); box-shadow: 0 14px 30px rgba(12, 0, 84, 0.18); }
+}
+.gw-item:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
+
+/* No JS: a plain sideways-scrolling row */
+.gw:not(.is-ready) { overflow-x: auto; touch-action: auto; }
+.gw:not(.is-ready) .gw-track { padding: 0 24px; }
+.gw:not(.is-ready) .gw-item { width: 320px; }
+.gw:not(.is-ready) .gw-media { aspect-ratio: 16 / 9; }
+@media (prefers-reduced-motion: reduce) { .gw-item, .gw-pill { transition: none; } }
+
+/* Each kind of piece has a tag colour of its own */
+.gw-pill[data-kind="deck"]     { background: var(--periwinkle); color: var(--navy); }
+.gw-pill[data-kind="article"]  { background: var(--blue); color: #fff; }
+.gw-pill[data-kind="video"]    { background: var(--indigo); color: #fff; }
+.gw-pill[data-kind="series"]   { background: var(--navy); color: #fff; }
+.gw-pill[data-kind="campaign"] { background: var(--pale); color: var(--blue); box-shadow: inset 0 0 0 1.5px var(--blue); }

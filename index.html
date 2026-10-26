@@ -21,9 +21,14 @@
 <meta name="twitter:title" content="Ifeoluwa Taiwo — Marketing Strategist">
 <meta name="twitter:description" content="Ifeoluwa Taiwo is a Product Marketer building at the intersection of product, branding, and growth marketing.">
 <meta name="twitter:image" content="https://ifeoluwaport.vercel.app/assets/images/og-image.jpg">
-<link rel="stylesheet" href="css/style.css?v=327">
-<link rel="stylesheet" href="css/signpost.css?v=13">
+<link rel="stylesheet" href="css/style.css?v=336">
+<link rel="stylesheet" href="css/fx.css?v=5">
+<link rel="stylesheet" href="css/signpost.css?v=14">
 <link rel="stylesheet" href="css/hero-lines.css?v=2">
+<link rel="stylesheet" href="css/gallery-wall.css?v=14">
+<link rel="stylesheet" href="css/event-book.css?v=3">
+<link rel="stylesheet" href="css/reaction.css?v=4">
+<link rel="stylesheet" href="css/games.css?v=7">
 </head>
 <body data-page="home">
 
@@ -41,13 +46,17 @@
     <div class="nav-wrap" id="nav-wrap">
       <nav class="main-nav" id="main-nav">
         <a href="work.html" class="nav-link" data-page="work">Work</a>
-        <a href="events.html" class="nav-link" data-page="events">Events</a>
         <a href="storytelling.html" class="nav-link" data-page="storytelling">Storytelling</a>
+        <a href="events.html" class="nav-link" data-page="events">Events</a>
         <a href="side-quests.html" class="nav-link" data-page="side-quests">Side-Quests</a>
       </nav>
     </div>
 
     <div class="nav-actions">
+      <button type="button" class="nav-music" id="nav-music" aria-label="Play music" aria-pressed="false">
+        <span class="nav-eq" aria-hidden="true"><i></i><i></i><i></i></span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6.5l10-2V16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="16.5" cy="16" r="2.5" fill="currentColor"/></svg>
+      </button>
       <a href="mailto:hi@ifeoluwa.xyz" class="nav-mail">hi@ifeoluwa.xyz</a>
       <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">/menu</button>
     </div>
@@ -82,6 +91,7 @@
       <div class="hero-row">
         <div class="hero-photo">
           <img src="assets/images/hero-headshot.webp" alt="Portrait of Ifeoluwa Taiwo" width="1090" height="950" class="hero-photo-img">
+          <img src="assets/images/hero-headshot-3d.webp" alt="" width="1090" height="950" class="hero-photo-img hero-photo-img--3d" aria-hidden="true" loading="lazy" decoding="async">
         </div>
       </div>
 
@@ -104,7 +114,11 @@
       <!-- Calls to action, right side (positioned from the wordmark by script.js) -->
       <div class="hero-cta">
         <a class="hero-cta-btn hero-cta-btn--solid" href="work.html">View my work</a>
-        <a class="hero-cta-btn hero-cta-btn--ghost" href="#site-footer">Contact me</a>
+        <div class="hero-socials">
+          <a class="hero-cta-btn hero-cta-btn--icon" href="mailto:hi@ifeoluwa.xyz" aria-label="Email me"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.8 7.2 12 13.4l8.2-6.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a class="hero-cta-btn hero-cta-btn--icon" href="https://www.linkedin.com/in/ifeoluwa-marketing/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 8.5H3.56V20.5H6.94V8.5Z" fill="currentColor"/><path d="M5.25 7.03C6.35 7.03 7.25 6.13 7.25 5.03C7.25 3.92 6.35 3.03 5.25 3.03C4.14 3.03 3.25 3.92 3.25 5.03C3.25 6.13 4.14 7.03 5.25 7.03Z" fill="currentColor"/><path d="M20.5 20.5H17.13V14.5C17.13 13 17.1 11.13 15.06 11.13C13 11.13 12.69 12.71 12.69 14.39V20.5H9.31V8.5H12.56V10.03H12.6C13.06 9.17 14.17 8.27 15.83 8.27C19.25 8.27 20.5 10.5 20.5 13.87V20.5Z" fill="currentColor"/></svg></a>
+          <a class="hero-cta-btn hero-cta-btn--icon" href="https://x.com/_WillOG" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 2H22L14.5 10.6L23.3 22H16.4L11 15.2L4.8 22H1.7L9.7 12.8L1.3 2H8.4L13.3 8.2L18.9 2ZM17.7 20H19.6L7 3.9H5L17.7 20Z" fill="currentColor"/></svg></a>
+        </div>
       </div>
     </div>
   </section>
@@ -396,59 +410,49 @@
         <h2 class="section-heading">Brand Storytelling</h2>
       </div>
 
-      <div class="storytelling-gallery">
-        <a href="storytelling.html#onboard-b2b-sales-deck" class="storytelling-tile storytelling-tile--wide">
-          <img decoding="async" loading="lazy" width="960" height="540" src="assets/images/onboard-b2b-sales-deck.jpg" alt="Onboard Business sales deck cover slide" style="aspect-ratio: 960 / 540;">
-          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
-          <h3 class="storytelling-tile-caption">Onboard B2B Sales Deck</h3>
-        </a>
-        <a href="storytelling.html#onboard-3-0-recap" class="storytelling-tile storytelling-tile--narrow">
-          <span class="work-card-media work-card-media--video" style="aspect-ratio: 484 / 272;">
-            <img decoding="async" loading="lazy" width="484" height="272" src="assets/images/onboard-h2-2025-recap-thumb-wide.jpg?v=2" alt="What we've been up to since we launched Onboard 3.0">
-          </span>
-          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
-          <h3 class="storytelling-tile-caption">Onboard 3.0 Recap</h3>
-        </a>
-
-        <a href="storytelling.html#onboard-blog" class="storytelling-tile storytelling-tile--narrow">
-          <img decoding="async" loading="lazy" width="1600" height="912" src="assets/images/onboard-blog.jpg" alt="Onboard blog featured articles grid" style="aspect-ratio: 1600 / 912;">
-          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
-          <h3 class="storytelling-tile-caption">Onboard Blog</h3>
-        </a>
-        <a href="storytelling.html#onchain-products-from-africa" class="storytelling-tile storytelling-tile--narrow">
-          <img decoding="async" loading="lazy" width="1600" height="900" src="assets/images/onchain-products-from-africa.jpg" alt="Onchain Products From Africa series cover: FBI x Base" style="aspect-ratio: 1600 / 900;">
-          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
-          <h3 class="storytelling-tile-caption">African Onchain Products</h3>
-        </a>
-        <a href="storytelling.html#quarterly-product-report" class="storytelling-tile storytelling-tile--narrow">
-          <img decoding="async" loading="lazy" width="960" height="540" src="assets/images/q1-2026-product-report.jpg" alt="Onboard Q1 2026 Product Report cover slide" style="aspect-ratio: 960 / 540;">
-          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
-          <h3 class="storytelling-tile-caption">Quarterly Product Report</h3>
-        </a>
-
-        <a href="storytelling.html#with-love-onboard" class="storytelling-tile storytelling-tile--half">
-          <img decoding="async" loading="lazy" width="1600" height="900" src="assets/images/with-love-onboard.jpg" alt="With Love, Onboard campaign visual" style="aspect-ratio: 1600 / 900;">
-          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
-          <h3 class="storytelling-tile-caption">With Love, Onboard</h3>
-        </a>
-        <a href="storytelling.html#the-graph" class="storytelling-tile storytelling-tile--half">
-          <img decoding="async" loading="lazy" width="1600" height="899" src="assets/images/the-graph.jpg" alt="Medium articles by Ifeoluwa on The Graph" style="aspect-ratio: 1600 / 899;">
-          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
-          <h3 class="storytelling-tile-caption">The Graph Articles</h3>
-        </a>
-
-        <a href="storytelling.html#onboard-wrapped-2024" class="storytelling-tile storytelling-tile--half">
-          <span class="work-card-media work-card-media--video" style="aspect-ratio: 484 / 303;">
-            <img decoding="async" loading="lazy" width="484" height="303" src="assets/images/onboard-2024-recap-thumb-wide.jpg" alt="Onboard in 2024 recap cover">
-          </span>
-          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
-          <h3 class="storytelling-tile-caption">Onboard Wrapped 2024</h3>
-        </a>
-        <a href="storytelling.html#q3-2026-product-report" class="storytelling-tile storytelling-tile--half">
-          <img decoding="async" loading="lazy" width="1600" height="900" src="assets/images/q3-2026-product-report.webp" alt="Onboard Q3 2026 Product Report cover slide" style="aspect-ratio: 1600 / 900;">
-          <span class="storytelling-tile-overlay" aria-hidden="true"></span>
-          <h3 class="storytelling-tile-caption">Q3 2026 Product Report</h3>
-        </a>
+      <div class="gw" id="gw" aria-label="Brand storytelling projects">
+        <div class="gw-track">
+          <a class="gw-item" href="storytelling.html#sales-deck" data-ar="1.7778">
+            <span class="gw-media"><img src="assets/images/onboard-b2b-sales-deck.jpg" width="960" height="540" alt="Onboard Business sales deck cover slide" loading="lazy" decoding="async" draggable="false"></span>
+            <span class="gw-meta"><span class="gw-pill">Deck</span><span class="gw-title">Onboard B2B Sales Deck</span></span>
+          </a>
+          <a class="gw-item" href="storytelling.html#2025-h2-onboard-recap" data-ar="1.7794">
+            <span class="gw-media"><img src="assets/images/onboard-h2-2025-recap-thumb-wide.jpg?v=2" width="484" height="272" alt="What we've been up to since we launched Onboard 3.0" loading="lazy" decoding="async" draggable="false"></span>
+            <span class="gw-meta"><span class="gw-pill">Video</span><span class="gw-title">Onboard 3.0 Recap</span></span>
+          </a>
+          <a class="gw-item" href="storytelling.html#onboard-blog" data-ar="1.7544">
+            <span class="gw-media"><img src="assets/images/onboard-blog.jpg" width="1600" height="912" alt="Onboard blog featured articles grid" loading="lazy" decoding="async" draggable="false"></span>
+            <span class="gw-meta"><span class="gw-pill">Article</span><span class="gw-title">Onboard Blog</span></span>
+          </a>
+          <a class="gw-item" href="storytelling.html#onchain-products-from-africa" data-ar="1.7778">
+            <span class="gw-media"><img src="assets/images/onchain-products-from-africa.jpg" width="1600" height="900" alt="Onchain Products From Africa series cover: FBI x Base" loading="lazy" decoding="async" draggable="false"></span>
+            <span class="gw-meta"><span class="gw-pill">Series</span><span class="gw-title">African Onchain Products</span></span>
+          </a>
+          <a class="gw-item" href="storytelling.html#q1-2026-product-report" data-ar="1.7778">
+            <span class="gw-media"><img src="assets/images/q1-2026-product-report.jpg" width="960" height="540" alt="Onboard Q1 2026 Product Report cover slide" loading="lazy" decoding="async" draggable="false"></span>
+            <span class="gw-meta"><span class="gw-pill">Deck</span><span class="gw-title">Quarterly Product Report</span></span>
+          </a>
+          <a class="gw-item" href="storytelling.html#with-love-onboard" data-ar="1.7778">
+            <span class="gw-media"><img src="assets/images/with-love-onboard.jpg" width="1600" height="900" alt="With Love, Onboard campaign visual" loading="lazy" decoding="async" draggable="false"></span>
+            <span class="gw-meta"><span class="gw-pill">Campaign</span><span class="gw-title">With Love, Onboard</span></span>
+          </a>
+          <a class="gw-item" href="storytelling.html#the-graph-articles" data-ar="1.7798">
+            <span class="gw-media"><img src="assets/images/the-graph.jpg" width="1600" height="899" alt="Medium articles by Ifeoluwa on The Graph" loading="lazy" decoding="async" draggable="false"></span>
+            <span class="gw-meta"><span class="gw-pill">Article</span><span class="gw-title">The Graph Articles</span></span>
+          </a>
+          <a class="gw-item" href="storytelling.html#polygon-in-africa-2022-h2" data-ar="1.7766">
+            <span class="gw-media"><img src="assets/images/putting-africa-on-the-web3-map.jpg" width="1400" height="788" alt="Polygon: Putting Africa on the Web3 Map" loading="lazy" decoding="async" draggable="false"></span>
+            <span class="gw-meta"><span class="gw-pill">Article</span><span class="gw-title">Polygon in Africa 2022 H2</span></span>
+          </a>
+          <a class="gw-item" href="storytelling.html#2024-onboard-recap" data-ar="1.5974">
+            <span class="gw-media"><img src="assets/images/onboard-2024-recap-thumb-wide.jpg" width="484" height="303" alt="Onboard in 2024 recap cover" loading="lazy" decoding="async" draggable="false"></span>
+            <span class="gw-meta"><span class="gw-pill">Video</span><span class="gw-title">Onboard Wrapped 2024</span></span>
+          </a>
+          <a class="gw-item" href="storytelling.html#q3-2026-product-report" data-ar="1.7778">
+            <span class="gw-media"><img src="assets/images/q3-2026-product-report.webp" width="1600" height="900" alt="Onboard Q3 2026 Product Report cover slide" loading="lazy" decoding="async" draggable="false"></span>
+            <span class="gw-meta"><span class="gw-pill">Deck</span><span class="gw-title">Q3 2026 Product Report</span></span>
+          </a>
+        </div>
       </div>
 
     </div>
@@ -456,87 +460,27 @@
 
   <!-- EVENTS (TEASER) -->
   <section class="events" id="events">
+    <div class="section-inner">
+      <div class="section-heading-row">
+        <h2 class="section-heading">Events</h2>
+      </div>
 
-    <!-- Sticky, scroll-driven full-bleed gallery — an original recreation
-         of Framer's "ImageScroller" component: scrolling through this
-         tall track advances which image/caption is pinned on screen,
-         cross-fading between them, with a thumbnail dock to jump
-         straight to any one (see initEventsScroller in script.js). -->
-    <div class="events-scroller" id="events-scroller">
-      <div class="events-scroller-sticky">
-        <div class="events-scroller-head">
-        <div class="section-inner">
-          <div class="section-heading-row">
-            <h2 class="section-heading">Events</h2>
-          </div>
-        </div>
-        </div>
-        <div class="events-scroller-slide is-active" data-index="0">
-          <a href="events.html" class="events-scroller-slide-link">
-            <div class="events-scroller-media events-scroller-media--img">
-              <img width="1200" height="1200" class="events-scroller-photo" src="assets/images/event-sip-and-ship.webp" alt="Sip and Ship With Onboard poster, Lagos, 30th July 2025" loading="eager" decoding="async">
-            </div>
-          </a>
-          <div class="events-scroller-caption"><h3>Sip &amp; Ship With Onboard</h3></div>
-        </div>
-        <div class="events-scroller-slide" data-index="1">
-          <a href="events.html" class="events-scroller-slide-link">
-            <div class="events-scroller-media events-scroller-media--img">
-              <img width="1080" height="1080" class="events-scroller-photo" src="assets/images/event-fbi-africa.webp" alt="FBI in Africa community launch and meetup poster" loading="lazy" decoding="async">
-            </div>
-          </a>
-          <div class="events-scroller-caption"><h3>FBI Africa Meetup</h3></div>
-        </div>
-        <div class="events-scroller-slide" data-index="2">
-          <a href="events.html" class="events-scroller-slide-link">
-            <div class="events-scroller-media events-scroller-media--img">
-              <img width="1000" height="1000" class="events-scroller-photo" src="assets/images/event-graph-birthday.webp" alt="The Graph Network 3-Year Birthday Celebration stage in Lagos" loading="lazy" decoding="async">
-            </div>
-          </a>
-          <div class="events-scroller-caption"><h3>The Graph Birthday Celebration</h3></div>
-        </div>
-        <div class="events-scroller-slide" data-index="3">
-          <a href="events.html" class="events-scroller-slide-link">
-            <div class="events-scroller-media events-scroller-media--img">
-              <img width="1000" height="1000" class="events-scroller-photo" src="assets/images/graph-advocate/speaking.webp" alt="Speaking at a WeaveDB Campus Meetup" loading="lazy" decoding="async">
-            </div>
-          </a>
-          <div class="events-scroller-caption"><h3>The Graph Advocate</h3></div>
-        </div>
-        <div class="events-scroller-slide" data-index="4">
-          <a href="events.html" class="events-scroller-slide-link">
-            <div class="events-scroller-media events-scroller-media--img">
-              <img width="788" height="940" class="events-scroller-photo" src="assets/images/event-onchain-festival.webp" alt="Onchain Festival x Onboard Global: Creators Challenge Deep Dive poster" loading="lazy" decoding="async">
-            </div>
-          </a>
-          <div class="events-scroller-caption"><h3>Onchain Festival</h3></div>
-        </div>
-
-        <div class="events-scroller-dock">
-          <button type="button" class="events-scroller-thumb is-active" data-index="0" aria-label="Jump to Sip &amp; Ship With Onboard">
-            <span class="events-scroller-thumb-outline" aria-hidden="true"></span>
-            <img width="1200" height="1200" class="events-scroller-thumb-media" src="assets/images/event-sip-and-ship.webp" alt="Sip and Ship event" loading="lazy" decoding="async">
-          </button>
-          <button type="button" class="events-scroller-thumb" data-index="1" aria-label="Jump to FBI Africa Meetup">
-            <span class="events-scroller-thumb-outline" aria-hidden="true"></span>
-            <img width="1080" height="1080" class="events-scroller-thumb-media" src="assets/images/event-fbi-africa.webp" alt="FBI Africa event" loading="lazy" decoding="async">
-          </button>
-          <button type="button" class="events-scroller-thumb" data-index="2" aria-label="Jump to The Graph Birthday Celebration">
-            <span class="events-scroller-thumb-outline" aria-hidden="true"></span>
-            <img width="1000" height="1000" class="events-scroller-thumb-media" src="assets/images/event-graph-birthday.webp" alt="The Graph birthday event" loading="lazy" decoding="async">
-          </button>
-          <button type="button" class="events-scroller-thumb" data-index="3" aria-label="Jump to The Graph Advocate">
-            <span class="events-scroller-thumb-outline" aria-hidden="true"></span>
-            <img width="1000" height="1000" class="events-scroller-thumb-media" src="assets/images/graph-advocate/speaking.webp" alt="Ifeoluwa speaking at a The Graph event" loading="lazy" decoding="async">
-          </button>
-          <button type="button" class="events-scroller-thumb" data-index="4" aria-label="Jump to Onchain Festival">
-            <span class="events-scroller-thumb-outline" aria-hidden="true"></span>
-            <img width="788" height="940" class="events-scroller-thumb-media" src="assets/images/event-onchain-festival.webp" alt="Onchain Festival event" loading="lazy" decoding="async">
-          </button>
-        </div>
+      <!-- A page-turning journal of the events (see js/event-book.js). Each <li> is one page. -->
+      <div class="bk" id="bk" aria-label="Events journal">
+        <ol class="bk-data">
+          <li data-kind="intro" data-kicker="Events" data-text="Rooms I have planned, hosted and shown up in." data-note="Turn the page"></li>
+          <li data-title="Sip &amp; Ship With Onboard" data-caption="An intimate IRL gathering, live feedback shaping Onboard 3.0 in real-time." data-tag="Lagos · Jul 2025" data-src="assets/images/event-sip-and-ship.webp" data-w="1200" data-h="1200" data-alt="Sip and Ship With Onboard poster, Lagos, 30th July 2025"></li>
+          <li data-title="FBI Africa Meetup" data-caption="FBI Africa's community launch, strengthening Base in West Africa with keynote speakers." data-tag="Lagos · 28 Sep" data-src="assets/images/event-fbi-africa.webp" data-w="1080" data-h="1080" data-alt="FBI in Africa community launch and meetup poster"></li>
+          <li data-title="The Graph Birthday Celebration" data-caption="7 cities worldwide. In Lagos: entertainment meets The Graph's web3 data story." data-tag="Lagos" data-src="assets/images/event-graph-birthday.webp" data-w="1000" data-h="1000" data-alt="The Graph Network 3-Year Birthday Celebration stage in Lagos"></li>
+          <li data-title="The Graph Advocate" data-caption="Representing The Graph at events, helping builders and developers index their data as they ship." data-tag="Community" data-src="assets/images/graph-advocate/speaking.webp" data-w="1000" data-h="1000" data-alt="Speaking at a WeaveDB Campus Meetup"></li>
+          <li data-title="Onchain Festival" data-caption="Founders, creators &amp; innovators across finance and AI, with Onboard front and centre." data-tag="X Space · Aug 2025" data-src="assets/images/event-onchain-festival.webp" data-w="788" data-h="940" data-alt="Onchain Festival x Onboard Global: Creators Challenge Deep Dive poster"></li>
+          <li data-kind="outro" data-text="Want the full story behind each one?" data-link="events.html" data-label="See all events"></li>
+        </ol>
       </div>
     </div>
   </section>
+
+
 
 
 
@@ -603,11 +547,86 @@
     </div>
   </footer>
 
+  <!-- REACTION SPEED TEST: tucked under the footer; hover the signpost to reveal it (always shown on touch screens) -->
+  <section class="games games--landing" id="games" inert aria-labelledby="rx-heading">
+    <div class="rx-game">
+
+      <div class="rx-left">
+        <div class="rx-panel" id="rx-panel" role="button" tabindex="0" data-state="idle" aria-label="Reaction speed test. Press to start.">
+          <p class="rx-title" id="rx-title">Test your reaction speed.</p>
+          <p class="rx-big" id="rx-big" hidden></p>
+          <p class="rx-sub" id="rx-sub">Tap to start.</p>
+        </div>
+        <p class="rx-compare" id="rx-compare"></p>
+        <p class="rx-tease" id="rx-tease"></p>
+      </div>
+
+      <div class="rx-right">
+        <div class="game-head">
+          <h2 class="game-title" id="rx-heading">How fast are you?</h2>
+        </div>
+
+
+        <form class="rx-claim" id="rx-claim" autocomplete="off" hidden>
+          <p class="rx-claim-text" id="rx-claim-text"></p>
+          <div class="rx-claim-row">
+            <input class="rx-claim-input" id="rx-claim-name" type="text" name="nickname" maxlength="16" minlength="2" placeholder="Your name" aria-label="Your name for the leaderboard" autocomplete="off" autocapitalize="words" spellcheck="false">
+            <button class="rx-claim-save" type="submit">Add me</button>
+            <button class="rx-claim-skip" type="button" id="rx-claim-skip">No thanks</button>
+          </div>
+          <p class="rx-claim-msg" id="rx-claim-msg" role="status"></p>
+        </form>
+
+        <div class="rx-stats rx-stats--two">
+          <div class="rx-stat">
+            <p class="rx-stat-label">Your average</p>
+            <p class="rx-stat-value" id="rx-mine">—</p>
+          </div>
+          <div class="rx-stat">
+            <p class="rx-stat-label">Your best</p>
+            <p class="rx-stat-value" id="rx-best">—</p>
+          </div>
+        </div>
+
+        <div class="rx-stats rx-stats--three">
+          <div class="rx-stat">
+            <p class="rx-stat-label">People who've played</p>
+            <p class="rx-stat-value" id="rx-players-count">—</p>
+          </div>
+          <div class="rx-stat">
+            <p class="rx-stat-label">Everyone's average</p>
+            <p class="rx-stat-value" id="rx-everyone">—</p>
+          </div>
+          <div class="rx-stat">
+            <p class="rx-stat-label">Fastest ever</p>
+            <p class="rx-stat-value" id="rx-fastest">—</p>
+          </div>
+        </div>
+
+        <div class="rx-board" id="rx-board" hidden>
+          <p class="rx-board-title">Leaderboard &middot; top 10</p>
+          <div class="rx-board-view" id="rx-board-view">
+            <div class="rx-board-track" id="rx-board-track"></div>
+          </div>
+        </div>
+
+        <div class="rx-sr" id="rx-live" aria-live="polite" aria-atomic="true"></div>
+      </div>
+
+    </div>
+  </section>
+
 </main>
 
-<script src="js/script.js?v=120"></script>
+<script src="js/script.js?v=121"></script>
 <script src="js/signpost.js?v=1"></script>
 <script src="js/hero-lines.js?v=2"></script>
-<script src="js/music-keep.js?v=4"></script>
+<script src="js/gallery-wall.js?v=12"></script>
+<script src="js/event-book.js?v=2"></script>
+<script src="js/reaction.js?v=7"></script>
+<script src="js/music-keep.js?v=6"></script>
+<script src="js/hero-fx.js?v=2"></script>
+<script src="js/footer-game.js?v=1"></script>
+<script src="js/fx.js?v=6"></script>
 </body>
 </html>

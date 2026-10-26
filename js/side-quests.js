@@ -219,6 +219,7 @@
         spanA.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 360, easing: 'ease-out' });
         spanB.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 360, easing: 'ease-out' });
       }
+      if (prev >= 0 && window.fx) window.fx.sound('tile', i);   // each tile has its own note (only if the visitor switched sound on)
       shown = i;
       live.textContent = (i + 1) + ' of ' + n + ': ' + d.title;
     }
@@ -414,10 +415,10 @@
           width: '200', height: '200',
           playerVars: { autoplay: 1, rel: 0, playsinline: 1, modestbranding: 1 },
           events: {
-            onReady: function (e) { e.target.playVideo(); },
+            onReady: function (e) { e.target.setVolume(window.SQ_VOLUME); e.target.playVideo(); },
             onStateChange: function (e) {
               if (e.data === 0) start(current + 1);                  // ended: next song
-              else if (e.data === 1 || e.data === 3) setPlaying(true);
+              else if (e.data === 1 || e.data === 3) { try { player.setVolume(window.SQ_VOLUME); } catch (x) {} setPlaying(true); }
               else if (e.data === 2) setPlaying(false);
             },
             onError: function () { start(current + 1); }              // not playable: skip on
@@ -456,59 +457,17 @@
     sync();
   })();
 
-  // ---------- "Still want to listen?" when leaving for another page while music plays ----------
+  // The music bar is fixed at the bottom of the screen from the moment the page loads (like the nav bar).
+  // This empty slot keeps its place in the layout so the wheel does not shift.
   (function () {
-    var dlg = null, pending = null, back = null;
-    function build() {
-      dlg = document.createElement('div');
-      dlg.className = 'sq2-ask';
-      dlg.hidden = true;
-      dlg.setAttribute('role', 'dialog');
-      dlg.setAttribute('aria-modal', 'true');
-      dlg.setAttribute('aria-labelledby', 'sq2-ask-t');
-      dlg.innerHTML =
-        '<div class="sq2-ask-card">' +
-          '<h2 id="sq2-ask-t">Still want to listen?</h2>' +
-          '<p>Keep the music going while you look around the rest of the site?</p>' +
-          '<div class="sq2-ask-btns">' +
-            '<button type="button" class="sq2-ask-yes">Yes, keep playing</button>' +
-            '<button type="button" class="sq2-ask-no">No, stop it</button>' +
-          '</div>' +
-        '</div>';
-      document.body.appendChild(dlg);
-      dlg.querySelector('.sq2-ask-yes').addEventListener('click', function () { go(true); });
-      dlg.querySelector('.sq2-ask-no').addEventListener('click', function () { go(false); });
-      dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
-    }
-    function open(url) {
-      if (!dlg) build();
-      pending = url; back = document.activeElement;
-      dlg.hidden = false;
-      void dlg.offsetWidth;
-      dlg.classList.add('is-open');
-      dlg.querySelector('.sq2-ask-yes').focus();
-    }
-    function close() {
-      if (!dlg) return;
-      dlg.classList.remove('is-open'); dlg.hidden = true; pending = null;
-      if (back && back.focus) back.focus({ preventScroll: true });
-    }
-    function go(keep) {
-      var url = pending;
-      if (keep) window.sqMusic.keep(); else window.sqMusic.stop();
-      dlg.hidden = true;
-      if (url) window.location.href = url;
-    }
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && dlg && !dlg.hidden) close(); });
-    document.addEventListener('click', function (e) {
-      if (!window.sqMusic || !window.sqMusic.playing()) return;
-      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      var a = e.target.closest ? e.target.closest('a[href]') : null;
-      if (!a || a.target === '_blank' || a.hasAttribute('download')) return;
-      var u;
-      try { u = new URL(a.href, location.href); } catch (err) { return; }
-      if (u.origin !== location.origin || (u.pathname === location.pathname && u.search === location.search)) return;   // other sites, or same page (#anchors)
-      e.preventDefault();
-      open(u.href);
-    }, true);
+    var bar = document.getElementById('sq2-music');
+    if (!bar) return;
+    var slot = document.createElement('div');
+    slot.className = 'sq2-music-slot';
+    bar.parentNode.insertBefore(slot, bar);
+    document.body.appendChild(bar);        // straight into <body>, so nothing on the page can stack above it
+    function measure() { slot.style.height = bar.offsetHeight + 'px'; }
+    measure();
+    window.addEventListener('resize', measure);
+    window.addEventListener('load', measure);
   })();

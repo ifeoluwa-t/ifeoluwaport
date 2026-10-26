@@ -65,6 +65,7 @@
   function setState(next, o) {
     state = next;
     panel.dataset.state = next;
+    if (window.fx) { if (next === 'go') window.fx.sound('go'); else if (next === 'soon') window.fx.sound('soon'); else if (next === 'result') window.fx.sound('done'); }   // only audible if the visitor switched sound on
     titleEl.textContent = o.title || '';
     titleEl.hidden = !o.title;
     bigEl.textContent = o.big || '';

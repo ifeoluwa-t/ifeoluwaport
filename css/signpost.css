@@ -195,7 +195,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background-image: repeating-radial-gradient(circle at 100% 0, transparent 0 28px, rgba(191, 212, 255, 0.9) 28px 32px);
+  background-image: repeating-radial-gradient(circle at 100% 0, transparent 0 28px, rgba(191, 212, 255, 0.4) 28px 32px);
   pointer-events: none;
 }
 .sp-bubble::after { /* tail */
