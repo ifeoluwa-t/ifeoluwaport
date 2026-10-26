@@ -3,10 +3,9 @@
  * Paused while the hero is off-screen or the tab is hidden; with prefers-reduced-motion
  * it draws one still frame (no drift, no pointer response). */
 (function () {
-  const hero = document.querySelector('.hero, .sq2-gallery');
-  if (!hero) return;
   const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  function init(hero) {
   const canvas = document.createElement('canvas');
   canvas.className = 'hero-lines';
   canvas.setAttribute('aria-hidden', 'true');
@@ -17,7 +16,7 @@
 
   let W = 0, H = 0, gap = 10;
   const STEP = 16;
-  const R = 170; // pointer reach, px
+  const R = 150; // pointer reach, px
   let px = -9999, py = -9999, tx = -9999, ty = -9999;
   let strength = 0, active = false;
   let raf = 0, inView = true;
@@ -39,7 +38,7 @@
     const foldCx = W * (0.55 + 0.18 * Math.sin(t * 0.11));
     for (let x = gap / 2; x < W + gap; x += gap) {
       const near = Math.exp(-Math.pow((x - px) / R, 2)) * strength;
-      ctx.strokeStyle = 'rgba(191, 212, 255,' + (0.14 + 0.5 * near).toFixed(3) + ')';
+      ctx.strokeStyle = 'rgba(191, 212, 255,' + (0.14 + 0.16 * near).toFixed(3) + ')';
       ctx.beginPath();
       for (let y = -STEP; y <= H + STEP; y += STEP) {
         // slow overlapping waves
@@ -50,7 +49,7 @@
         // pointer bulge: lines bow away from the cursor
         if (strength > 0.001) {
           const ddx = x - px, ddy = y - py;
-          dx += ddx * 0.5 * strength * Math.exp(-(ddx * ddx + ddy * ddy) / (R * R));
+          dx += ddx * 0.3 * strength * Math.exp(-(ddx * ddx + ddy * ddy) / (R * R));
         }
         if (y === -STEP) ctx.moveTo(x + dx, y); else ctx.lineTo(x + dx, y);
       }
@@ -90,4 +89,8 @@
   }
   document.addEventListener('visibilitychange', kick);
   kick();
+  }
+
+  // Hero, Side Quests gallery and the signpost footer each get their own line field.
+  document.querySelectorAll('.hero, .sq2-gallery, .signpost-footer, .games--landing').forEach(init);
 })();

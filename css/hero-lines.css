@@ -12,3 +12,8 @@
 /* Side Quests: same line field behind the wheel; the content sits above it. */
 .sq2-gallery > .hero-lines { z-index: 0; }
 .sq2-gallery .sqw { position: relative; z-index: 1; }
+
+/* The reaction game under the footer shares the line field. */
+.games--landing { position: relative; overflow: hidden; }
+.games--landing > .rx-game, .games--landing > * { position: relative; z-index: 1; }
+.games--landing > .hero-lines { position: absolute; z-index: 0; }

@@ -771,6 +771,7 @@ html.js-reveal .reveal-heading.is-visible .reveal-word {
   color: var(--navy);
   padding: 96px 0 8px;
   position: relative;
+  overflow-x: clip;   /* the orbiting labels never widen the page (clip, not hidden, so the pinned panel still sticks) */
 }
 
 .who-i-am-inner {
@@ -797,15 +798,20 @@ html.js-reveal .reveal-heading.is-visible .reveal-word {
    itself starts at the top, right under the heading. */
 .who-i-am-row {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
   gap: clamp(32px, 5vw, 64px);
-  align-items: start;
+  align-items: center;            /* the text box and the wheel share one horizontal centre line */
+  max-width: 1120px;
+  margin: 0 auto;                 /* and the pair sits in the middle of the page */
 }
 
 /* Comfortably sized for reading, clearly a step below the "Who I
    Am" display heading so the hierarchy stays obvious. */
 .who-i-am-copy {
   max-width: 700px;
+  justify-self: center;
+  box-sizing: border-box;
+  padding: 0;   /* no card: the copy sits straight on the section */
 }
 .who-i-am-copy p {
   margin: 0 0 22px;
@@ -897,7 +903,7 @@ html.js-reveal .reveal-heading.is-visible .reveal-word {
   inset: 0;
   margin: auto;
   border-radius: 50%;
-  border: 1px solid rgba(12, 0, 84, 0.16);
+  border: 1.5px solid var(--periwinkle);   /* the same periwinkle as the outline of the text box beside it */
   pointer-events: none;
 }
 /* TWEAK HERE: ring sizes (as % of .tools-orbit) and the 36s duration
@@ -1628,7 +1634,7 @@ body.modal-open { overflow: hidden; }
   position: relative;
   display: block;
   width: 100%;
-  background: var(--pale);
+  background: #fff;
   border: none;
   border-radius: 18px;
   padding: 22px 56px 22px 22px;
@@ -1753,8 +1759,21 @@ body.modal-open { overflow: hidden; }
    WORK
 ============================================ */
 .work {
-  background: var(--pale);
+  position: relative;
+  isolation: isolate;
+  background: #fff;                 /* the white page carries on down both sides of the blue panel */
   padding: var(--section-pad) 0;
+}
+.work::before {                     /* the blue panel, with softly curved corners */
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: var(--work-gutter); right: var(--work-gutter);
+  /* white margin down each side: 18px on phones, 32px at 1280, 40px at 1600, then growing to a 56px cap by 1920 */
+  --work-gutter: max(clamp(18px, 2.5vw, 40px), min(56px, calc(40px + (100vw - 1600px) * 0.05)));
+  background: var(--pale);
+  border-radius: 36px;
+  z-index: -1;
 }
 .work .section-heading--light { color: var(--blue); }
 .work .btn-pill-light { background: var(--blue); border-color: var(--blue); color: #fff; }
@@ -4547,4 +4566,81 @@ img.img-placeholder {
 @media (max-width: 480px) {
   .btn { padding: 12px 22px; font-size: 0.85rem; }
   .hero { padding-top: 130px; }
+}
+
+/* ---- Solid 3D blocks: "What I Did" and "I've Done This At" ----
+   A run of solid shadows stepping down and to the right builds the thick side of each block (lit from
+   the top left), a bright rim and a faint inner shade finish the form, and a deep shadow on the ground
+   lifts it off the page. Hover changes colour (the sides deepen with it); pressing sinks the block in. */
+.work .work-card,
+.exp-card,
+.exp-card:hover {
+  --edge: #b6caf5;
+  --edge-deep: #7fa2ee;
+  --ground: rgba(12, 0, 84, 0.3);
+  position: relative;
+  border-radius: 22px;
+  box-shadow:
+    inset 2px 2px 0 rgba(255, 255, 255, 0.95),
+    inset -2px -3px 0 rgba(12, 0, 84, 0.06),
+    1px 1px 0 var(--edge),
+    2px 2px 0 var(--edge),
+    3px 3px 0 var(--edge),
+    4px 4px 0 var(--edge),
+    5px 5px 0 var(--edge-deep),
+    13px 19px 24px -6px var(--ground);
+  transition: background-color 0.3s ease, box-shadow 0.2s ease, translate 0.15s ease;
+}
+.work .work-card:hover,
+.exp-card:hover { --edge: #94b2f1; --edge-deep: #5d8aeb; }
+.work .work-card:active,
+.exp-card:active {
+  translate: 4px 4px;
+  box-shadow:
+    inset 2px 2px 0 rgba(255, 255, 255, 0.95),
+    inset -2px -3px 0 rgba(12, 0, 84, 0.06),
+    1px 1px 0 var(--edge-deep),
+    2px 2px 0 var(--edge-deep),
+    3px 3px 0 var(--edge-deep),
+    7px 9px 10px -4px var(--ground);
+}
+/* the pictures and logos sit slightly raised inside the block */
+.work .work-card .img-placeholder { box-shadow: 2px 5px 0 rgba(12, 0, 84, 0.12), 6px 12px 16px -4px rgba(12, 0, 84, 0.34), 0 0 0 1px rgba(12, 0, 84, 0.06); }
+.exp-card .exp-logo { box-shadow: 2px 3px 0 rgba(12, 0, 84, 0.12), 4px 8px 12px -3px rgba(12, 0, 84, 0.3); }
+.exp-card:hover { transform: none; }
+.work-grid-row { padding: 0 8px 9px 0; }
+.experience-grid { padding-right: 8px; padding-bottom: 9px; row-gap: 22px; }
+@media (prefers-reduced-motion: reduce) { .work .work-card, .exp-card { transition: background-color 0.3s ease; } .work .work-card:active, .exp-card:active { translate: 0 0; } }
+
+/* Phones/tablets: copy first, photo last. The photo sits on the hero's base
+   edge (the skills strip crosses it) and the card + buttons move up above it,
+   mirroring the desktop arrangement. */
+@media (max-width: 900px) {
+  .hero { padding-bottom: 0; }
+  .hero-inner { display: flex; flex-direction: column; }
+  .hero-heading { order: 1; }
+  .hero-left-stack { order: 2; }
+  .hero-cta { order: 3; margin-top: 18px; margin-bottom: 8px; }
+  .hero-row { order: 4; margin-bottom: 0; }
+  .hero-photo { margin-bottom: 0; }
+}
+
+/* Smaller screens: every section topic is centred, never left-aligned. */
+@media (max-width: 900px) {
+  .section-heading, .cs-section-heading, .cs-headline, .st-heading,
+  .sq2-story-heading, .sq2-rotation-heading, .ev-heading, .game-title {
+    text-align: center !important;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Work page: the heading sits on white; the pale panel starts where the cards start and wraps them
+   (the same treatment as the Brand Storytelling gallery). */
+.work-page::before { content: none; }
+.work-page .work-grid {
+  margin-top: 0;
+  background: var(--pale);
+  border-radius: 32px;
+  padding: clamp(16px, 3vw, 36px);
 }

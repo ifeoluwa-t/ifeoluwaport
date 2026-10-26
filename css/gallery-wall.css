@@ -8,8 +8,9 @@
   margin: 8px 0 0 calc(50% - min(calc(100vw - 40px), 1240px) / 2);
   padding: 22px 0 28px;
   overflow: hidden;
-  border-radius: 24px;
-  background: #d6e4ff;   /* a solid blue panel; cards slip in and out at its edges */
+  border-radius: 28px;
+  background: var(--pale);     /* the soft blue the cards used to be; the cards themselves are white now */
+  box-shadow: 0 0 0 1.5px var(--periwinkle), 0 12px 34px -16px rgba(12, 0, 84, 0.2);
   color: var(--navy);
   cursor: grab;
   user-select: none;
@@ -33,7 +34,7 @@
   background: #fff;
   color: inherit;
   text-decoration: none;
-  box-shadow: 0 6px 18px rgba(10, 0, 84, 0.1);
+  box-shadow: 0 0 0 1.5px rgba(0, 82, 255, 0.12), 0 6px 18px rgba(10, 0, 84, 0.1);
   outline: none;
   transition: box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
 }
@@ -83,8 +84,46 @@
 @media (prefers-reduced-motion: reduce) { .gw-item, .gw-pill { transition: none; } }
 
 /* Each kind of piece has a tag colour of its own */
-.gw-pill[data-kind="deck"]     { background: var(--periwinkle); color: var(--navy); }
+.gw-pill[data-kind="deck"]     { background: var(--periwinkle); color: var(--navy); box-shadow: inset 0 0 0 1.5px rgba(12, 0, 84, 0.2); }
 .gw-pill[data-kind="article"]  { background: var(--blue); color: #fff; }
 .gw-pill[data-kind="video"]    { background: var(--indigo); color: #fff; }
 .gw-pill[data-kind="series"]   { background: var(--navy); color: #fff; }
-.gw-pill[data-kind="campaign"] { background: var(--pale); color: var(--blue); box-shadow: inset 0 0 0 1.5px var(--blue); }
+.gw-pill[data-kind="campaign"] { background: #fff; color: var(--blue); box-shadow: inset 0 0 0 1.5px var(--blue); }
+
+/* subtext under the heading */
+.gw-sub { margin: 10px auto 0; max-width: 560px; text-align: center; text-wrap: balance; font-size: clamp(1rem, 1.6vw, 1.15rem); line-height: 1.5; color: rgba(12, 0, 84, 0.72); }
+
+/* The cards are solid 3D blocks too, like the cards further up the page (a thinner edge, lit from the top left) */
+.gw-item {
+  --edge: #b6caf5;
+  --edge-deep: #8aaaf0;
+  box-shadow:
+    inset 2px 2px 0 rgba(255, 255, 255, 0.9),
+    inset -2px -2px 0 rgba(12, 0, 84, 0.05),
+    1px 1px 0 var(--edge),
+    2px 2px 0 var(--edge),
+    3px 3px 0 var(--edge),
+    4px 4px 0 var(--edge-deep),
+    5px 5px 0 var(--edge-deep),
+    12px 16px 20px -6px rgba(12, 0, 84, 0.28);
+}
+@media (hover: hover) {
+  .gw-item:hover, .gw-item:focus-visible {
+    --edge: #94b2f1;
+    --edge-deep: #6f96ec;
+    box-shadow:
+      inset 2px 2px 0 rgba(255, 255, 255, 0.9),
+      inset -2px -2px 0 rgba(12, 0, 84, 0.05),
+    1px 1px 0 var(--edge),
+    2px 2px 0 var(--edge),
+    3px 3px 0 var(--edge),
+    4px 4px 0 var(--edge-deep),
+    5px 5px 0 var(--edge-deep),
+      12px 16px 20px -6px rgba(12, 0, 84, 0.3);
+  }
+}
+/* the pictures sit a little raised in the blocks */
+.gw-media { box-shadow: 2px 3px 0 rgba(12, 0, 84, 0.1), 4px 8px 12px -3px rgba(12, 0, 84, 0.28); }
+
+/* the same size as the subtext under "Events" (1rem on wide screens) */
+@media (min-width: 1100px) { .gw-sub { font-size: 1rem; } }

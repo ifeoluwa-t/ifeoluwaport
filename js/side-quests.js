@@ -384,12 +384,15 @@
     var playBtn = document.getElementById('sq2-play');
     var player = null, current = Math.floor(Math.random() * SONGS.length), apiLoading = false, queued = null, playing = false;
 
+    function announce() { document.dispatchEvent(new CustomEvent('sqmusic', { detail: { index: current, playing: playing } })); }
     function show() {
       titleEl.textContent = SONGS[current][0];
       artistEl.textContent = SONGS[current][1];
+      announce();
     }
     function setPlaying(on) {
       playing = on;
+      announce();
       root.classList.toggle('is-playing', on);
       playBtn.setAttribute('aria-label', on ? 'Pause' : 'Play');
     }
@@ -437,6 +440,12 @@
     // Used by the "still want to listen?" prompt when the visitor leaves for another page.
     window.sqMusic = {
       playing: function () { return playing; },
+      index: function () { return current; },
+      play: function (i) { start(i); },
+      toggle: function () { playBtn.click(); },
+      shuffle: function () { start(Math.floor(Math.random() * SONGS.length)); },
+      next: function () { start(current + 1); },
+      prev: function () { start(current - 1); },
       keep: function () {
         var t = 0;
         try { t = player.getCurrentTime(); } catch (e) {}
@@ -455,6 +464,17 @@
     function sync() { cta.classList.toggle('is-quiet', player.classList.contains('is-playing')); }
     if (window.MutationObserver) new MutationObserver(sync).observe(player, { attributes: true, attributeFilter: ['class'] });
     sync();
+    // The nudge only stays for 5 seconds, then it is removed from the page for good.
+    setTimeout(function () {
+      cta.classList.add('is-quiet');
+      setTimeout(function () {
+        // an empty block of the same size takes its place, so the wheel does not jump
+        var gap = document.createElement('div');
+        gap.setAttribute('aria-hidden', 'true');
+        gap.style.height = (cta.offsetHeight + 12) + 'px';
+        cta.replaceWith(gap);
+      }, 350);
+    }, 5000);
   })();
 
   // The music bar is fixed at the bottom of the screen from the moment the page loads (like the nav bar).
@@ -470,4 +490,115 @@
     measure();
     window.addEventListener('resize', measure);
     window.addEventListener('load', measure);
+  })();
+
+  // ---------- On rotation: the playlist list plays through the music bar ----------
+  (function () {
+    var list = document.getElementById('rot-list');
+    var songs = window.SQ_SONGS;
+    if (!list || !songs) return;
+    var titleEl = document.getElementById('rot-title'), artistEl = document.getElementById('rot-artist'), kicker = document.getElementById('rot-kicker');
+    var playBtn = document.getElementById('rot-play'), shuffleBtn = document.getElementById('rot-shuffle'), count = document.getElementById('rot-count');
+    var rows = [], started = false;
+    count.textContent = songs.length + ' songs';
+    function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+    // The list is drawn in small batches as you scroll it (nothing here downloads audio: a song is only
+    // fetched, one at a time, when it is played).
+    var BATCH = 8, drawn = 0, current = 0, sentinel = document.createElement('li');
+    sentinel.className = 'rot-more'; sentinel.setAttribute('aria-hidden', 'true');
+    function row(i) {
+      var s = songs[i], li = document.createElement('li');
+      li.innerHTML = '<button type="button" class="rot-row" aria-label="Play ' + esc(s[0]) + ' by ' + esc(s[1]) + '"><span class="rot-row-n">' + (i < 9 ? '0' : '') + (i + 1) + '</span><span class="rot-row-t"><strong>' + esc(s[0]) + '</strong><span>' + esc(s[1]) + '</span></span><span class="rot-eq" aria-hidden="true"><i></i><i></i><i></i></span></button>';
+      var b = li.firstChild;
+      b.addEventListener('click', function () {
+        started = true;
+        if (window.sqMusic && window.sqMusic.index() === i && window.sqMusic.playing()) window.sqMusic.toggle();
+        else if (window.sqMusic) window.sqMusic.play(i);
+      });
+      rows[i] = b;
+      return li;
+    }
+    function drawMore(upTo) {
+      var end = Math.min(songs.length, Math.max(drawn + BATCH, (upTo || 0) + 1));
+      for (; drawn < end; drawn++) list.insertBefore(row(drawn), sentinel);
+      if (drawn >= songs.length) { sentinel.remove(); if (io) io.disconnect(); }
+    }
+    var io = null;
+    list.appendChild(sentinel);
+    if ('IntersectionObserver' in window) {
+      io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) drawMore(); }, { root: list, rootMargin: '0px 0px 120px 0px' });
+      io.observe(sentinel);
+    }
+    drawMore();
+    if (!io) drawMore(songs.length);          // very old browsers: just draw them all
+    function paint(i, playing) {
+      titleEl.textContent = songs[i][0]; artistEl.textContent = songs[i][1];
+      kicker.textContent = playing ? 'Now playing' : (started ? 'Paused' : 'Up next');
+      document.body.classList.toggle('rot-playing', !!playing);
+      playBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+      current = i;
+      if (i >= drawn) drawMore(i);              // the playing song's row always exists
+      rows.forEach(function (r, k) { if (r) r.classList.toggle('is-current', k === i && (started || playing)); });
+    }
+    document.addEventListener('sqmusic', function (e) {
+      if (e.detail.playing) started = true;
+      paint(e.detail.index, e.detail.playing);
+    });
+    playBtn.addEventListener('click', function () { if (window.sqMusic) window.sqMusic.toggle(); });
+    shuffleBtn.addEventListener('click', function () { if (window.sqMusic) window.sqMusic.shuffle(); });
+    paint(window.sqMusic ? window.sqMusic.index() : 0, false);
+  })();
+
+  // ---------- playlist: previous / next, the bar steps aside, and the suggestion box ----------
+  (function () {
+    var prevBtn = document.getElementById('rot-prev'), nextBtn = document.getElementById('rot-next');
+    if (prevBtn && nextBtn) {
+      prevBtn.addEventListener('click', function () { if (window.sqMusic) window.sqMusic.prev(); });
+      nextBtn.addEventListener('click', function () { if (window.sqMusic) window.sqMusic.next(); });
+    }
+
+    // The fixed music bar hides while the "On rotation" section is on screen (it has its own controls),
+    // and comes back once you scroll on to the footer.
+    var section = document.getElementById('on-rotation'), bar = document.getElementById('sq2-music');
+    if (section && bar && 'IntersectionObserver' in window) {
+      // watches the middle band of the screen, so the bar is back as soon as the footer takes over
+      new IntersectionObserver(function (es) { bar.classList.toggle('is-away', es[0].isIntersecting); }, { rootMargin: '-30% 0px -30% 0px' }).observe(section);
+    }
+
+    // "What should I read, listen to or watch next?"
+    var form = document.getElementById('rot-suggest');
+    if (!form) return;
+    var text = document.getElementById('rot-text'), name = document.getElementById('rot-name'), btn = document.getElementById('rot-submit'), msg = document.getElementById('rot-msg');
+    function grow() { text.style.height = 'auto'; text.style.height = Math.min(text.scrollHeight, 120) + 'px'; }
+    text.addEventListener('input', grow);
+    function say(t, ok) { msg.className = 'rot-suggest-msg' + (ok ? ' is-ok' : ''); msg.textContent = t; }
+    function mailFallback(t, n) {
+      var body = 'Suggestion: ' + t + (n ? '\n\nFrom: ' + n : '');
+      var a = document.createElement('a');
+      a.href = 'mailto:hi@ifeoluwa.xyz?subject=' + encodeURIComponent('A suggestion for you') + '&body=' + encodeURIComponent(body);
+      a.textContent = 'Send it by email instead';
+      msg.className = 'rot-suggest-msg';
+      msg.textContent = "That didn't go through just now. ";
+      msg.appendChild(a);
+    }
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var t = text.value.trim(), n = name.value.trim();
+      if (t.length < 3) { say('Tell me what you have in mind first.', false); text.focus(); return; }
+      btn.disabled = true; btn.textContent = 'Sending…';
+      fetch('/api/suggest', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: t, name: n, website: form.elements.website.value }) })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); })
+        .then(function (res) {
+          if (res.ok) {
+            say('Thank you' + (n ? ', ' + n : '') + '! I will check it out.', true);
+            text.value = ''; name.value = ''; grow();
+          } else if (res.status === 400 || res.status === 429) {
+            say(res.d.error || 'Something went wrong. Try again.', false);
+          } else {
+            mailFallback(t, n);
+          }
+        })
+        .catch(function () { mailFallback(t, n); })
+        .then(function () { btn.disabled = false; btn.textContent = 'Put me on'; });
+    });
   })();

@@ -1,5 +1,5 @@
 /* Shared playful touches (see css/fx.css):
- *  - springy press on the buttons that matter, and "Email me" turning into "Say hi" on hover
+ *  - springy press on the buttons that matter, and "Email me" turning into "Say hello" on hover
  *  - a small cursor label (drag / view / play) over things you can drag, open or play
  *  - tiny sounds, OFF until the visitor switches them on (button, bottom-right)
  */
@@ -106,14 +106,14 @@
   var PRESS = '.hero-cta-btn, .sp-btn--solid, .sp-btn--icon, .btn-pill, .btn-pill-light, .sq2-cta, .game-btn, .bk-link, .nav-mail';
   Array.prototype.forEach.call(document.querySelectorAll(PRESS), function (el) { el.classList.add('fx-press'); });
 
-  // "Email me" turns into "Say hi"
+  // "Email me" turns into "Say hello"
   Array.prototype.forEach.call(document.querySelectorAll('a.sp-btn--solid'), function (el) {
     var orig = el.textContent;
     if (!/email me/i.test(orig)) return;
     el.style.minWidth = el.getBoundingClientRect().width + 'px';
-    el.addEventListener('mouseenter', function () { el.textContent = 'Say hi'; });
+    el.addEventListener('mouseenter', function () { el.textContent = 'Say hello'; });
     el.addEventListener('mouseleave', function () { el.textContent = orig; });
-    el.addEventListener('focus', function () { el.textContent = 'Say hi'; });
+    el.addEventListener('focus', function () { el.textContent = 'Say hello'; });
     el.addEventListener('blur', function () { el.textContent = orig; });
   });
 
@@ -130,6 +130,7 @@
       ['.gw-item', 'view'], ['.gw', 'drag'],
       ['.sqw-car', 'view'], ['.sqw-photo', 'view'], ['.sqw-stage', 'drag'],
       ['.bk-photo', 'view'], ['.bk-stage', 'drag'],
+      ['.og-focus', 'close'], ['.og-card', 'open'], ['.og', 'drag'],
       ['.work-card', 'view']
     ];
     var x = 0, y = 0, shown = '';

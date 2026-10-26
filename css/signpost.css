@@ -12,6 +12,7 @@
     radial-gradient(ellipse 900px 420px at 15% 0%, rgba(0, 82, 255, 0.4), transparent 70%),
     var(--navy);
 }
+.signpost-footer > .sp-grid, .signpost-footer > .sp-base { position: relative; z-index: 1; }
 
 .sp-grid {
   max-width: 1180px;
@@ -113,7 +114,8 @@
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 .sp-sign--left  .sp-face { padding-left: 54px;  clip-path: polygon(16% 0, 100% 0, 100% 100%, 16% 100%, 0 50%); }
-.sp-sign--right .sp-face { padding-right: 54px; clip-path: polygon(0 0, 84% 0, 100% 50%, 84% 100%, 0 100%); }
+/* every sign points the same way (towards the speech bubble) */
+.sp-sign--right .sp-face { padding-left: 54px; clip-path: polygon(16% 0, 100% 0, 100% 100%, 16% 100%, 0 50%); }
 .sp-face svg { width: 0.8em; height: 0.8em; flex-shrink: 0; }
 
 /* colours: all brand */
@@ -145,14 +147,6 @@
   border-radius: 24px;
   background: var(--blue);
   color: #fff;
-}
-.sp-rotator::before { /* concentric rings, from the opposite corner to the second card */
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background-image: repeating-radial-gradient(circle at 0 100%, transparent 0 28px, rgba(255, 255, 255, 0.2) 28px 32px);
-  pointer-events: none;
 }
 .sp-rotator::after { /* tail */
   content: '';
@@ -189,14 +183,6 @@
   overflow: visible;
   background: var(--pale);
   color: var(--navy);
-}
-.sp-bubble::before { /* concentric rings */
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background-image: repeating-radial-gradient(circle at 100% 0, transparent 0 28px, rgba(191, 212, 255, 0.4) 28px 32px);
-  pointer-events: none;
 }
 .sp-bubble::after { /* tail */
   content: '';
@@ -260,6 +246,7 @@
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.75);
 }
+.sp-credit, .sp-credit-note { font-weight: 700; }
 .sp-credit-note { color: var(--periwinkle); }
 .sp-base a { color: #fff; font-weight: 600; }
 .sp-base a:hover { color: var(--periwinkle); }
@@ -267,17 +254,38 @@
 @media (max-width: 900px) {
   .sp-top { display: none; } /* no back-to-top link on phones/tablets */
   .sp-grid { grid-template-columns: 1fr; gap: 72px; }
-  .sp-post, .sp-right { order: 0; }
+  .sp-right { order: 0; }   /* the two cards come first… */
+  .sp-post { order: 1; }    /* …then the stand, on its own line */
   .sp-spark--a { left: -30px; }
   .sp-spark--b { right: -30px; }
 }
 @media (max-width: 420px) {
   .sp-face { min-width: 210px; padding: 13px 26px; gap: 10px; }
   .sp-sign--left  .sp-face { padding-left: 44px; }
-  .sp-sign--right .sp-face { padding-right: 44px; }
+  .sp-sign--right .sp-face { padding-left: 44px; }
 }
 
 /* Reduced motion: signs are simply there. */
 @media (prefers-reduced-motion: reduce) {
   .sp-sign { opacity: 1; transform: translateX(var(--x)) rotate(var(--rot)); transition: none; }
+}
+
+@media (max-width: 900px) {
+  .sp-bubble { text-align: center; }
+  .sp-cta { justify-content: center; }
+}
+
+@media (max-width: 900px) {
+  .sp-rotator { text-align: center; }
+  .sp-rotator .hero-highlight-slide { justify-content: center; align-items: center; }
+  .sp-rotator .hero-highlight-slide p { text-align: center; padding-right: 0; }
+}
+
+@media (max-width: 900px) {
+  .sp-bubble p { margin-left: auto; margin-right: auto; }
+  /* highlight card: a smaller picture on the left, the line centred in the space beside it */
+  .sp-rotator { height: 140px; }
+  .sp-rotator .hero-highlight-slide { flex-direction: row; gap: 14px; }
+  .sp-rotator .hero-highlight-slide img { height: 100px; width: 100px; }
+  .sp-rotator .hero-highlight-slide p { flex: 1; font-size: 1rem; }
 }

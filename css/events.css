@@ -1,5 +1,6 @@
 /* ============================================
-   EVENTS PAGE: a few compact cards that open in place.
+   EVENTS PAGE: horizontal accordion. Tap (or hover) a strip and it opens to the right:
+   the photos and the story beside them arrive together. Stacks vertically on phones.
    Loaded only by events.html, on top of style.css.
 ============================================ */
 .ev-section {
@@ -7,59 +8,70 @@
   padding: 128px 0 clamp(64px, 9vw, 110px);
 }
 .ev-heading { text-align: center; margin: 0 0 clamp(32px, 5vw, 56px); }
-.ev-grid {
+
+.ev-acc {
+  --gap: 12px;
+  --ease: cubic-bezier(0.7, 0, 0.15, 1);
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
-  align-items: start;
+  display: flex;
+  gap: var(--gap);
+  height: clamp(580px, 80vh, 720px);
+  container-type: inline-size;
 }
-.ev-item { display: block; }
+.ev-item {
+  flex: 1 1 0;
+  min-width: 0;
+  transition: flex-grow 0.9s var(--ease);
+}
+.ev-item.is-open { flex-grow: 4.5; }
 .ev-card {
-  background: var(--pale);
-  border-radius: 24px;
-  padding: 14px;
-  height: 100%;
-}
-.ev-toggle {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  width: 100%;
-  text-align: left;
-  font: inherit;
-  color: var(--navy);
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-}
-.ev-toggle:focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; border-radius: 18px; }
-.ev-media.img-placeholder {
-  display: flex;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  margin: 0;
-  border-radius: 16px;
-}
-.ev-media--img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 16px;
-  object-fit: cover;
-}
-.ev-item.is-open .ev-media--img { width: 42%; flex: none; align-self: flex-start; }
-.ev-slides {
   position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 16px;
+  height: 100%;
+  border-radius: 28px;
+  background: var(--pale);
   overflow: hidden;
+  isolation: isolate;
 }
+
+/* The open panel is laid out at its final width so nothing reflows while it grows;
+   the card simply reveals it. */
+.ev-stage {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc((100cqw - 4 * var(--gap)) * 4.5 / 8.5);
+  display: grid;
+  grid-template-columns: 45% minmax(0, 1fr);
+}
+
+/* ---------- photo side ---------- */
+.ev-pic {
+  position: relative;
+  margin: 12px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--periwinkle);
+}
+.ev-pic::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--tint, var(--blue));
+  opacity: 0.62;
+  transition: opacity 0.7s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+.ev-item.is-open .ev-pic::after { opacity: 0; }
+.ev-media {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform: scale(1.18);
+  transition: transform 1.3s var(--ease);
+}
+.ev-item.is-open .ev-media { transform: scale(1); }
 .ev-slide {
   position: absolute;
   inset: 0;
@@ -67,144 +79,277 @@
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transition: opacity 0.6s ease;
+  transform: scale(1.06);
+  transition: opacity 0.7s ease, transform 2.8s ease-out;
 }
-.ev-slide.is-current { opacity: 1; }
-.ev-item.is-open .ev-slides { width: 42%; flex: none; align-self: flex-start; }
-.ev-video {
+.ev-slide.is-current { opacity: 1; transform: scale(1); }
+
+.ev-bars {
+  position: absolute;
+  left: 14px; right: 14px; top: 14px;
+  z-index: 3;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.5s ease 0.5s;
+  pointer-events: none;
+}
+.ev-item.is-open .ev-bars { opacity: 1; }
+.ev-bars i {
   position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 16px;
+  flex: 1;
+  height: 3px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.4);
   overflow: hidden;
 }
-.ev-video-poster { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
-.ev-video-el {
+.ev-bars i::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+.ev-bars i.done::after { transform: scaleX(1); }
+.ev-bars i.on::after { animation: ev-fill var(--dur, 2600ms) linear forwards; }
+@keyframes ev-fill { to { transform: scaleX(1); } }
+
+.ev-cap {
+  position: absolute;
+  left: 14px; right: 14px; bottom: 14px;
+  z-index: 3;
+  padding: 9px 14px;
+  border-radius: 12px;
+  background: rgba(12, 0, 84, 0.66);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.5s var(--ease);
+  pointer-events: none;
+}
+.ev-item.is-open .ev-cap { opacity: 1; transform: none; transition-delay: 0.55s; }
+.ev-cap.is-swap { opacity: 0 !important; transform: translateY(6px) !important; transition-delay: 0s !important; }
+.ev-slides { cursor: pointer; }
+
+/* video (Onchain Festival) */
+.ev-video-poster, .ev-video-el {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-  background: #000;
 }
-.ev-video.is-playing .ev-video-el { opacity: 1; }
+.ev-video-poster { object-position: center 30%; }
+.ev-video-el { opacity: 0; background: #000; transition: opacity 0.35s ease; }
+.ev-video.is-playing .ev-video-el, .ev-item.is-open .ev-video-el { opacity: 1; }
 .ev-item.is-open .ev-video:not(.is-playing) { cursor: pointer; }
-/* Opened card: the video itself is shown (its poster frame) rather than the thumbnail. */
-.ev-item.is-open .ev-video-el { opacity: 1; }
-/* Play icon on the thumbnail: the viewer chooses whether the video loads and plays. */
 .ev-play {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 68px;
-  height: 68px;
-  margin: -34px 0 0 -34px;
-  display: flex;
+  left: 50%; top: 50%;
+  width: 72px; height: 72px;
+  margin: -36px 0 0 -36px;
+  display: none;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.94);
   color: var(--blue);
   pointer-events: none;
-  transition: transform 0.25s ease, background-color 0.25s ease;
+  z-index: 3;
+  transition: transform 0.25s ease;
 }
 .ev-play svg { width: 30px; height: 30px; margin-left: 4px; }
-.ev-toggle:hover .ev-play { transform: scale(1.08); }
-.ev-play { display: none; }
 .ev-item.is-open .ev-video:not(.is-playing) .ev-play { display: flex; }
-.ev-video.is-playing .ev-play { display: none; }
-.ev-play-btn {
-  display: inline-flex;
+.ev-item.is-open .ev-video:not(.is-playing):hover .ev-play { transform: scale(1.1); }
+.ev-video.is-playing ~ .ev-cap { display: none; }
+
+/* ---------- the strip you tap ---------- */
+.ev-toggle {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 24px 16px;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+  text-shadow: 0 1px 10px rgba(12, 0, 84, 0.45);
+  transition: opacity 0.4s ease, background-color 0.3s ease;
+}
+.ev-toggle:hover { background: rgba(255, 255, 255, 0.1); }
+.ev-toggle:focus-visible { outline: 3px solid #fff; outline-offset: -6px; border-radius: 28px; }
+.ev-item.is-open .ev-toggle { opacity: 0; pointer-events: none; }
+.ev-num { font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; }
+.ev-vtitle {
+  flex: 1;
+  align-self: stretch;
+  display: flex;
+  align-items: flex-end;
+  font-size: 0.98rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: left;
+  text-wrap: balance;
+}
+.ev-plus {
+  position: relative;
+  align-self: flex-end;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.4s var(--ease);
+  text-shadow: none;
+}
+.ev-plus::before, .ev-plus::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 12px; height: 2px;
+  background: var(--blue);
+  transform: translate(-50%, -50%);
+}
+.ev-plus::after { transform: translate(-50%, -50%) rotate(90deg); }
+.ev-toggle:hover .ev-plus { transform: rotate(90deg) scale(1.1); }
+
+/* ---------- text side: each piece slides in just after the photo lands ---------- */
+.ev-text {
+  min-width: 0;
+  padding: 36px 40px 32px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-y: auto;
+  color: var(--navy);
+  visibility: hidden;
+  transition: visibility 0s 0.5s;
+}
+.ev-item.is-open .ev-text { visibility: visible; transition-delay: 0s; }
+.ev-text > * {
+  opacity: 0;
+  transform: translateX(-26px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.ev-item.is-open .ev-text > * {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.6s ease, transform 0.8s var(--ease);
+  transition-delay: calc(0.4s + var(--i, 0) * 0.09s);
+}
+.ev-text > :nth-child(1) { --i: 0; }
+.ev-text > :nth-child(2) { --i: 1; }
+.ev-text > :nth-child(3) { --i: 2; }
+.ev-text > :nth-child(4) { --i: 3; }
+.ev-count {
   margin: 0 0 14px;
-  padding: 11px 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--blue);
+}
+.ev-count span { color: rgba(12, 0, 84, 0.4); }
+.ev-title { margin: 0 0 12px; font-size: clamp(1.7rem, 2.7vw, 2.6rem); font-weight: 700; line-height: 1.1; text-wrap: balance; }
+.ev-brief { margin: 0 0 22px; font-size: 1.02rem; line-height: 1.55; color: rgba(12, 0, 84, 0.75); }
+.ev-detail {
+  padding: 18px 20px 20px;
+  background: #fff;
+  border-radius: 18px;
+}
+.ev-detail-title { margin: 0 0 10px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--blue); }
+.ev-detail-title:not(:first-child) { margin-top: 6px; }
+.ev-detail-list { margin: 0 0 14px; padding-left: 20px; line-height: 1.55; font-size: 0.95rem; }
+.ev-detail-list li + li { margin-top: 4px; }
+.ev-link, .ev-play-btn {
+  display: inline-flex;
+  margin: 0 10px 0 0;
+  padding: 12px 22px;
   border: none;
   border-radius: 999px;
   background: var(--blue);
   color: #fff;
   font: inherit;
   font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-.ev-play-btn:hover { background: var(--navy); }
-.ev-play-btn:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
-.ev-item.is-open .ev-video { width: 42%; flex: none; align-self: flex-start; }
-.ev-card-body { display: flex; flex-direction: column; gap: 8px; padding: 0 6px 6px; }
-.ev-card-title { font-size: 1.2rem; font-weight: 700; line-height: 1.2; }
-.ev-card-brief { font-size: 0.95rem; line-height: 1.5; color: rgba(12, 0, 84, 0.72); }
-.ev-card-more {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 4px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--blue);
-}
-.ev-more-open { display: none; }
-.ev-plus {
-  position: relative;
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  background: var(--blue);
-}
-.ev-plus::before, .ev-plus::after {
-  content: '';
-  position: absolute;
-  left: 50%; top: 50%;
-  width: 10px; height: 2px;
-  background: #fff;
-  transform: translate(-50%, -50%);
-  transition: transform 0.25s ease;
-}
-.ev-plus::after { transform: translate(-50%, -50%) rotate(90deg); }
-.ev-toggle:hover .ev-card-title { color: var(--blue); }
-
-/* Open: the card takes the full row, image beside the details. */
-.ev-item.is-open { grid-column: 1 / -1; }
-.ev-item.is-open .ev-toggle { flex-direction: row; align-items: stretch; gap: 24px; }
-.ev-item.is-open .ev-media.img-placeholder { width: 42%; flex: none; aspect-ratio: 4 / 3; }
-.ev-item.is-open .ev-card-body { justify-content: center; padding: 6px 6px 6px 0; }
-.ev-item.is-open .ev-more-closed { display: none; }
-.ev-item.is-open .ev-more-open { display: inline; }
-.ev-item.is-open .ev-plus::after { transform: translate(-50%, -50%) rotate(0deg); }
-
-.ev-detail {
-  margin-top: 14px;
-  padding: 18px 20px 20px;
-  background: #fff;
-  border-radius: 18px;
-}
-.ev-detail[hidden] { display: none; }
-.ev-detail-title { margin: 0 0 10px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--blue); }
-.ev-detail-list { margin: 0 0 16px; padding-left: 20px; line-height: 1.6; color: var(--navy); }
-.ev-detail-note { margin: 0 0 16px; line-height: 1.6; color: var(--navy); }
-.ev-link {
-  display: inline-flex;
-  padding: 12px 22px;
-  border-radius: 999px;
-  background: var(--blue);
-  color: #fff;
-  font-weight: 600;
   font-size: 0.92rem;
   text-decoration: none;
-  transition: background-color 0.25s ease;
+  cursor: pointer;
+  transition: background-color 0.25s ease, transform 0.25s ease;
 }
-.ev-link:hover { background: var(--navy); }
-.ev-link:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
+.ev-play-btn { margin-bottom: 14px; }
+.ev-link:hover, .ev-play-btn:hover { background: var(--navy); transform: translateY(-2px); }
+.ev-link:focus-visible, .ev-play-btn:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
 
-@media (max-width: 960px) {
-  .ev-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+/* Between phone and wide desktop: a little tighter */
+@media (max-width: 1180px) {
+  .ev-stage { grid-template-columns: 42% minmax(0, 1fr); }
+  .ev-text { padding: 26px 24px 24px 12px; }
+  .ev-vtitle { font-size: 0.88rem; }
+  .ev-toggle { padding: 20px 14px; }
 }
-@media (max-width: 640px) {
-  .ev-grid { grid-template-columns: 1fr; }
-  .ev-item.is-open .ev-toggle { flex-direction: column; }
-  .ev-item.is-open .ev-media.img-placeholder, .ev-item.is-open .ev-media--img, .ev-item.is-open .ev-slides, .ev-item.is-open .ev-video { width: 100%; }
-  .ev-item.is-open .ev-card-body { padding: 0 6px 6px; }
+
+/* ---------- stacked rows that open downward (all sizes); PC gets photo beside text ---------- */
+@media all {
+  .ev-acc { flex-direction: column; height: auto; container-type: normal; }
+  .ev-item, .ev-item.is-open { flex: none; scroll-margin-top: 84px; }
+  .ev-card { height: auto; border-radius: 24px; }
+  .ev-stage {
+    position: static;
+    width: auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 0fr;
+    transition: grid-template-rows 0.7s var(--ease);
+  }
+  .ev-item.is-open .ev-stage { grid-template-rows: auto 1fr; }
+  .ev-pic { height: 84px; margin: 10px; transition: height 0.7s var(--ease); }
+  .ev-item.is-open .ev-pic { height: min(78vw, 420px); }
+  .ev-plus { align-self: center; }
+  .ev-toggle {
+    align-items: center;
+    inset: 10px 10px auto 10px;
+    height: 84px;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 14px;
+    padding: 0 18px;
+    border-radius: 20px;
+  }
+  .ev-vtitle { font-size: 1.05rem; align-items: center; }
+  .ev-text { min-height: 0; overflow: hidden; padding: 0 22px; justify-content: flex-start; }
+  .ev-item.is-open .ev-text { padding: 20px 22px 24px; overflow: visible; }
+  .ev-title { font-size: 1.6rem; }
 }
+
+@media (min-width: 900px) {
+  .ev-acc { gap: 14px; }
+  .ev-card { border-radius: 32px; }
+  .ev-stage {
+    grid-template-columns: 1fr 0fr;
+    grid-template-rows: 116px;
+    transition: grid-template-columns 0.8s var(--ease), grid-template-rows 0.8s var(--ease);
+  }
+  .ev-item.is-open .ev-stage { grid-template-columns: 5fr 6fr; grid-template-rows: 590px; }
+  .ev-pic, .ev-item.is-open .ev-pic { height: auto; margin: 10px; border-radius: 24px; }
+  .ev-toggle { height: 96px; padding: 0 28px; gap: 18px; }
+  .ev-vtitle { font-size: 1.3rem; }
+  .ev-text, .ev-item.is-open .ev-text { padding: 0; overflow: hidden; justify-content: center; }
+  .ev-item.is-open .ev-text { padding: 28px 44px 28px 34px; overflow-y: auto; }
+  .ev-title { font-size: clamp(1.9rem, 2.8vw, 2.8rem); }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .ev-plus::before, .ev-plus::after { transition: none; }
+  .ev-item, .ev-stage, .ev-pic, .ev-media, .ev-slide, .ev-text > *, .ev-cap { transition-duration: 0.01s !important; transition-delay: 0s !important; }
+  .ev-bars i.on::after { animation: none; transform: scaleX(1); }
 }
+
+/* Thumbnail framing (the strip shows a wide slice of each first photo). */
+#sip-and-ship .ev-slide:first-child { object-position: 50% 44%; }
+#graph-advocate .ev-slide:first-child { object-position: 50% 35%; }

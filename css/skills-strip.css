@@ -1,0 +1,47 @@
+/* Skills strip under the landing hero: a bold, slightly slanted ticker. */
+.skills-strip {
+  position: relative;
+  z-index: 6;
+  height: 0;
+  overflow-x: clip;
+}
+.sk-band {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 112vw;
+  margin-left: -6vw;
+  padding: clamp(14px, 1.8vw, 22px) 0;
+  background: var(--blue);
+  color: #fff;
+  transform: translateY(-30%) rotate(-0.8deg);
+  box-shadow: 0 10px 0 var(--indigo);
+  overflow: hidden;
+}
+.sk-track {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2.4vw, 34px);
+  margin: 0;
+  padding: 0 clamp(18px, 2.4vw, 34px) 0 0;
+  list-style: none;
+  white-space: nowrap;
+  animation: sk-run 38s linear infinite;
+}
+.sk-track li {
+  font-size: clamp(1.25rem, 2.6vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+}
+.sk-star { display: flex; color: var(--periwinkle); }
+.sk-star svg { width: clamp(18px, 2vw, 28px); height: clamp(18px, 2vw, 28px); }
+@keyframes sk-run { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@media (prefers-reduced-motion: reduce) { .sk-track { animation: none; } }
+
+/* PC: breathing room between the strip and the section after it. */
+@media (min-width: 901px) {
+  .skills-strip + .who-i-am { padding-top: clamp(150px, 13vw, 200px); }
+}
