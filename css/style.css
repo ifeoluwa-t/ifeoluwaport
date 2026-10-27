@@ -4710,3 +4710,9 @@ img.img-placeholder {
 
 /* while music is playing, the music icon in the top bar steps aside (the bottom icon / bar takes over) */
 .nav-music.is-on, .nav-music.is-carried { display: none; }
+
+/* Very large screens: the hero content scales up with the screen (the factor is set by script.js; it is 1 up to 1536px wide). */
+@media (min-width: 1537px) {
+  .hero-inner { zoom: var(--hero-zoom, 1); }
+  .hero { padding-top: calc(110px * var(--hero-zoom, 1)); }
+}

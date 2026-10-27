@@ -288,6 +288,15 @@ document.addEventListener('DOMContentLoaded', () => {
         kicker.style.left = '';
         return;
       }
+      /* Very large screens (wider than a 1536px laptop): the whole hero content scales up with the screen (CSS zoom
+         on .hero-inner) so it keeps the proportions of the laptop layout and the photo still ends on the section's
+         base. Below that width nothing changes (factor 1). All measurements here are visual pixels, so values written
+         back as CSS are divided by the zoom factor z. */
+      let z = 1;
+      if (window.innerWidth > 1536 && window.CSS && CSS.supports('zoom', '1.2')) {
+        z = Math.max(1, Math.min(window.innerWidth / 1536, window.innerHeight / 864, 3));
+      }
+      document.documentElement.style.setProperty('--hero-zoom', z.toFixed(4));
       const innerRect = inner.getBoundingClientRect();
       const nameRect = name.getBoundingClientRect();
       const firstRect = first.getBoundingClientRect();
@@ -303,13 +312,13 @@ document.addEventListener('DOMContentLoaded', () => {
          tuned. Uses the whole element's box, not just the first/last
          letters, since a middle letter's own ascender/descender can
          render lower or higher than either of those. */
-      const top = (nameRect.bottom - innerRect.top) + 24;
+      const top = (nameRect.bottom - innerRect.top) / z + 24;
       card.style.top = top + 'px';
-      card.style.right = (innerRect.right - lastRect.right) + 'px';
+      card.style.right = ((innerRect.right - lastRect.right) / z) + 'px';
       card.style.left = 'auto';
 
       stack.style.top = top + 'px';
-      stack.style.left = (firstRect.left - innerRect.left) + 'px';
+      stack.style.left = ((firstRect.left - innerRect.left) / z) + 'px';
       stack.style.right = 'auto';
 
       /* Sized as big as it can go while reaching all the way down to
@@ -338,10 +347,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const heightBudget = heroRect.bottom - rowRect.top;
       const widthFromHeight = heightBudget / aspect;
 
-      const photoWidth = Math.max(160, Math.min(760, maxWidthByBounds, widthFromHeight));
+      const photoWidth = Math.max(160, Math.min(760 * z, maxWidthByBounds, widthFromHeight));
 
       photo.style.transform = 'none';
-      photo.style.width = photoWidth + 'px';
+      photo.style.width = (photoWidth / z) + 'px';
       const naturalRect = photo.getBoundingClientRect();
 
       /* Positioned (not resized — width/height are untouched above)
@@ -354,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
          head and "hi, i'm" sit exactly in the middle of the page. */
       const target = (innerRect.left + innerRect.right) / 2;
       const desiredLeft = target - photoWidth * APEX_FRACTION;
-      photo.style.transform = `translateX(${desiredLeft - naturalRect.left}px)`;
+      photo.style.transform = `translateX(${(desiredLeft - naturalRect.left) / z}px)`;
 
       /* "hi, i'm" shifted off its default centered position (over the
          whole wordmark) to sit right over that same O/L midpoint.
@@ -368,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
       kicker.style.left = '0px';
       const kickerRect = kicker.getBoundingClientRect();
       const kickerCenter = (kickerRect.left + kickerRect.right) / 2;
-      kicker.style.left = (target - kickerCenter) + 'px';
+      kicker.style.left = ((target - kickerCenter) / z) + 'px';
     }
 
     align();
