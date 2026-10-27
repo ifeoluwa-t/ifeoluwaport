@@ -181,6 +181,7 @@
               '<svg class="sqw-stand" viewBox="0 0 400 400" fill="none" aria-hidden="true"><path d="M200 184 146 362M200 184 254 362M124 362H276" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>' +
               '<div class="sqw-wheel"><span class="sqw-ring2"></span>' + rim + cars + '</div>' +
               '<div class="sqw-hub" aria-hidden="true"><i>SPIN<br><span class="sqw-the">THE</span><br>WHEEL</i></div>' +
+              '<span class="sqw-side sqw-side--l" aria-hidden="true">SIDE</span><span class="sqw-side sqw-side--r" aria-hidden="true">QUESTS</span>' +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -206,7 +207,7 @@
     function fit() {
       if (!smallMQ.matches) { photo.style.removeProperty('--fit-h'); return; }
       var top = photo.getBoundingClientRect().top + window.scrollY;
-      photo.style.setProperty('--fit-h', Math.max(150, window.innerHeight - top - 18) + 'px');
+      photo.style.setProperty('--fit-h', Math.max(150, window.innerHeight - top - 30) + 'px');
     }
     window.addEventListener('resize', fit);
     window.addEventListener('orientationchange', fit);
@@ -228,8 +229,8 @@
         if (k === i) c.setAttribute('aria-current', 'true'); else c.removeAttribute('aria-current');
       });
       if (prev >= 0 && !reduce.matches && spanA.animate) {
-        spanA.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 360, easing: 'ease-out' });
-        spanB.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 360, easing: 'ease-out' });
+        spanA.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450, easing: 'ease-in-out' });
+        spanB.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 450, easing: 'ease-in-out' });
       }
       if (prev >= 0 && window.fx) window.fx.sound('tile', i);   // each tile has its own note (only if the visitor switched sound on)
       shown = i;

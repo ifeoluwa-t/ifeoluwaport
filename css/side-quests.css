@@ -749,3 +749,33 @@ body > .sq2-music.is-away { opacity: 0; transform: translate(-50%, 26px); pointe
 .sqw-hub { width: 17%; }
 .sqw-hub i { margin: 0; font-size: clamp(7px, 2.5cqw, 11px); line-height: 1.15; letter-spacing: 0.06em; text-align: center; font-weight: 700; color: var(--blue); }
 .sqw-hub .sqw-the { color: var(--navy); }   /* "THE" in the darkest blue of the palette */
+
+/* ---------- phones: "SIDE" and "QUESTS" run down either side of the wheel, level with each other ---------- */
+.sqw-side { display: none; }
+@media (max-width: 899px) {
+  .sqw-head { position: absolute; width: 1px; height: 1px; margin: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }   /* still there for screen readers */
+  .sqw-pin { padding-top: 66px; }
+  .sqw-side {
+    display: block;
+    position: absolute;
+    top: 52%;   /* the middle of the ring of pictures (they hang below the ring's own middle) */
+    transform: translateY(-50%);
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 8.4vw, 2.2rem);
+    line-height: 1;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: var(--sq-yellow);
+    pointer-events: none;
+  }
+  /* a little narrower wheel leaves a clear band down each side for the words, away from the pictures and the screen edge */
+  .sqw-stage { width: min(calc(100% - 44px), 40svh); }
+  .sqw-side--l { left: calc(16px - (100vw - 100%) / 2); }
+  .sqw-side--r { right: calc(16px - (100vw - 100%) / 2); }
+}
+/* smooth: the big picture glides to each new shape instead of jumping, and the name fades */
+.sqw-photo { transition: width 0.45s cubic-bezier(0.3, 0.7, 0.2, 1), aspect-ratio 0.45s cubic-bezier(0.3, 0.7, 0.2, 1); }
+.sqw-name { transition: opacity 0.2s ease; }
+@media (prefers-reduced-motion: reduce) { .sqw-photo, .sqw-name { transition: none; } }
