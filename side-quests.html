@@ -21,10 +21,10 @@
 <meta name="twitter:title" content="Side-Quests | Ifeoluwa Taiwo">
 <meta name="twitter:description" content="What Ifeoluwa Taiwo gets up to outside of marketing: music, books, comics, sport, birthdays, photography, design and health.">
 <meta name="twitter:image" content="https://ifeoluwaport.vercel.app/assets/images/og-image.jpg">
-<link rel="stylesheet" href="css/style.css?v=374">
+<link rel="stylesheet" href="css/style.css?v=377">
 <link rel="stylesheet" href="css/fx.css?v=9">
 <link rel="stylesheet" href="css/hero-lines.css?v=3">
-<link rel="stylesheet" href="css/side-quests.css?v=78">
+<link rel="stylesheet" href="css/side-quests.css?v=98">
 <link rel="stylesheet" href="css/signpost.css?v=44">
 <link rel="stylesheet" href="css/reaction.css?v=5">
 <link rel="stylesheet" href="css/games.css?v=7">
@@ -70,16 +70,16 @@
     <div class="sqw" id="sqw"><div class="sqw-pin">
       <p class="sq2-label sqw-head">Side Quests</p>
       <ul class="sqw-data" hidden>
-        <li data-title="Tatakae" data-src="assets/images/side-quests/comics.webp" data-w="825" data-h="1100" data-alt="A hand-painted denim jacket with an Attack on Titan crest, holding the first manga volume"></li>
-        <li data-title="Polyjammerous" data-src="assets/images/side-quests/genres.webp" data-w="825" data-h="1100" data-alt="Top music genres: Afroswing, soft pop, Afro house, alte and indie"></li>
         <li data-title="Athlete" data-src="assets/images/side-quests/volleyball.webp" data-w="825" data-h="1100" data-alt="Playing volleyball in a green and black kit, at the court"></li>
-        <li data-title="Graphic designer" data-src="assets/images/side-quests/easter.webp" data-w="825" data-h="1100" data-alt="Onboard Happy Easter graphic with a decorated blue egg"></li>
-        <li data-title="Future model" data-src="assets/images/side-quests/car.webp" data-w="825" data-h="1100" data-alt="Posing beside a vintage white Mercedes in a courtyard"></li>
+        <li data-title="Polyjammerous" data-src="assets/images/side-quests/genres.webp" data-w="825" data-h="1100" data-alt="Top music genres: Afroswing, soft pop, Afro house, alte and indie"></li>
         <li data-title="Photographer" data-src="assets/images/side-quests/photographer.webp" data-w="825" data-h="1100" data-alt="Ifeoluwa in a navy t-shirt looking through a camera in a studio, with a large white reflector behind"></li>
+        <li data-title="Graphic designer" data-src="assets/images/side-quests/easter.webp" data-w="825" data-h="1100" data-alt="Onboard Happy Easter graphic with a decorated blue egg"></li>
         <li data-title="Pharmacist" data-src="assets/images/side-quests/pharmacist.webp?v=2" data-w="825" data-h="1100" data-alt="Ifeoluwa in a white pharmacist coat behind a counter, with shelves of medicine behind him"></li>
         <li data-title="My book stack" data-src="assets/images/side-quests/books.webp" data-w="825" data-h="1100" data-alt="Shelf of novels and manga"></li>
-        <li data-title="Touching grass" data-src="assets/images/side-quests/stream.webp" data-w="825" data-h="1100" data-alt="A stream winding through rocks and grass"></li>
         <li data-title="Aesthete" data-src="assets/images/side-quests/photo-shoot.webp" data-w="825" data-h="1100" data-alt="Selfie in front of a framed portrait painting"></li>
+        <li data-title="Touching grass" data-src="assets/images/side-quests/stream.webp" data-w="825" data-h="1100" data-alt="A stream winding through rocks and grass"></li>
+        <li data-title="Future model" data-src="assets/images/side-quests/car.webp" data-w="825" data-h="1100" data-alt="Posing beside a vintage white Mercedes in a courtyard"></li>
+        <li data-title="Tatakae" data-src="assets/images/side-quests/comics.webp" data-w="825" data-h="1100" data-alt="A hand-painted denim jacket with an Attack on Titan crest, holding the first manga volume"></li>
       </ul>
       <div class="sqw-mount"></div>
     <!-- Now-playing bar: one song per genre (YouTube, loaded only when play is pressed). Prev / play-pause / next. -->
@@ -89,6 +89,7 @@
       <div class="sq2-music" id="sq2-music" role="region" aria-label="Music player">
         <span class="sq2-music-icon" aria-hidden="true">
           <span class="sq2-eq"><i></i><i></i><i></i><i></i></span>
+          <svg class="sq2-note" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6.5l10-2V16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="16.5" cy="16" r="2.5" fill="currentColor"/></svg>
         </span>
         <span class="sq2-music-text" aria-live="polite">
           <strong id="sq2-song-title">Did You See</strong>
@@ -101,6 +102,7 @@
             <svg class="i-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z"/></svg>
           </button>
           <button type="button" id="sq2-next" aria-label="Next song"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.6 5H18v14h-2.4zM4 5.4v13.2a.8.8 0 0 0 1.25.66l9.15-6.6a.8.8 0 0 0 0-1.32L5.25 4.74A.8.8 0 0 0 4 5.4z"/></svg></button>
+          <button type="button" id="sq2-close" class="sq2-close" aria-label="Close the music bar"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></button>
         </span>
         <!-- The YouTube player lives here, kept out of sight: this bar is audio-only. -->
         <div class="sq2-yt-holder" aria-hidden="true"><div id="sq2-yt"></div></div>
@@ -116,10 +118,15 @@
       <div class="sq2-story-inner">
         <div class="sq2-story-photo">
         <img class="sq2-photo" src="assets/images/side-quests/me-night.webp" width="825" height="1100" alt="Ifeoluwa at night, eyes cast down, in warm orange light with hanging lanterns behind" loading="lazy" decoding="async">
-        <span class="sq2-sticker sq2-sticker--lime sq2-photo-sticker">that's me</span>
-        <svg class="sq2-doodle sq2-doodle--star" viewBox="0 0 48 48" fill="currentColor" aria-hidden="true"><path d="M24 2l5.2 14.6L44 18l-12 9.4L35.8 44 24 35.2 12.2 44 16 27.4 4 18l14.8-1.4z"/></svg>
-        <svg class="sq2-doodle sq2-doodle--squiggle" viewBox="0 0 120 40" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22c10-18 18 18 28 0s18 18 28 0 18 18 28 0 18 14 28 0"/></svg>
-        <svg class="sq2-doodle sq2-doodle--arrow" viewBox="0 0 90 60" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 14c30-14 62-2 68 32M56 40l18 8 6-20"/></svg>
+        <button type="button" class="sq2-icon sq2-icon--lore" data-backs="assets/images/side-quests/icons/hp.png" aria-label="Eye of Elena. Tap to flip.">
+          <span class="sq2-icon-in"><img class="sq2-icon-front" src="assets/images/side-quests/icons/eye.png" alt="" draggable="false"><img class="sq2-icon-back" src="assets/images/side-quests/icons/hp.png" alt="" draggable="false"></span>
+        </button>
+        <button type="button" class="sq2-icon sq2-icon--bishop" data-backs="assets/images/side-quests/icons/bishop.png" aria-label="Volleyball. Tap to flip.">
+          <span class="sq2-icon-in"><img class="sq2-icon-front" src="assets/images/side-quests/icons/volleyball.png" alt="" width="360" height="360" draggable="false"><img class="sq2-icon-back" src="assets/images/side-quests/icons/bishop.png" alt="" width="187" height="420" draggable="false"></span>
+        </button>
+        <button type="button" class="sq2-icon sq2-icon--dc" data-backs="assets/images/side-quests/icons/marvel.png" aria-label="DC. Tap to flip.">
+          <span class="sq2-icon-in"><img class="sq2-icon-front" src="assets/images/side-quests/icons/dc.png" alt="" width="360" height="360" draggable="false"><img class="sq2-icon-back" src="assets/images/side-quests/icons/marvel.png" alt="" draggable="false"></span>
+        </button>
       </div>
         <div class="sq2-story-copy">
           <p>Marketing is my job, but curiosity is the real day job. Most of what I do outside work comes down to <button type="button" class="sq2-term" data-quest="motion" aria-haspopup="true">staying in motion</button>, admiring elegant things and <button type="button" class="sq2-term" data-quest="creative" aria-haspopup="true">making things beautiful</button>.</p>
@@ -409,11 +416,11 @@
 </main>
 
 <script src="js/script.js?v=121"></script>
-<script src="js/music-keep.js?v=15"></script>
+<script src="js/music-keep.js?v=21"></script>
 <script src="js/hero-lines.js?v=5"></script>
-<script src="js/side-quests.js?v=50"></script>
+<script src="js/side-quests.js?v=57"></script>
 <script src="js/signpost.js?v=1"></script>
 <script src="js/reaction.js?v=8"></script>
-<script src="js/fx.js?v=16"></script>
+<script src="js/fx.js?v=18"></script>
 </body>
 </html>

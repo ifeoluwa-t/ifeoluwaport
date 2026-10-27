@@ -4702,3 +4702,11 @@ img.img-placeholder {
 /* Work and Events pages: the subtext sits right under the heading */
 .work-page-heading:has(+ .work-sub), .ev-heading:has(+ .work-sub) { margin-bottom: 0; }
 .work-page .work-sub, .ev-section .work-sub { margin-bottom: clamp(26px, 4vw, 44px); }
+
+/* the nav music icon while music plays: a still pause symbol (two bars), not moving bars */
+.nav-music.is-on .nav-eq { display: inline-flex; gap: 4px; height: 14px; }
+.nav-music.is-on .nav-eq i { width: 4px; height: 100%; animation: none; transform: none; border-radius: 2px; }
+.nav-music.is-on .nav-eq i:nth-child(3) { display: none; }
+
+/* while music is playing, the music icon in the top bar steps aside (the bottom icon / bar takes over) */
+.nav-music.is-on, .nav-music.is-carried { display: none; }

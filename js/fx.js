@@ -10,7 +10,7 @@
 
   /* ---------------- sound ---------------- */
   // Sound effects (and the little sound switch) exist on the Side Quests page only.
-  var SOUND_PAGE = !!(document.body && document.body.getAttribute('data-page') === 'side-quests');
+  var SOUND_PAGE = false;   // the sound switch and the little sounds are switched off on every page
   var on = false;
   try { on = SOUND_PAGE && localStorage.getItem(KEY) === '1'; } catch (e) {}
   var ctx = null;
@@ -126,8 +126,8 @@
     cur.setAttribute('aria-hidden', 'true');
     document.body.appendChild(cur);
     var MAP = [
-      ['#nav-music', function () { var b = document.getElementById('nav-music'); return b && b.classList.contains('is-on') ? 'pause' : 'play'; }],
-      ['.sq2-cta', 'play'], ['.sq2-music', 'music'],
+      ['#nav-music', function () { if (document.body.getAttribute('data-page') === 'side-quests') return ''; var b = document.getElementById('nav-music'); return b && b.classList.contains('is-on') ? 'pause' : 'play'; }],   // no hover tag on Side Quests
+      ['.sq2-cta', 'play'],
       ['.rx-panel', 'tap'],
       ['.gw-item', 'view'], ['.gw', 'drag'],
       ['.sqw-car', 'view'], ['.sqw-stage', 'drag'],

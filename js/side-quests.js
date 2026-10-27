@@ -180,7 +180,7 @@
             '<div class="sqw-square">' +
               '<svg class="sqw-stand" viewBox="0 0 400 400" fill="none" aria-hidden="true"><path d="M200 184 146 362M200 184 254 362M124 362H276" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>' +
               '<div class="sqw-wheel"><span class="sqw-ring2"></span>' + rim + cars + '</div>' +
-              '<div class="sqw-hub" aria-hidden="true"><i>SPIN<br><span class="sqw-the">THE</span><br>WHEEL</i></div>' +
+              '<div class="sqw-hub" aria-hidden="true"><i>SPIN<br><span class="sqw-the">ME</span></i></div>' +
               '<span class="sqw-side sqw-side--l" aria-hidden="true">SIDE</span><span class="sqw-side sqw-side--r" aria-hidden="true">QUESTS</span>' +
             '</div>' +
           '</div>' +
@@ -201,15 +201,21 @@
     var spanA = imgA.parentNode, spanB = imgB.parentNode;
     var name = mount.querySelector('.sqw-name'), live = mount.querySelector('.sqw-live');
 
-    // Phones and tablets: the big picture is sized to fill whatever is left of the first screen, above the
-    // music bar, so the whole gallery (wheel, name and picture) is seen without scrolling.
+    // Phones and tablets: the big picture is sized once, to fill what is left of the first screen. It uses the
+    // small-viewport height (svh), which does not change when the browser's address bar slides away while
+    // scrolling, and it is not recalculated on scroll, so the picture never grows or shrinks.
     var smallMQ = window.matchMedia('(max-width: 899px)');
+    var vhProbe = document.createElement('div');
+    vhProbe.setAttribute('aria-hidden', 'true');
+    vhProbe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100svh;visibility:hidden;pointer-events:none';
+    document.body.appendChild(vhProbe);
+    var lastW = window.innerWidth;
     function fit() {
       if (!smallMQ.matches) { photo.style.removeProperty('--fit-h'); return; }
       var top = photo.getBoundingClientRect().top + window.scrollY;
-      photo.style.setProperty('--fit-h', Math.max(150, window.innerHeight - top - 30) + 'px');
+      photo.style.setProperty('--fit-h', Math.max(150, vhProbe.offsetHeight - top - 30) + 'px');
     }
-    window.addEventListener('resize', fit);
+    window.addEventListener('resize', function () { if (window.innerWidth !== lastW) { lastW = window.innerWidth; fit(); } });   // width changes only (rotating), never the address bar
     window.addEventListener('orientationchange', fit);
     window.addEventListener('load', fit);
 
@@ -217,21 +223,34 @@
       wheel.style.transform = 'rotate(' + a + 'deg)';
       for (var i = 0; i < counters.length; i++) counters[i].style.transform = 'rotate(' + (-a) + 'deg)';
     }
+    // every picture is fetched up front, and a new one is only swapped in once it is decoded, so nothing flashes
+    var imgCache = {}, token = 0;
+    data.forEach(function (d) { var im = new Image(); im.decoding = 'async'; im.src = d.src; imgCache[d.src] = im; });
     function showDetail(i) {
       var d = data[i], prev = shown;
-      imgB.src = imgA.src || d.src;
-      imgA.src = d.src;
-      imgA.alt = d.alt || d.title;
-      photo.style.setProperty('--ar', (d.w / d.h).toFixed(4));
+      var t = ++token;
+      function apply() {
+        if (t !== token) return;                               // a newer picture was chosen meanwhile
+        spanA.getAnimations && spanA.getAnimations().forEach(function (a) { a.cancel(); });
+        spanB.getAnimations && spanB.getAnimations().forEach(function (a) { a.cancel(); });
+        imgB.src = imgA.src || d.src;
+        imgA.src = d.src;
+        imgA.alt = d.alt || d.title;
+        photo.style.setProperty('--ar', (d.w / d.h).toFixed(4));
+        if (prev >= 0 && !reduce.matches && spanA.animate) {
+          spanA.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450, easing: 'ease-in-out' });
+          spanB.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 450, easing: 'ease-in-out' });
+        }
+      }
+      var im = imgCache[d.src];
+      if (im.complete && im.naturalWidth) apply();
+      else if (im.decode) im.decode().then(apply, apply);
+      else im.addEventListener('load', apply, { once: true });
       name.textContent = d.title;
       carsEl.forEach(function (c, k) {
         c.classList.toggle('is-on', k === i);
         if (k === i) c.setAttribute('aria-current', 'true'); else c.removeAttribute('aria-current');
       });
-      if (prev >= 0 && !reduce.matches && spanA.animate) {
-        spanA.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450, easing: 'ease-in-out' });
-        spanB.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 450, easing: 'ease-in-out' });
-      }
       if (prev >= 0 && window.fx) window.fx.sound('tile', i);   // each tile has its own note (only if the visitor switched sound on)
       shown = i;
       live.textContent = (i + 1) + ' of ' + n + ': ' + d.title;
@@ -417,7 +436,7 @@
       t.src = 'https://www.youtube.com/iframe_api';
       document.head.appendChild(t);
     }
-    function start(i) {
+    function start(i, at, paused) {
       current = (i + SONGS.length) % SONGS.length;
       show();
       var id = SONGS[current][2];
@@ -427,9 +446,9 @@
         player = new YT.Player('sq2-yt', {
           videoId: SONGS[current][2],
           width: '200', height: '200',
-          playerVars: { autoplay: 1, rel: 0, playsinline: 1, modestbranding: 1 },
+          playerVars: { autoplay: paused ? 0 : 1, start: at || 0, rel: 0, playsinline: 1, modestbranding: 1 },
           events: {
-            onReady: function (e) { e.target.setVolume(window.SQ_VOLUME); e.target.playVideo(); },
+            onReady: function (e) { e.target.setVolume(window.SQ_VOLUME); if (!paused) e.target.playVideo(); },
             onStateChange: function (e) {
               if (e.data === 0) start(current + 1);                  // ended: next song
               else if (e.data === 1 || e.data === 3) { try { player.setVolume(window.SQ_VOLUME); } catch (x) {} setPlaying(true); }
@@ -447,6 +466,9 @@
     document.getElementById('sq2-next').addEventListener('click', function () { start(current + 1); });
     document.getElementById('sq2-prev').addEventListener('click', function () { start(current - 1); });
     show();
+    // Music that was already playing on the page before this one carries straight on here, from where it had got to.
+    var resume = window.SQ_RESUME;
+    if (resume && SONGS[resume.i]) { current = resume.i; show(); start(resume.i, resume.t, resume.paused); }
 
     // Used by the "still want to listen?" prompt when the visitor leaves for another page.
     window.sqMusic = {
@@ -615,18 +637,98 @@
     });
   })();
 
-// Phones: the music bar is hidden, so the music icon in the top bar plays / pauses the playlist instead.
+// Phones: the music behaves as on the other pages. The top icon plays / pauses (a still pause symbol while playing); the bar
+// shows for 3 seconds when music starts, then folds into one round icon at the bottom, which can be dragged to either edge.
+// Both disappear while the "On Repeat" section is on screen.
 (function () {
-  var btn = document.getElementById('nav-music'), play = document.getElementById('sq2-play'), player = document.getElementById('sq2-music');
-  if (!btn || !play || !player) return;
+  var mq = window.matchMedia('(max-width: 899px)');
+  var navBtn = document.getElementById('nav-music'), play = document.getElementById('sq2-play'), bar = document.getElementById('sq2-music');
+  var closeBtn = document.getElementById('sq2-close');
+  if (!navBtn || !play || !bar) return;
+  var EDGE = 14, side = 'L', hideTimer = 0, started = false, dragSt = null, dragMoved = false;
+  function playing() { return bar.classList.contains('is-playing'); }
+  function edgeLeft() { return side === 'R' ? Math.max(EDGE, window.innerWidth - bar.offsetWidth - EDGE) : EDGE; }
+  function place() { if (mq.matches) { bar.style.left = edgeLeft() + 'px'; bar.style.transform = 'none'; } else { bar.style.left = ''; bar.style.transform = ''; } }
+  function armHide() { clearTimeout(hideTimer); hideTimer = setTimeout(function () { if (mq.matches) bar.classList.add('is-mini'); }, 3000); }
+  function wake() { bar.classList.remove('is-mini'); armHide(); }
   function sync() {
-    var on = player.classList.contains('is-playing');
-    btn.classList.toggle('is-on', on);
-    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-    btn.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
+    var on = playing();
+    navBtn.classList.toggle('is-on', on);
+    if (on) navBtn.classList.remove('is-carried');
+    navBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    navBtn.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
+    if (on && !started) {
+      started = true;
+      bar.classList.remove('is-gone');
+      if (window.SQ_RESUME) bar.classList.add('is-mini'); else wake();   // carried on from another page: just the icon
+    }
   }
-  btn.addEventListener('click', function () { play.click(); });
-  if (window.MutationObserver) new MutationObserver(sync).observe(player, { attributes: true, attributeFilter: ['class'] });
+  bar.classList.add('is-gone');                 // no bar until music is playing
+  if (window.SQ_RESUME && !window.SQ_RESUME.paused) navBtn.classList.add('is-carried');   // carried on from another page: the top icon never appears
+  if (window.MutationObserver) {
+    new MutationObserver(function () { sync(); place(); }).observe(bar, { attributes: true, attributeFilter: ['class'] });
+  }
   document.addEventListener('sqmusic', sync);
+  navBtn.addEventListener('click', function () {
+    if (bar.classList.contains('is-gone') && started) { bar.classList.remove('is-gone'); wake(); return; }   // bar was put away: bring it back
+    play.click();
+  });
+  if (closeBtn) closeBtn.addEventListener('click', function () {
+    clearTimeout(hideTimer);
+    if (playing()) bar.classList.add('is-mini'); else bar.classList.add('is-gone');
+  });
+  bar.addEventListener('click', function (e) { if (bar.classList.contains('is-mini') && !dragMoved && mq.matches) { e.preventDefault(); wake(); } }, true);
+  bar.addEventListener('pointerdown', function (e) { if (!bar.classList.contains('is-mini')) armHide(); });
+  // drag along the bottom edge, then settle on the nearest side
+  bar.addEventListener('pointerdown', function (e) {
+    if (!mq.matches || e.button !== 0) return;
+    dragSt = { id: e.pointerId, x: e.clientX, left: bar.getBoundingClientRect().left }; dragMoved = false;
+  });
+  bar.addEventListener('pointermove', function (e) {
+    if (!dragSt || dragSt.id !== e.pointerId) return;
+    var dx = e.clientX - dragSt.x;
+    if (!dragMoved && Math.abs(dx) < 6) return;
+    if (!dragMoved) { dragMoved = true; try { bar.setPointerCapture(e.pointerId); } catch (x) {} bar.style.transition = 'none'; clearTimeout(hideTimer); }
+    bar.style.left = Math.max(EDGE, Math.min(window.innerWidth - bar.offsetWidth - EDGE, dragSt.left + dx)) + 'px';
+  });
+  function endDrag(e) {
+    if (!dragSt || dragSt.id !== e.pointerId) return;
+    dragSt = null;
+    if (dragMoved) {
+      side = bar.getBoundingClientRect().left + bar.offsetWidth / 2 > window.innerWidth / 2 ? 'R' : 'L';
+      bar.style.transition = 'left .28s cubic-bezier(.2,.8,.3,1)'; place();
+      setTimeout(function () { bar.style.transition = ''; }, 320);
+      if (!bar.classList.contains('is-mini')) armHide();
+      setTimeout(function () { dragMoved = false; }, 0);
+    }
+  }
+  bar.addEventListener('pointerup', endDrag); bar.addEventListener('pointercancel', endDrag);
+  window.addEventListener('resize', place);
+  mq.addEventListener && mq.addEventListener('change', function () { place(); });
+  // away on the On Repeat section: the top icon and the bottom icon both go
+  var rot = document.getElementById('on-rotation');
+  if (rot && window.IntersectionObserver) {
+    new IntersectionObserver(function (es) { document.body.classList.toggle('rot-away', es[0].isIntersecting); }, { rootMargin: '-30% 0px -30% 0px' }).observe(rot);
+  }
+  place();
   sync();
+})();
+
+// The three icons round the lore photo flip over to something else when hovered (mouse) or tapped.
+// The bishop alternates between two backs each time it flips.
+(function () {
+  var icons = Array.prototype.slice.call(document.querySelectorAll('.sq2-icon'));
+  icons.forEach(function (btn) {
+    var backs = (btn.getAttribute('data-backs') || '').split(',').filter(Boolean), n = 0;
+    var back = btn.querySelector('.sq2-icon-back');
+    if (!back) return;                                  // the volleyball just sits there
+    function flipTo(on) {
+      if (on && backs.length > 1) { back.src = backs[n % backs.length]; n++; }
+      btn.classList.toggle('is-flipped', on);
+    }
+    btn.addEventListener('mouseenter', function () { if (matchMedia('(hover: hover)').matches) flipTo(true); });
+    btn.addEventListener('mouseleave', function () { if (matchMedia('(hover: hover)').matches) btn.classList.remove('is-flipped'); });
+    btn.addEventListener('click', function () { if (matchMedia('(hover: hover)').matches && btn.classList.contains('is-flipped')) return; flipTo(!btn.classList.contains('is-flipped')); });
+    document.addEventListener('click', function (e) { if (!btn.contains(e.target)) btn.classList.remove('is-flipped'); });
+  });
 })();

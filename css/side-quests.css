@@ -88,9 +88,6 @@
 .sq2-photo-sticker { position: absolute; right: -10px; bottom: 22px; font-size: 0.85rem; padding: 9px 16px; z-index: 2; }
 img.sq2-photo { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 28px; margin: 0; box-shadow: 0 0 0 1.5px var(--periwinkle), 0 12px 34px -16px rgba(12, 0, 84, 0.3); }
 .sq2-doodle { position: absolute; pointer-events: none; }
-.sq2-doodle--squiggle { width: 110px; left: -34px; bottom: -26px; color: var(--sq-coral); }
-.sq2-doodle--star { width: 54px; right: -20px; top: -22px; color: var(--sq-yellow); }
-.sq2-doodle--arrow { width: 84px; left: -48px; top: 26px; color: var(--blue); }
 
 .sq2-story-heading {
   font-family: var(--font-display);
@@ -189,9 +186,6 @@ img.sq2-pop-media { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit
   .sq2-story-photo { max-width: 360px; }
 }
 @media (max-width: 640px) {
-  .sq2-doodle--arrow { left: -14px; }
-  .sq2-doodle--star { right: -8px; }
-  .sq2-doodle--squiggle { left: -10px; }
 }
 
 /* ---------- Reduced motion ---------- */
@@ -742,12 +736,11 @@ body > .sq2-music.is-away { opacity: 0; transform: translate(-50%, 26px); pointe
 
 /* phones: no music bar at the bottom (the music icon in the top bar does the job); desktop: no extra icon */
 @media (max-width: 899px) {
-  body > .sq2-music { display: none; }
   .sq2-music-slot, .sq2-cta, .sq2-cta-gap { display: none; }
 }
-@media (min-width: 900px) { body[data-page="side-quests"] .nav-music { display: none; } }
-.sqw-hub { width: 17%; }
-.sqw-hub i { margin: 0; font-size: clamp(7px, 2.5cqw, 11px); line-height: 1.15; letter-spacing: 0.06em; text-align: center; font-weight: 700; color: var(--blue); }
+@media (min-width: 900px) { body[data-page="side-quests"] .nav-player { display: none; } }
+.sqw-hub { width: 13.5%; }
+.sqw-hub i { margin: 0; font-size: clamp(7px, 2.8cqw, 12px); line-height: 1.15; letter-spacing: 0.06em; text-align: center; font-weight: 700; color: var(--blue); }
 .sqw-hub .sqw-the { color: var(--navy); }   /* "THE" in the darkest blue of the palette */
 
 /* ---------- phones: "SIDE" and "QUESTS" run down either side of the wheel, level with each other ---------- */
@@ -772,10 +765,164 @@ body > .sq2-music.is-away { opacity: 0; transform: translate(-50%, 26px); pointe
   }
   /* a little narrower wheel leaves a clear band down each side for the words, away from the pictures and the screen edge */
   .sqw-stage { width: min(calc(100% - 44px), 40svh); }
-  .sqw-side--l { left: calc(16px - (100vw - 100%) / 2); }
-  .sqw-side--r { right: calc(16px - (100vw - 100%) / 2); }
+  .sqw-side--l { left: calc(22px - (100vw - 100%) / 2); }
+  .sqw-side--r { right: calc(22px - (100vw - 100%) / 2); }
 }
 /* smooth: the big picture glides to each new shape instead of jumping, and the name fades */
 .sqw-photo { transition: width 0.45s cubic-bezier(0.3, 0.7, 0.2, 1), aspect-ratio 0.45s cubic-bezier(0.3, 0.7, 0.2, 1); }
 .sqw-name { transition: opacity 0.2s ease; }
 @media (prefers-reduced-motion: reduce) { .sqw-photo, .sqw-name { transition: none; } }
+
+/* the top bar's small music player (phones): song on the left, play / pause on the right */
+.nav-player {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 4px 4px 14px;
+  background: linear-gradient(150deg, rgba(238, 241, 251, 0.72) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(228, 233, 250, 0.72) 100%);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 0 0 2px var(--navy), 0 10px 24px rgba(10, 0, 84, 0.12), inset 0 1px 1.5px rgba(255, 255, 255, 0.8);
+  border-radius: 999px;
+  color: var(--navy);
+}
+.nav-player-text { display: flex; flex-direction: column; min-width: 0; max-width: 92px; line-height: 1.15; }
+.nav-player-text b { font-size: 0.74rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav-player-text i { font-style: normal; font-size: 0.64rem; opacity: 0.65; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav-player .nav-music { width: 34px; height: 34px; background: var(--blue); color: #fff; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.nav-player .nav-music svg { width: 15px; height: 15px; }
+.nav-player .nav-music .i-pause { display: none; }
+.nav-player .nav-music.is-on svg.i-play { display: none; }
+.nav-player .nav-music.is-on svg.i-pause { display: block; }
+.nav-player .nav-music.is-on .nav-eq { display: none; }
+.nav-player .nav-music:hover { background: var(--indigo); }
+@media (max-width: 899px) {
+  body[data-page="side-quests"] .brand { font-size: 1.15rem; padding: 7px 14px; }
+  body[data-page="side-quests"] .nav-actions { gap: 6px; }
+}
+
+.nav-player-next { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 34px; margin-left: -6px; border: 0; border-radius: 50%; background: transparent; color: var(--navy); cursor: pointer; }
+.nav-player-next svg { width: 14px; height: 14px; }
+.nav-player-next:hover { background: rgba(0, 82, 255, 0.12); }
+.nav-player { padding-right: 6px; }
+.nav-player-text { max-width: 70px; }
+@media (max-width: 899px) { .nav-player-text { max-width: 54px; } .nav-player { gap: 6px; padding-left: 12px; } .nav-player-text b { font-size: 0.7rem; } }
+.sqw-hub .sqw-the { color: var(--navy); }
+
+/* ---------- phones: the bar is a floating pill that folds into one icon (like the other pages) ---------- */
+.sq2-close { display: none; }
+@media (max-width: 899px) {
+  body > .sq2-music { display: flex; bottom: 14px; left: 14px; transform: none; width: auto; max-width: calc(100vw - 28px); margin: 0; border-radius: 999px; padding: 6px 8px 6px 8px; touch-action: none; transition: padding 0.3s ease; }
+  body > .sq2-music.is-gone { display: none; }
+  body > .sq2-music .sq2-close { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: 0; border-radius: 50%; background: transparent; color: var(--navy); cursor: pointer; }
+  body > .sq2-music .sq2-close svg { width: 12px; height: 12px; }
+  body > .sq2-music.is-mini { padding: 5px; gap: 0; }
+  body > .sq2-music.is-mini .sq2-music-text, body > .sq2-music.is-mini .sq2-music-ctrl { display: none; }
+  body > .sq2-music.is-mini.is-playing { animation: sqMiniPulse 3.2s ease-in-out infinite; }
+  body > .sq2-music.is-away { opacity: 0; pointer-events: none; transform: none; }
+  body.rot-away #nav-music { visibility: hidden; }
+}
+@keyframes sqMiniPulse { 0%, 100% { box-shadow: 0 10px 30px rgba(7, 0, 46, 0.35), 0 0 0 0 rgba(255, 210, 63, 0.42); } 50% { box-shadow: 0 10px 30px rgba(7, 0, 46, 0.35), 0 0 0 7px rgba(255, 210, 63, 0); } }
+@media (prefers-reduced-motion: reduce) { body > .sq2-music.is-mini.is-playing { animation: none; } }
+
+/* the folded icon: the same music-note icon as on the other pages, kept in the Side Quests yellow */
+.sq2-music-icon .sq2-note { display: none; }
+@media (max-width: 899px) {
+  body > .sq2-music.is-mini .sq2-music-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--sq-yellow); color: var(--navy); display: inline-flex; align-items: center; justify-content: center; }
+  body > .sq2-music.is-mini .sq2-music-icon .sq2-eq { display: none; }
+  body > .sq2-music.is-mini .sq2-music-icon .sq2-note { display: block; width: 18px; height: 18px; }
+  body > .sq2-music.is-mini { border-radius: 999px; }
+}
+body > .sq2-music .sq2-music-icon .sq2-note { color: var(--navy); }
+
+/* the doodles around the lore photo: things that are about me */
+.sq2-doodle--dc { width: 50px; right: -24px; top: 42%; transform: rotate(8deg); filter: drop-shadow(0 4px 6px rgba(12, 0, 84, 0.25)); }
+
+
+/* doodles round the lore photo (not in the site's blues): the bishop leans in from outside at the top left,
+   a volleyball sits at the top right, and the DC Comics badge is on the right */
+.sq2-doodle--bishop { width: 58px; left: -58px; top: 2px; transform: rotate(18deg); filter: drop-shadow(0 4px 6px rgba(74, 29, 61, 0.3)); }
+.sq2-doodle--volley { width: 54px; right: -22px; top: -22px; transform: rotate(14deg); filter: drop-shadow(0 5px 7px rgba(74, 40, 10, 0.3)); }
+.sq2-doodle--dc { width: 52px; right: -26px; top: 46%; transform: rotate(8deg); filter: drop-shadow(0 4px 6px rgba(12, 0, 84, 0.25)); }
+@media (max-width: 900px) {
+  .sq2-doodle--bishop { left: -12px; top: -6px; filter: drop-shadow(0 0 3px #fff) drop-shadow(0 0 2px #fff); }
+  .sq2-doodle--volley { right: -10px; top: -22px; }
+  .sq2-doodle--dc { right: -12px; }
+}
+
+/* round the lore photo: a bishop, a volleyball and a DC badge; each flips over to something else when hovered or tapped */
+.sq2-doodle { display: none; }
+.sq2-icon { position: absolute; z-index: 3; padding: 0; border: 0; background: none; cursor: pointer; perspective: 600px; -webkit-tap-highlight-color: transparent; }
+.sq2-icon-in { position: relative; display: block; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.65s cubic-bezier(0.3, 0.7, 0.2, 1); }
+.sq2-icon.is-flipped .sq2-icon-in { transform: rotateY(180deg); }
+.sq2-icon img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; backface-visibility: hidden; -webkit-backface-visibility: hidden; pointer-events: none; filter: drop-shadow(0 5px 7px rgba(20, 10, 40, 0.3)); }
+.sq2-icon-back { transform: rotateY(180deg); }
+.sq2-icon:focus-visible { outline: 3px solid var(--sq-yellow); outline-offset: 4px; border-radius: 12px; }
+.sq2-icon--bishop { width: 72px; height: 88px; left: -74px; top: 8px; transform: rotate(78deg); }          /* base outside, head pointing in at me */
+.sq2-icon--volley { width: 60px; height: 60px; right: -24px; top: -24px; transform: rotate(12deg); }
+.sq2-icon--dc { width: 58px; height: 58px; right: -26px; top: 46%; transform: rotate(-6deg); }
+@media (max-width: 900px) {
+  .sq2-icon--bishop { left: -16px; top: 4px; width: 62px; height: 76px; }
+  .sq2-icon--volley { right: -10px; top: -22px; }
+  .sq2-icon--dc { right: -12px; }
+}
+@media (prefers-reduced-motion: reduce) { .sq2-icon-in { transition: none; } }
+
+/* new arrangement: the bishop comes in from the top right, head pointing diagonally across the photo;
+   the volleyball (a little smaller) is top left, the DC badge is on the left side */
+.sq2-icon--bishop { left: auto; right: -56px; top: -46px; transform: rotate(225deg); }
+.sq2-icon--volley { right: auto; left: -22px; top: -20px; width: 50px; height: 50px; transform: rotate(-12deg); cursor: default; }
+.sq2-icon--dc { right: auto; left: -26px; top: 46%; transform: rotate(6deg); }
+@media (max-width: 900px) {
+  .sq2-icon--bishop { left: auto; right: -14px; top: -40px; }
+  .sq2-icon--volley { left: -10px; right: auto; top: -22px; }
+  .sq2-icon--dc { left: -12px; right: auto; }
+}
+
+/* bishop flips to a volleyball; DC sits on the left edge at the neck; the Eye of Elena / the HP mark stand upright in the old "that's me" spot */
+.sq2-icon--dc { left: -32px; top: 62%; }
+.sq2-icon--lore { right: -18px; bottom: 16px; width: 66px; height: 82px; transform: none; }
+.sq2-icon--lore img { filter: drop-shadow(0 5px 8px rgba(20, 10, 40, 0.35)); }
+@media (max-width: 900px) { .sq2-icon--dc { left: -14px; top: 62%; } .sq2-icon--lore { right: -10px; bottom: 14px; width: 56px; height: 72px; } }
+
+/* nudges: DC / Marvel a little further left; the Eye of Elena / HP mark smaller and a little further right;
+   the bishop (and its volleyball back, now smaller) a little lower */
+.sq2-icon--dc { left: -44px; }
+.sq2-icon--lore { right: -30px; width: 52px; height: 66px; }
+.sq2-icon--bishop { top: -24px; }
+.sq2-icon--bishop .sq2-icon-back { inset: 20%; width: 60%; height: 60%; }
+@media (max-width: 900px) {
+  .sq2-icon--dc { left: -22px; }
+  .sq2-icon--lore { right: -18px; width: 46px; height: 58px; }
+  .sq2-icon--bishop { top: -22px; }
+}
+
+/* the volleyball comes first (70% of its box) and flips to the chess bishop; DC / Marvel and the Eye of Elena / HP mark swap sides */
+.sq2-icon--bishop .sq2-icon-front { inset: 15%; width: 70%; height: 70%; }
+.sq2-icon--bishop .sq2-icon-back { inset: 0; width: 100%; height: 100%; }
+.sq2-icon--dc { left: auto; top: auto; right: -30px; bottom: 16px; transform: rotate(-6deg); }
+.sq2-icon--lore { right: auto; bottom: auto; left: -44px; top: 62%; }
+@media (max-width: 900px) {
+  .sq2-icon--dc { left: auto; top: auto; right: -18px; bottom: 14px; }
+  .sq2-icon--lore { right: auto; bottom: auto; left: -22px; top: 62%; }
+}
+
+/* positions: the Eye of Elena / HP mark on the rounded top-left corner, DC / Marvel at the neck on the left,
+   the volleyball / bishop halfway down the right-hand side */
+.sq2-icon--lore { left: -26px; top: -22px; right: auto; bottom: auto; }
+.sq2-icon--dc { left: -47px; top: 62%; right: auto; bottom: auto; }
+.sq2-icon--bishop { right: -48px; top: calc(50% - 44px); left: auto; }
+@media (max-width: 900px) {
+  .sq2-icon--lore { left: -12px; top: -20px; }
+  .sq2-icon--dc { left: -22px; top: 62%; }
+  .sq2-icon--bishop { right: -14px; top: calc(50% - 38px); }
+}
+
+/* the volleyball / bishop sits on the left, halfway between the Eye of Elena mark and the DC badge,
+   and the bishop points straight across, level, into the photo */
+.sq2-icon--bishop { left: -50px; right: auto; top: calc(34% - 44px); transform: rotate(90deg); }
+@media (max-width: 900px) { .sq2-icon--bishop { left: -26px; right: auto; top: calc(34% - 38px); } }
+
+/* the volleyball / bishop now sits on the right-hand side, the bishop pointing straight across into the photo */
+.sq2-icon--bishop { left: auto; right: -50px; top: calc(34% - 44px); transform: rotate(-90deg); }
+@media (max-width: 900px) { .sq2-icon--bishop { left: auto; right: -26px; top: calc(34% - 38px); } }
