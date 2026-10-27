@@ -44,7 +44,7 @@
 .sq2-gallery {
   background: var(--blue);
   position: relative;
-  padding: 0 0 clamp(56px, 7vw, 96px);
+  padding: 0;               /* the wheel section is exactly one screen tall, nothing spills below it */
   overflow: clip; /* not hidden: the wheel below is position: sticky */
 }
 .sq2-gallery-head {
@@ -59,7 +59,7 @@
 }
 .sq2-label {
   font-family: var(--font-display);
-  font-size: clamp(2.7rem, 5.4vw, 4.2rem);
+  font-size: clamp(2.6rem, 6vw, 4.4rem);
   line-height: 1;
   color: var(--sq-yellow);
   margin: 0;
@@ -73,9 +73,6 @@
   overflow: hidden;
 }
 .sq2-story-inner {
-  padding: clamp(24px, 4.5vw, 64px);
-  border-radius: 32px;
-  background: var(--pale);   /* the same pale panel the Work and Storytelling pages use */
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   gap: clamp(32px, 6vw, 88px);
@@ -98,7 +95,7 @@ img.sq2-photo { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; 
 .sq2-story-heading {
   font-family: var(--font-display);
   font-weight: normal;
-  font-size: clamp(1.9rem, 7.2vw, 5rem);
+  font-size: clamp(2.6rem, 6vw, 4.4rem);
   line-height: 1;
   color: var(--blue);
   margin: 0 0 clamp(28px, 4vw, 48px);
@@ -374,7 +371,7 @@ body[data-page="side-quests"] main { position: relative; }
   padding: 80px 28px 32px;
   box-sizing: border-box;
 }
-.sqw-head { text-align: center; margin: 0 0 6px; font-size: clamp(2rem, 4.2vw, 3.2rem); }
+.sqw-head { text-align: center; margin: 0 0 6px; font-size: clamp(2.6rem, 6vw, 4.4rem); }
 .sqw-mount { width: 100%; max-width: 1320px; margin: 0 auto; min-height: 0; }
 .sqw-grid { display: grid; gap: 14px; align-items: center; position: relative; }
 @media (min-width: 900px) { .sqw-grid { grid-template-columns: auto auto; justify-content: center; gap: clamp(20px, 3vw, 48px); margin-top: -12px; } }
@@ -382,7 +379,7 @@ body[data-page="side-quests"] main { position: relative; }
 .sqw-stage {
   position: relative;
   margin: 0 auto 0 0;
-  width: min(100%, 860px, calc(100svh - 290px));
+  width: min(100%, 860px, calc(100svh - 314px));
   overflow: visible;
   border-radius: 24px;
   user-select: none;
@@ -391,7 +388,7 @@ body[data-page="side-quests"] main { position: relative; }
   cursor: grab;
 }
 .sqw-stage.is-dragging { cursor: grabbing; }
-@media (min-width: 900px) { .sqw-stage { margin: 0; width: min(46vw, 860px, calc(100svh - 290px)); } .sqw-hint { width: min(46vw, 860px, calc(100svh - 290px)); } }
+@media (min-width: 900px) { .sqw-stage { margin: 0; width: min(46vw, 860px, calc(100svh - 314px)); } .sqw-hint { width: min(46vw, 860px, calc(100svh - 314px)); } }
 @media (max-width: 899px) { .sqw-stage { margin: 0 auto; width: min(100%, 40svh); } }
 .sqw-square { position: relative; aspect-ratio: 1; container-type: inline-size; }
 .sqw-square::before {
@@ -447,26 +444,31 @@ body[data-page="side-quests"] main { position: relative; }
 }
 .sqw-hub b { font-size: clamp(0.9rem, 3.4cqw, 1.3rem); font-weight: 600; line-height: 1; }
 .sqw-hub i { margin-top: 3px; font-style: normal; font-size: clamp(5px, 1.4cqw, 8px); letter-spacing: 0.12em; font-weight: 600; color: var(--blue); }
-.sqw-hint { margin: 2px 0 0; width: min(100%, 860px, calc(100svh - 290px)); text-align: center; font-size: 11px; letter-spacing: 0.03em; color: rgba(255, 255, 255, 0.7); }
+.sqw-hint { margin: 2px 0 0; width: min(100%, 860px, calc(100svh - 314px)); text-align: center; font-size: 11px; letter-spacing: 0.03em; color: rgba(255, 255, 255, 0.7); }
 @media (max-width: 899px) { .sqw-hint { margin: 2px auto 0; } }
 
 .sqw-left { min-width: 0; }
 .sqw-detail { display: flex; flex-direction: column; align-items: center; gap: 16px; min-width: 0; }
 /* Fixed column (as wide as the widest picture, a square) so the wheel never shifts as pictures change shape. */
-@media (min-width: 900px) { .sqw-detail { width: min(48svh, 480px, 30vw); } }
+@media (min-width: 900px) { .sqw-detail { width: min(50svh, 560px, 32vw); } }
 @media (max-width: 899px) { .sqw-detail { flex-direction: column; justify-content: center; align-items: center; gap: 10px; } .sqw-name { order: -1; } }
 /* The picture box takes each image's true shape (--ar = width / height), as large as fits. */
 .sqw-photo {
   --ar: 1;
   position: relative; display: block; flex: none;
-  width: min(calc(48svh * var(--ar)), 480px, 30vw);
+  width: min(calc(50svh * var(--ar)), 560px, 32vw);
   aspect-ratio: var(--ar);
   padding: 0; border: 0; overflow: hidden;
   border-radius: 18px; background: var(--periwinkle);
   box-shadow: 0 18px 40px -18px rgba(7, 0, 46, 0.6);
-  cursor: zoom-in;
+  cursor: default;   /* the big picture is for looking at, not for enlarging */
 }
-@media (max-width: 899px) { .sqw-photo { width: min(70%, calc(24svh * var(--ar))); } }
+@media (max-width: 899px) {
+  .sqw-photo { width: min(88%, calc(var(--fit-h, 36svh) * var(--ar))); }
+  /* the first screen holds the whole gallery: it starts at the top, and the fixed music bar needs no spacer */
+  .sqw-pin { justify-content: flex-start; padding-top: 72px; padding-bottom: 0; }
+  .sqw-pin .sq2-music-slot { display: none; }
+}
 .sqw-photo span { position: absolute; inset: 0; }
 .sqw-photo .sqw-photo-b { opacity: 0; } /* the previous picture, only shown while fading out */
 .sqw-photo img { width: 100%; height: 100%; object-fit: cover; }
@@ -518,7 +520,7 @@ body[data-page="side-quests"] .games { padding-bottom: 96px; }
 
 /* ---------- On rotation: playlist + reading / watching / last article ---------- */
 .sq2-rotation { background: #fff; padding: clamp(64px, 9vw, 110px) 0 clamp(64px, 9vw, 100px); }
-.sq2-rotation-heading { margin: 0; text-align: center; font-family: var(--font-display); font-weight: 400; font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1; color: var(--blue); }
+.sq2-rotation-heading { margin: 0; text-align: center; font-family: var(--font-display); font-weight: 400; font-size: clamp(2.6rem, 6vw, 4.4rem); line-height: 0.9; color: var(--blue); }
 .sq2-rotation-sub { margin: 12px auto 0; max-width: 520px; text-align: center; font-size: 1rem; line-height: 1.55; color: rgba(12, 0, 84, 0.72); }
 
 .rot-grid { margin-top: clamp(32px, 5vw, 52px); display: grid; gap: 22px; grid-template-columns: minmax(0, 1fr); align-items: stretch; }
@@ -710,3 +712,30 @@ body > .sq2-music.is-away { opacity: 0; transform: translate(-50%, 26px); pointe
 .rot-item--show:hover .rot-cover { background: var(--sq-violet); }
 .rot-item--article:hover .rot-cover { background: var(--sq-lime); }
 .rot-item--book .rot-label, .rot-item--show .rot-label, .rot-item--article .rot-label { color: var(--navy); }
+
+/* ---------- genre pills on the playlist rows ---------- */
+.rot-genre { flex: none; padding: 4px 10px; border-radius: 999px; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.04em; line-height: 1.2; white-space: nowrap; background: var(--sq-violet-soft); color: var(--navy); }
+.rot-genre:empty { display: none; }
+.rot-genre[data-genre="Afrobeats"] { background: #ff6b5a; color: #fff; }
+.rot-genre[data-genre="Afro-house"] { background: #8b6cff; color: #fff; }
+.rot-genre[data-genre="Alté"] { background: #ff8fc8; color: #0c0054; }
+.rot-genre[data-genre="Amapiano"] { background: #b8f53a; color: #0c0054; }
+.rot-genre[data-genre="Highlife"] { background: #ffd23f; color: #0c0054; }
+.rot-genre[data-genre="Pop"] { background: #8fd3ff; color: #0c0054; }
+.rot-genre[data-genre="R&B"] { background: #ffb347; color: #0c0054; }
+.rot-genre[data-genre="Indie"] { background: #7fe3c0; color: #0c0054; }
+.rot-genre[data-genre="Folk"] { background: #e8cf9a; color: #0c0054; }
+.rot-genre[data-genre="Latin"] { background: #ff4f7b; color: #fff; }
+.rot-genre[data-genre="Dance"] { background: #0052ff; color: #fff; }
+.rot-genre[data-genre="Hip-Hop"] { background: #0a00cb; color: #fff; }
+.rot-genre[data-genre="Soul"] { background: #ffd9d3; color: #0c0054; }
+.rot-genre[data-genre="Soundtrack"] { background: #e4dcff; color: #0c0054; }
+.rot-genre[data-genre="Musical"] { background: #ffc2e2; color: #0c0054; }
+.rot-genre[data-genre="Gospel"] { background: #e3fbb4; color: #0c0054; }
+.rot-genre[data-genre="Ambient"] { background: #bfd4ff; color: #0c0054; }
+.rot-genre[data-genre="Electronic"] { background: #5b3dff; color: #fff; }
+.rot-genre[data-genre="J-Pop"] { background: #ff9ad5; color: #0c0054; }
+@media (max-width: 480px) { .rot-genre { padding: 3px 8px; font-size: 0.6rem; } }
+.rot-row.is-current .rot-genre { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85); }
+.rot-genre[data-genre="Worship"] { background: #ffe7a3; color: #0c0054; }
+.rot-genre[data-genre="Choral"] { background: #c9f0ff; color: #0c0054; }

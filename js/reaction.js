@@ -8,7 +8,6 @@
   const bigEl = el('rx-big');
   const subEl = el('rx-sub');
   const compareEl = el('rx-compare');
-  const teaseEl = el('rx-tease');
   const liveEl = el('rx-live');
   const claimEl = el('rx-claim');
   const claimText = el('rx-claim-text');
@@ -41,7 +40,7 @@
     slow: ['Were you sleeping? 😴', 'A sloth just overtook you 🦥', 'Hello? Anyone home? 📞', 'Loading... your reflexes ⏳', 'Is this thing on? 🥱'],
   };
   const SOON_SUBS = ['Tap to try again.', 'Patience, grasshopper. Tap to try again.', 'Trigger-happy! Tap to try again.', 'Eager much? Tap to try again.', 'The blue was NOT ready. Tap to try again.'];
-  const SOON_STREAK = ['Twice in a row? Someone is impatient 😅', 'Three false starts. Are you guessing? 🎲', 'Take a breath. Wait for the blue. 🧘'];
+  const SOON_STREAK = ['Twice in a row? Impatient! 😅 Tap to try again.', 'Three false starts. Guessing? 🎲 Tap to try again.', 'Take a breath. Wait for the blue. 🧘'];
   function verdict(ms) {
     if (ms < 200) return pick(VERDICTS.lightning);
     if (ms < 300) return pick(VERDICTS.sharp);
@@ -151,23 +150,21 @@
   function compareLine(ms) {
     const online = !!(global && global.count > 0);
     const ref = online ? global.average : TYPICAL_MS;
-    const who = online ? 'the average visitor' : 'a typical human (~' + TYPICAL_MS + 'ms)';
     const d = ref - ms;
-    if (d === 0) return "You're right on " + who + '.';
-    return "You're " + Math.abs(d) + 'ms ' + (d > 0 ? 'faster' : 'slower') + ' than ' + who + '.';
+    if (d === 0) return 'Right on the average human.';
+    return Math.abs(d) + 'ms ' + (d > 0 ? 'faster' : 'slower') + ' than the average human.';
   }
 
-  // A second, cheekier line: personal best, own trend, and tries-so-far milestones.
-  function teaseLine(ms, prevMine) {
+  // One commentary line lives in the game box. Milestones and personal bests take over from the speed verdict.
+  function specialLine(ms, prevMine) {
     const tries = prevMine.length + 1;
     const prevBest = prevMine.length ? Math.min.apply(null, prevMine) : null;
     const prevAvg = prevMine.length ? prevMine.reduce((a, b) => a + b, 0) / prevMine.length : null;
-    if (tries % 5 === 0) return "That's try number " + tries + '. We are not judging. We are, a little. 😌';
-    if (prevBest != null && ms < prevBest) return 'New personal best! 🔥 Your old self is shaking.';
+    if (prevBest != null && ms < prevBest) return 'New personal best! 🔥';
     if (prevBest != null && ms === prevBest) return 'Exactly your best. Spooky. 👻';
-    if (prevAvg != null && ms > prevAvg + 120) return 'Getting sleepy? Your average is better than that. 😏';
-    if (prevBest == null) return pick(['First try logged. No pressure. (A little pressure.)', 'Okay, that is the baseline. Now beat it. 😈']);
-    return pick(['Again? Go on, you know you want to. 😏', 'One more. Just one. We both know it is not one.', 'The panel is judging you. Quietly. 👀']);
+    if (tries % 5 === 0) return 'Try number ' + tries + '. We are not judging. 😌';
+    if (prevAvg != null && ms > prevAvg + 120) return 'Getting sleepy? You can beat that. 😏';
+    return null;
   }
 
   /* ---------- "add your name" offer ---------- */
@@ -206,7 +203,7 @@
         const row = (j.board || []).find((b) => b.ms === claim.ms);
         const who = row ? row.name : name;
         hideClaim();
-        teaseEl.textContent = "You're on the board, " + who + '! Go on, defend it. 🏅';
+        compareEl.textContent = compareEl.textContent + ' On the board as ' + who + '! 🏅';
       })
       .catch((err) => {
         claimMsg.classList.add('is-error');
@@ -223,9 +220,8 @@
 
   function start() {
     compareEl.textContent = '';
-    teaseEl.textContent = '';
     hideClaim();
-    setState('waiting', { title: 'Wait for blue...', label: 'Waiting. Press as soon as the panel turns blue.', live: 'Wait for blue.' });
+    setState('waiting', { title: 'Wait for blue...', label: 'Waiting on yellow. Press as soon as the panel turns blue.', live: 'Wait for blue.' });
     timer = setTimeout(go, 1500 + Math.random() * 3500);
   }
 
@@ -238,9 +234,8 @@
     clearTimeout(timer);
     lastEndAt = performance.now();
     streakSoon++;
-    const sub = pick(SOON_SUBS);
+    const sub = streakSoon >= 2 ? SOON_STREAK[Math.min(streakSoon - 2, SOON_STREAK.length - 1)] : pick(SOON_SUBS);
     setState('soon', { title: 'Too soon! 🙈', sub: sub, label: 'Too soon. Press to try again.', live: 'Too soon! ' + sub });
-    teaseEl.textContent = streakSoon >= 2 ? SOON_STREAK[Math.min(streakSoon - 2, SOON_STREAK.length - 1)] : '';
   }
 
   function react() {
@@ -250,10 +245,9 @@
     streakSoon = 0;
     const line = compareLine(ms); // against the average as it was before this attempt
     const prev = mine.slice();
-    const v = verdict(ms);
+    const v = specialLine(ms, prev) || verdict(ms);
     setState('result', { big: ms + ' ms', title: v, sub: 'Tap to go again.', label: 'Result ' + ms + ' milliseconds. Press to try again.', live: ms + ' milliseconds. ' + v });
     compareEl.textContent = line;
-    teaseEl.textContent = teaseLine(ms, prev);
     if (ms <= MAX_VALID) {
       mine.push(ms);
       saveMine();

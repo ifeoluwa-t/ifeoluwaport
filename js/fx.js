@@ -9,8 +9,10 @@
   var KEY = 'fxSound';
 
   /* ---------------- sound ---------------- */
+  // Sound effects (and the little sound switch) exist on the Side Quests page only.
+  var SOUND_PAGE = !!(document.body && document.body.getAttribute('data-page') === 'side-quests');
   var on = false;
-  try { on = localStorage.getItem(KEY) === '1'; } catch (e) {}
+  try { on = SOUND_PAGE && localStorage.getItem(KEY) === '1'; } catch (e) {}
   var ctx = null;
   function ac() {
     if (!ctx) { var C = window.AudioContext || window.webkitAudioContext; if (!C) return null; ctx = new C(); }
@@ -55,7 +57,7 @@
   }
   var lastTile = -1;
   function sound(name, i) {
-    if (!on) return;
+    if (!SOUND_PAGE || !on) return;
     var c = ac(); if (!c) return;
     var t = c.currentTime;
     if (name === 'click') { tone(520, t, 0.08, 'sine', 0.06, 330); }
@@ -88,7 +90,7 @@
     paintSwitch();
     if (on) sound('click');
   });
-  document.body.appendChild(sw);
+  if (SOUND_PAGE) document.body.appendChild(sw);
 
   var CLICKY = '.hero-cta-btn, .sp-btn, .btn-pill, .btn-pill-light, .sq2-cta, .game-btn, .nav-music, .bk-link, .bk-btn, .gw-item';
   document.addEventListener('click', function (e) {
@@ -128,7 +130,7 @@
       ['.sq2-cta', 'play'], ['.sq2-music', 'music'],
       ['.rx-panel', 'tap'],
       ['.gw-item', 'view'], ['.gw', 'drag'],
-      ['.sqw-car', 'view'], ['.sqw-photo', 'view'], ['.sqw-stage', 'drag'],
+      ['.sqw-car', 'view'], ['.sqw-stage', 'drag'],
       ['.bk-photo', 'view'], ['.bk-stage', 'drag'],
       ['.og-focus', 'close'], ['.og-card', 'open'], ['.og', 'drag'],
       ['.work-card', 'view']

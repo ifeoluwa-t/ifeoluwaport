@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Sprite Graffiti Shadow';
+  src: url('../assets/fonts/SpriteGraffiti-Shadow.woff2') format('woff2'),
+       url('../assets/fonts/SpriteGraffiti-Shadow.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 /* ============================================
    SIGNPOST FOOTER (homepage, very bottom)
    A pole with tilted arrow-shaped signs that slide in as links, a ring-patterned
@@ -124,8 +132,9 @@
 .sp-c-peri   { --bg: var(--periwinkle); --fg: var(--navy); }
 .sp-c-indigo { --bg: var(--indigo);     --fg: #fff; }
 .sp-c-white  { --bg: #fff;              --fg: var(--navy); }
-.sp-face { background: var(--bg); color: var(--fg); }
-.sp-sign:hover .sp-face { background: var(--fg); color: var(--bg); }
+.sp-face { --cut: var(--bg); background: var(--bg); color: var(--fg); }
+.sp-sign:hover .sp-face { --cut: var(--periwinkle); background: var(--periwinkle); color: var(--navy); }
+.sp-sign:hover .sp-face.sp-c-peri { --cut: var(--pale); background: var(--pale); }
 
 /* sparkles instead of clouds */
 .sp-spark { position: absolute; width: 34px; height: 34px; color: var(--periwinkle); pointer-events: none; }
@@ -289,3 +298,188 @@
   .sp-rotator .hero-highlight-slide img { height: 100px; width: 100px; }
   .sp-rotator .hero-highlight-slide p { flex: 1; font-size: 1rem; }
 }
+
+/* Phones/tablets: the name and year on the first line, the rest of the credit on the line below */
+@media (max-width: 900px) {
+  .sp-credit-note { display: block; }
+  .sp-dot { display: none; }
+}
+
+/* ---------- Phones: no pole, just two stacks of signs side by side ----------
+   Work / Events / Storytelling on the left, Side-Quests / LinkedIn / X (and Instagram on Side Quests) on the right. */
+@media (max-width: 640px) {
+  .sp-post { width: 100%; padding: 0; }
+  .sp-post::before, .sp-post::after, .sp-finial, .sp-spark { display: none; }
+  .sp-signs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 12px;
+    row-gap: 10px;
+    align-items: start;
+  }
+  .sp-signs li { min-width: 0; }
+  .sp-signs li:nth-child(1) { grid-column: 1; grid-row: 1; }
+  .sp-signs li:nth-child(2) { grid-column: 1; grid-row: 2; }
+  .sp-signs li:nth-child(3) { grid-column: 1; grid-row: 3; }
+  .sp-signs li:nth-child(4) { grid-column: 2; grid-row: 1; }
+  .sp-signs li:nth-child(5) { grid-column: 2; grid-row: 2; }
+  .sp-signs li:nth-child(6) { grid-column: 2; grid-row: 3; }
+  .sp-signs li:nth-child(7) { grid-column: 2; grid-row: 4; }
+  .sp-sign { --x: 0px !important; --rot: 0deg !important; filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.35)); }
+  .sp-face { min-width: 0; width: 100%; min-height: 66px; box-sizing: border-box; gap: 7px; padding: 14px 10px 14px 24px; font-size: 1rem; }
+  .sp-sign--left .sp-face, .sp-sign--right .sp-face { padding-left: 24px; padding-right: 10px; }
+  .sp-face svg { width: 1em; height: 1em; }
+  .sp-i { font-size: 0.85em; }
+  /* Rounded tags instead of pointed arrows: each has a punched hole, and little chain links join the ones in a stack */
+  .sp-sign--left .sp-face, .sp-sign--right .sp-face { clip-path: none; border-radius: 18px; position: relative; padding-left: 28px; }
+  .sp-face::before {
+    content: '';
+    position: absolute;
+    left: 11px; top: 50%;
+    width: 9px; height: 9px;
+    margin-top: -4.5px;
+    border-radius: 50%;
+    background: var(--bg);
+    box-shadow: inset 0 0 0 2px var(--fg);
+    opacity: 0.55;
+  }
+  .sp-signs { row-gap: 14px; }
+  /* like the cards above: a rounded card with a little speech-bubble tail */
+  .sp-sign--left .sp-face, .sp-sign--right .sp-face { border-radius: 24px; }
+  .sp-face::after {
+    content: '';
+    position: absolute;
+    left: 22px; bottom: -8px;
+    width: 0; height: 0;
+    border-left: 0 solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 9px solid var(--bg);
+  }
+  /* the right-hand stack points its tails to the right */
+  .sp-signs li:nth-child(n+4) .sp-face::after { left: auto; right: 22px; border-right: 0 solid transparent; border-left: 14px solid transparent; }
+  .sp-sign:hover .sp-face::after { border-top-color: var(--periwinkle); }
+  .sp-sign:hover .sp-face.sp-c-peri::after { border-top-color: var(--pale); }
+  .sp-sign { filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.3)); }
+  /* LinkedIn and X wear their own logo colours */
+  .sp-signs li:nth-child(5) .sp-face { --bg: #0a66c2; --fg: #fff; }
+  .sp-signs li:nth-child(6) .sp-face { --bg: #000; --fg: #fff; }
+  /* Side-Quests wears the yellow of the Side Quests page */
+  .sp-sign[href="side-quests.html"] .sp-face { --bg: #ffd23f; --fg: var(--navy); }
+}
+
+/* The LinkedIn and X buttons in the footer card use their logos' own colours */
+.sp-btn--icon[aria-label="LinkedIn"] { background: #0a66c2; border-color: #0a66c2; color: #fff; }
+.sp-btn--icon[aria-label="X"] { background: #000; border-color: #000; color: #fff; }
+.sp-btn--icon[aria-label="LinkedIn"]:hover { background: #0a66c2; border-color: #0a66c2; color: #fff; }
+.sp-btn--icon[aria-label="X"]:hover { background: #000; border-color: #000; color: #fff; }
+
+/* the graffiti "I" from the wordmark (the first letter of IFEOLUWA), set inside a circle, marks the Side-Quests sign */
+.sp-i {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4em; height: 1.4em;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  font-family: 'Sprite Graffiti Shadow', var(--font-display);   /* the outlined version of the graffiti font (letters with holes in) */
+  font-size: 0.7em;
+  line-height: 1;
+  text-transform: none;
+  padding-top: 0.04em;
+}
+
+/* ---------- Larger screens: the stand keeps its pole, but the signs are the same rounded tags as on phones ---------- */
+@media (min-width: 641px) {
+  .sp-sign--left .sp-face, .sp-sign--right .sp-face {
+    clip-path: none;
+    border-radius: 24px;
+    position: relative;
+    padding: 18px 34px 18px 44px;
+  }
+  .sp-face::before {   /* the punched hole */
+    content: '';
+    position: absolute;
+    left: 16px; top: 50%;
+    width: 10px; height: 10px;
+    margin-top: -5px;
+    border-radius: 50%;
+    background: var(--bg);
+    box-shadow: inset 0 0 0 2px var(--fg);
+    opacity: 0.55;
+  }
+  .sp-face::after {    /* the little speech-bubble tail */
+    content: '';
+    position: absolute;
+    left: 26px; bottom: -10px;
+    width: 0; height: 0;
+    border-left: 0 solid transparent;
+    border-right: 16px solid transparent;
+    border-top: 11px solid var(--bg);
+  }
+  .sp-signs li:nth-child(n+4) .sp-face::after { left: auto; right: 26px; border-right: 0 solid transparent; border-left: 16px solid transparent; }
+  .sp-sign:hover .sp-face::after { border-top-color: var(--periwinkle); }
+  .sp-sign:hover .sp-face.sp-c-peri::after { border-top-color: var(--pale); }
+  .sp-sign { filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.3)); }
+  .sp-signs { gap: 20px; }
+  /* Side-Quests in its yellow; LinkedIn and X in their logo colours */
+  .sp-sign[href="side-quests.html"] .sp-face { --bg: #ffd23f; --fg: var(--navy); }
+  .sp-signs li:nth-child(5) .sp-face { --bg: #0a66c2; --fg: #fff; }
+  .sp-signs li:nth-child(6) .sp-face { --bg: #000; --fg: #fff; }
+  .sp-i { font-size: 0.78em; }
+}
+
+/* ---------- Phones: the whole footer is one screen, no scrolling inside it ---------- */
+@media (max-width: 640px) {
+  .signpost-footer {
+    padding: 68px 20px 18px;   /* clears the fixed nav bar; the footer is only as tall as its content */
+    box-sizing: border-box;
+  }
+  .signpost-footer .sp-grid { gap: 26px; width: 100%; }
+  .sp-right { gap: 26px; }
+  /* the speech card */
+  .sp-bubble { padding: 18px 18px 20px; border-radius: 22px; }
+  .sp-bubble h2 { font-size: 1.12rem; line-height: 1.22; margin: 0 0 8px; }
+  .sp-bubble p { font-size: 0.86rem; line-height: 1.4; margin: 0 auto 12px; }
+  .sp-cta { gap: 8px; }
+  .sp-btn { padding: 9px 20px; font-size: 0.9rem; }
+  .sp-btn--icon { width: 40px; height: 40px; padding: 0; }
+  .sp-btn--icon svg { width: 18px; height: 18px; }
+  /* the blue rotating card */
+  .sp-rotator { height: 84px; padding: 9px; border-radius: 22px; }
+  .sp-rotator .hero-highlight-slide { inset: 9px; gap: 12px; }
+  .sp-rotator .hero-highlight-slide img { height: 64px; width: 64px; border-radius: 12px; }
+  .sp-rotator .hero-highlight-slide p { font-size: 0.9rem; line-height: 1.25; }
+  /* the sign tags */
+  .sp-signs { row-gap: 18px; column-gap: 10px; }
+  .sp-face { min-height: 46px; padding: 8px 8px 8px 22px; font-size: 0.88rem; gap: 6px; border-radius: 18px; }
+  .sp-sign--left .sp-face, .sp-sign--right .sp-face { border-radius: 18px; padding-left: 22px; }
+  .sp-face::before { left: 9px; width: 7px; height: 7px; margin-top: -3.5px; }
+  .sp-face::after { bottom: -6px; left: 16px; border-right-width: 11px; border-top-width: 7px; }
+  .sp-signs li:nth-child(n+4) .sp-face::after { right: 16px; border-left-width: 11px; border-right-width: 0; }
+  .sp-face svg { width: 0.95em; height: 0.95em; }
+  .sp-i { font-size: 0.8em; }
+  /* the credit */
+  .sp-base { margin-top: 16px; padding-top: 12px; font-size: 0.74rem; gap: 4px 12px; }
+}
+
+/* Instagram sign (Side Quests page): Instagram's own pink */
+.sp-sign[href*="instagram.com"] .sp-face { --bg: #e1306c; --fg: #fff; }
+.sp-sign::after { content: none !important; }   /* no little external-link arrow beside the Instagram tag */
+
+/* No punched-hole circles on any sign, on any device; the labels sit centred in the tags */
+.sp-face::before { content: none !important; display: none !important; }
+@media (max-width: 640px) {
+  .sp-face, .sp-sign--left .sp-face, .sp-sign--right .sp-face { padding-left: 10px; padding-right: 10px; }
+}
+@media (min-width: 641px) {
+  .sp-sign--left .sp-face, .sp-sign--right .sp-face { padding: 18px 34px; }
+}
+
+/* every sign, Instagram (an external link) included, is a full block that fills its column */
+.sp-signs li > a.sp-sign { display: block; width: 100%; }
+@media (min-width: 641px) { .sp-signs li > a.sp-sign { width: auto; } }
+
+/* "Email me": its label is centred in the button, and the button has no shadow under it */
+.sp-btn { justify-content: center; }
+.sp-btn--solid { box-shadow: none; }

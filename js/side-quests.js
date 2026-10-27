@@ -185,7 +185,7 @@
           '</div>' +
         '</div>' +
         '<div class="sqw-detail">' +
-          '<button type="button" class="sqw-photo" aria-label="Open this picture large"><span class="sqw-photo-a"><img alt="" draggable="false"></span><span class="sqw-photo-b"><img alt="" draggable="false"></span></button>' +
+          '<div class="sqw-photo"><span class="sqw-photo-a"><img alt="" draggable="false"></span><span class="sqw-photo-b"><img alt="" draggable="false"></span></div>' +
           '<h3 class="sqw-name"></h3>' +
         '</div>' +
         '<span class="sqw-live" role="status" aria-live="polite"></span>' +
@@ -199,6 +199,18 @@
     var imgA = mount.querySelector('.sqw-photo-a img'), imgB = mount.querySelector('.sqw-photo-b img');
     var spanA = imgA.parentNode, spanB = imgB.parentNode;
     var name = mount.querySelector('.sqw-name'), live = mount.querySelector('.sqw-live');
+
+    // Phones and tablets: the big picture is sized to fill whatever is left of the first screen, above the
+    // music bar, so the whole gallery (wheel, name and picture) is seen without scrolling.
+    var smallMQ = window.matchMedia('(max-width: 899px)');
+    function fit() {
+      if (!smallMQ.matches) { photo.style.removeProperty('--fit-h'); return; }
+      var top = photo.getBoundingClientRect().top + window.scrollY;
+      photo.style.setProperty('--fit-h', Math.max(150, window.innerHeight - top - 92) + 'px');
+    }
+    window.addEventListener('resize', fit);
+    window.addEventListener('orientationchange', fit);
+    window.addEventListener('load', fit);
 
     function paint(a) {
       wheel.style.transform = 'rotate(' + a + 'deg)';
@@ -248,21 +260,15 @@
       if (d > n / 2) d -= n; else if (d < -n / 2) d += n;
       vel = 0; tAngle = Math.round(tAngle / step) * step + d * step; idleAt = performance.now();
     }
-    window.addEventListener('scroll', function () {
-      var y = window.scrollY, dy = y - lastY; lastY = y;
-      if (!visible || dragging) return;
-      tAngle += (dy / PX_PER_PICTURE) * step;
-      idleAt = performance.now();
-    }, { passive: true });
+    // (scrolling the page no longer turns the wheel; it turns by dragging, the arrow keys, tapping a picture, and its own slow drift)
     if (window.IntersectionObserver) {
       new IntersectionObserver(function (es) { visible = es[0].isIntersecting; visible ? start() : stop(); }, { rootMargin: '150px' }).observe(root);
     } else { visible = true; start(); }
     stage.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') hover = true; });
     stage.addEventListener('pointerleave', function () { hover = false; });
 
-    showDetail(0); paint(0);
+    showDetail(0); paint(0); fit(); setTimeout(fit, 400);
     carsEl.forEach(function (c, i) { c.addEventListener('click', function () { if (performance.now() >= suppress) turnTo(i); }); });
-    photo.addEventListener('click', function () { openLightbox(imgA); });
     root.addEventListener('keydown', function (e) {
       if (e.altKey || e.ctrlKey || e.metaKey) return;
       if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
@@ -508,7 +514,7 @@
     sentinel.className = 'rot-more'; sentinel.setAttribute('aria-hidden', 'true');
     function row(i) {
       var s = songs[i], li = document.createElement('li');
-      li.innerHTML = '<button type="button" class="rot-row" aria-label="Play ' + esc(s[0]) + ' by ' + esc(s[1]) + '"><span class="rot-row-n">' + (i < 9 ? '0' : '') + (i + 1) + '</span><span class="rot-row-t"><strong>' + esc(s[0]) + '</strong><span>' + esc(s[1]) + '</span></span><span class="rot-eq" aria-hidden="true"><i></i><i></i><i></i></span></button>';
+      li.innerHTML = '<button type="button" class="rot-row" aria-label="Play ' + esc(s[0]) + ' by ' + esc(s[1]) + '"><span class="rot-row-n">' + (i < 9 ? '0' : '') + (i + 1) + '</span><span class="rot-row-t"><strong>' + esc(s[0]) + '</strong><span>' + esc(s[1]) + '</span></span><span class="rot-genre" data-genre="' + esc(s[3] || '') + '">' + esc(s[3] || '') + '</span><span class="rot-eq" aria-hidden="true"><i></i><i></i><i></i></span></button>';
       var b = li.firstChild;
       b.addEventListener('click', function () {
         started = true;

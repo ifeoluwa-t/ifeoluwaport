@@ -6,37 +6,70 @@
   var KEY = 'sqMusic';
   // Alternates Afro / world picks with everything else, so no two similar songs sit side by side.
   var SONGS = window.SQ_SONGS = [
-    ['Remember Me', 'Fireboy DML', '7nhFhG0IuaE'],
-    ['august', 'Taylor Swift', 'nn_0zPAfyo8'],
-    ['l\'abe igi', 'Tega Ethan', 'NUangWG1IYE'],
-    ['Slick (Remix)', 'Victony, Summer Walker & Don Toliver', 'ksnN8PMf30I'],
-    ['October Passed Me By', 'girl in red', 'c8W4WRNz3gM'],
-    ['U.F.O', 'June Sometimes', 'vNC3lCFdAzg'],
-    ['Bo Gogo (Magical Remix)', 'Kelvin Momo, Dlala Thukzin & Da Muziqal Chef', 'xGyzVSleWcQ'],
-    ['Divinize', 'ROSALÍA', 'OxDmGz60hws'],
-    ['Sunshine', 'Baaba J', 't_SNGKA8o8k'],
-    ['Pluto (Remember You)', 'DJ Clock ft. Beatenberg', 'kF-f2nIVDn4'],
-    ['Doors', 'Noah Kahan', 'IAYJ4iTDkQ0'],
-    ['Ok Love You Bye', 'Olivia Dean', 'rtS9c4PdEVs'],
-    ['Bridgertn', 'Ayra Starr', 'waJE7BGVn-k'],
-    ['Cry (Just A Little)', 'Bingo Players', 'ZBpWdwXzpMk'],
-    ['Worship', 'Asake & DJ Snake', 'RQOg16kmFJM'],
-    ['Energy', 'Beyonc\u00e9', 'vMeUz6-VEec'],
-    ['Coping Mechanism', 'Omah Lay & Elmah', 'VWqdBp3OfVg'],
-    ['party 4 u', 'Charli xcx', 'fKrTCGGEiWY'],
-    ['Little Freak', 'Harry Styles', '4UAZkexQ7Cg'],
-    ['Damage Gets Done', 'Hozier & Brandi Carlile', 'HvDhLl68ZHw'],
-    ['Live Life', 'Show Dem Camp & Tems', 'gxXMhMApfW0'],
-    ['STORM II', 'GENER8ION & Yung Lean', 'w0T83nZDOEc'],
-    ['Gratitude', 'Anendlessocean', 'LzAdpgIOzXI'],
-    ['Bandana', 'Fireboy DML & Asake', 'gCLUIzOsgGg'],
-    ['The Wonder Years', 'Jon Bellion', 'WVDtoaO5C70'],
-    ['Everywhere, Everything', 'Noah Kahan & Gracie Abrams', 'dJPdkhsr0gU'],
-    ['Born In This Body', 'Obongjayar', 'r-YksvAnxNU'],
-    ['Non-Stop', 'Hamilton (Original Broadway Cast)', 'vYbdQAeO0vo'],
-    ['Like a Prayer (Choir Version)', "I'll Take You There Choir", 'pMPKTwESkxs'],
-    ['In a Lake', 'Mitski', 'pUERvd0D_XI']
+    ['Remember Me', 'Fireboy DML', '7nhFhG0IuaE', 'Afrobeats'],
+    ['august', 'Taylor Swift', 'nn_0zPAfyo8', 'Pop'],
+    ['l\'abe igi', 'Tega Ethan', 'NUangWG1IYE', 'Alté'],
+    ['Slick (Remix)', 'Victony, Summer Walker & Don Toliver', 'ksnN8PMf30I', 'R&B'],
+    ['October Passed Me By', 'girl in red', 'c8W4WRNz3gM', 'Indie'],
+    ['U.F.O', 'June Sometimes', 'vNC3lCFdAzg', 'Alté'],
+    ['Bo Gogo (Magical Remix)', 'Kelvin Momo, Dlala Thukzin & Da Muziqal Chef', 'xGyzVSleWcQ', 'Amapiano'],
+    ['Divinize', 'ROSALÍA', 'OxDmGz60hws', 'Latin'],
+    ['Sunshine', 'Baaba J', 't_SNGKA8o8k', 'Afrobeats'],
+    ['The Louvre', 'Lorde', 'fN6KvLfd9sE', 'Pop'],
+    ['Pluto (Remember You)', 'DJ Clock ft. Beatenberg', 'kF-f2nIVDn4', 'Dance'],
+    ['Doors', 'Noah Kahan', 'IAYJ4iTDkQ0', 'Folk'],
+    ['Adaugo', 'The Cavemen', 'YctG0C4fce0', 'Highlife'],
+    ['Ok Love You Bye', 'Olivia Dean', 'rtS9c4PdEVs', 'Soul'],
+    ['Bridgertn', 'Ayra Starr', 'waJE7BGVn-k', 'Afrobeats'],
+    ['Non-Stop', 'Hamilton (Original Broadway Cast)', 'vYbdQAeO0vo', 'Musical'],
+    ['Lion', 'Little Simz & Obongjayar', '6KiGnxlxLQg', 'Hip-Hop'],
+    ['Damage Gets Done', 'Hozier & Brandi Carlile', 'HvDhLl68ZHw', 'Folk'],
+    ['Black Friday (pretty like the sun)', 'Lost Frequencies & Tom Odell', 'j79lPX5ZjLc', 'Dance'],
+    ['Little Freak', 'Harry Styles', '4UAZkexQ7Cg', 'Pop'],
+    ['Into The Unknown (Instrumental)', 'Kristen Anderson-Lopez & Robert Lopez', 'mBrAj8ukGDE', 'Soundtrack'],
+    ['Like a Prayer (Choir Version)', 'I\'ll Take You There Choir', 'pMPKTwESkxs', 'Choral'],
+    ['Coping Mechanism', 'Omah Lay & Elmah', 'VWqdBp3OfVg', 'Afrobeats'],
+    ['Cry (Just A Little)', 'Bingo Players', 'ZBpWdwXzpMk', 'Dance'],
+    ['Worship', 'Asake & DJ Snake', 'RQOg16kmFJM', 'Afro-house'],
+    ['All Of You (Instrumental)', 'Lin-Manuel Miranda', '1mtHDkxIi28', 'Soundtrack'],
+    ['Gone', 'NF & Julia Michaels', 'f5ZaOGLZHoU', 'Hip-Hop'],
+    ['The Wonder Years', 'Jon Bellion', 'WVDtoaO5C70', 'Pop'],
+    ['Propeller', 'JAE5, BNXN & Dave', 'yEiGnvgL4fA', 'Afrobeats'],
+    ['In a Lake', 'Mitski', 'pUERvd0D_XI', 'Indie'],
+    ['Bandana', 'Fireboy DML & Asake', 'gCLUIzOsgGg', 'Afrobeats'],
+    ['HEATED', 'Beyoncé', 'YgKr4mzPBCM', 'Dance'],
+    ['Shinunoga E-Wa', 'Fujii Kaze', '3zh9Wb1KuW8', 'J-Pop'],
+    ['É Hlu', 'Outgun Onkar & Sinmidele', '5hLrpc12o4A', 'Worship'],
+    ['party 4 u', 'Charli xcx', 'fKrTCGGEiWY', 'Pop'],
+    ['Not Strong Enough', 'boygenius', 'RV1-GJJf2Pg', 'Indie'],
+    ['Shekere', 'Simone Glad & El-Jay', 'ia2SgkvijK0', 'Afro-house'],
+    ['People Watching', 'Conan Gray', 'BKMe7AS7MK0', 'Pop'],
+    ['Blue Bucket of Gold', 'Sufjan Stevens', 'erqpdc9W8F8', 'Folk'],
+    ['Unwritten', 'Natasha Bedingfield', 'b7k0a5hYnSI', 'Pop'],
+    ['Outro', 'M83', '1cEy4UyYHI0', 'Electronic'],
+    ['All Of You', 'Encanto Cast', 'sReEGWewGg4', 'Soundtrack'],
+    ['Echoes In Rain', 'Enya', 'oSVg3umy8_Q', 'Ambient'],
+    ['Live Life', 'Show Dem Camp & Tems', 'gxXMhMApfW0', 'Alté'],
+    ['Gratitude', 'Anendlessocean', 'LzAdpgIOzXI', 'Worship'],
+    ['Everywhere, Everything', 'Noah Kahan & Gracie Abrams', 'dJPdkhsr0gU', 'Folk']
   ];
+  // The nav-bar music icon starts one of these three, alternating between them. After that the
+  // rest of the playlist plays on shuffle whenever next is pressed (or a song ends).
+  var DEFAULT_TITLES = ['Outro', 'All Of You (Instrumental)', 'Into The Unknown (Instrumental)'];
+  var DEFAULTS = DEFAULT_TITLES.map(function (t) { for (var k = 0; k < SONGS.length; k++) if (SONGS[k][0] === t) return k; return 0; });
+  function nextDefault() {
+    var n = 0;
+    try { n = parseInt(localStorage.getItem('mkDefault'), 10) || 0; localStorage.setItem('mkDefault', String((n + 1) % DEFAULTS.length)); } catch (e) { n = Math.floor(Math.random() * DEFAULTS.length); }
+    return DEFAULTS[n % DEFAULTS.length];
+  }
+  var bag = [];
+  function shuffleNext(cur) {
+    if (!bag.length) {
+      for (var k = 0; k < SONGS.length; k++) if (DEFAULTS.indexOf(k) < 0 && k !== cur) bag.push(k);
+      for (var m = bag.length - 1; m > 0; m--) { var r = Math.floor(Math.random() * (m + 1)), tmp = bag[m]; bag[m] = bag[r]; bag[r] = tmp; }
+    }
+    return bag.pop();
+  }
   function read() { try { return JSON.parse(sessionStorage.getItem(KEY)); } catch (e) { return null; } }
   function write(v) { try { if (v) sessionStorage.setItem(KEY, JSON.stringify(v)); else sessionStorage.removeItem(KEY); } catch (e) {} }
   window.sqMusicStore = { read: read, write: write };
@@ -177,11 +210,11 @@
       events: {
         onReady: function (e) { e.target.setVolume(window.SQ_VOLUME); if (!saved.paused) e.target.playVideo(); },
         onStateChange: function (e) {
-          if (e.data === 0) { cur = (cur + 1) % SONGS.length; label(); player.loadVideoById(SONGS[cur][2]); }
+          if (e.data === 0) { cur = shuffleNext(cur); label(); player.loadVideoById(SONGS[cur][2]); }
           else if (e.data === 1 || e.data === 3) { try { player.setVolume(window.SQ_VOLUME); } catch (x) {} setPlaying(true); }
           else if (e.data === 2) { setPlaying(false); persist(); }
         },
-        onError: function () { cur = (cur + 1) % SONGS.length; label(); player.loadVideoById(SONGS[cur][2]); }
+        onError: function () { cur = shuffleNext(cur); label(); player.loadVideoById(SONGS[cur][2]); }
       }
     });
     tick = setInterval(function () { if (playing) persist(); }, 1000);
@@ -196,7 +229,7 @@
   playBtn.addEventListener('click', function () { if (!player || !player.playVideo) return; if (playing) player.pauseVideo(); else player.playVideo(); });
   pill.querySelector('.mk-next').addEventListener('click', function () {
     if (!player || !player.loadVideoById) return;
-    cur = (cur + 1) % SONGS.length; label(); player.loadVideoById(SONGS[cur][2]); if (consented) write({ i: cur, t: 0, at: Date.now(), paused: false });
+    cur = shuffleNext(cur); label(); player.loadVideoById(SONGS[cur][2]); if (consented) write({ i: cur, t: 0, at: Date.now(), paused: false });
   });
   pill.querySelector('.mk-x').addEventListener('click', stopAll);
   window.addEventListener('pagehide', persist);
@@ -212,10 +245,10 @@
   var saved = read();
   if (saved && typeof saved.i === 'number' && SONGS[saved.i]) init(saved, true);
 
-  // The music icon in the nav bar: first press starts a random song, then it plays / pauses.
+  // The music icon in the nav bar: first press starts one of the three default songs, then it plays / pauses.
   if (navBtn) {
     navBtn.addEventListener('click', function () {
-      if (!ctl) init({ i: Math.floor(Math.random() * SONGS.length), t: 0, at: Date.now(), paused: false }, false);
+      if (!ctl) init({ i: nextDefault(), t: 0, at: Date.now(), paused: false }, false);
       else ctl.toggle();
     });
   }

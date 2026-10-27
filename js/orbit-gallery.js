@@ -30,7 +30,10 @@
     if (picked >= 0) fit(cards[picked].querySelector('img'));
     paint();
   }
+  var spinner = box.querySelector('.og-spinner');
+  var hint = document.getElementById('og-hint'), HINT = hint ? hint.textContent : '', spinMs = 0, idleMs = 0, teased = false;
   function paint() {
+    if (spinner) spinner.style.transform = 'rotate(' + (rot * 4) + 'deg)';   // the fidget spinner turns with the ring, four times as fast
     for (var i = 0; i < n; i++) {
       var a = rot + (360 / n) * i;
       cards[i].style.transform = 'rotate(' + a + 'deg) translateY(' + (-R) + 'px)';
@@ -43,6 +46,12 @@
     else if (!dragging) {
       if (Math.abs(vel) > 0.02) { rot += vel; vel *= 0.94; }
       else { vel = 0; if (!reduce && picked < 0) rot += AUTO * (hover ? 0.25 : 1) * dt; }   // the ring rests while a picture is open
+    }
+    // if the ring / spinner has been kept spinning for over 3 seconds, the hint teases about it
+    if (hint) {
+      if (dragging || Math.abs(vel) > 1.2) { spinMs += dt * 1000; idleMs = 0; }
+      else { idleMs += dt * 1000; if (idleMs > 3000) { spinMs = 0; if (teased) { hint.textContent = HINT; teased = false; } } }
+      if (!teased && spinMs > 3000) { hint.textContent = 'You play a lot \u{1F602}'; teased = true; }
     }
     paint();
     if (visible && !document.hidden) raf = requestAnimationFrame(frame);
@@ -129,7 +138,7 @@
     if (!drag.on) {
       if (Math.hypot(dx, dy) < 7) return;
       if (drag.touch && Math.abs(dy) > Math.abs(dx) * 1.4) { drag = null; return; }   // a mostly vertical swipe scrolls the page
-      drag.on = true; dragging = true; box.classList.add('is-dragging'); box.setPointerCapture(e.pointerId); drag.a = ang(e);
+      drag.on = true; dragging = true; box.classList.add('is-dragging', 'has-spun'); box.setPointerCapture(e.pointerId); drag.a = ang(e);
     }
     var a = ang(e), d = a - drag.a;
     if (d > 180) d -= 360; else if (d < -180) d += 360;
@@ -147,4 +156,33 @@
   }
   box.addEventListener('pointerup', end);
   box.addEventListener('pointercancel', end);
+
+  // Tapping the fidget spinner flicks it round and throws a few sparks.
+  var spin = box.querySelector('.og-spin');
+  function sparkle() {
+    if (reduce || !spin.animate) return;
+    var COLS = ['#0052ff', '#bfd4ff', '#0a00cb', '#e9f1ff'];
+    for (var k = 0; k < 12; k++) {
+      var s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      s.setAttribute('viewBox', '0 0 24 24');
+      s.setAttribute('class', 'og-spark');
+      var size = 8 + Math.random() * 10;
+      s.style.width = s.style.height = size + 'px';
+      s.innerHTML = '<path d="M12 1.5 14 10 22.5 12 14 14 12 22.5 10 14 1.5 12 10 10Z" fill="' + COLS[k % COLS.length] + '"/>';
+      spin.appendChild(s);
+      var a = Math.random() * Math.PI * 2, dist = spin.offsetWidth * (0.5 + Math.random() * 0.45);
+      var anim = s.animate([
+        { transform: 'translate(-50%,-50%) translate(0,0) scale(0.3) rotate(0deg)', opacity: 1 },
+        { transform: 'translate(-50%,-50%) translate(' + Math.cos(a) * dist + 'px,' + Math.sin(a) * dist + 'px) scale(1) rotate(120deg)', opacity: 0 }
+      ], { duration: 520 + Math.random() * 280, easing: 'cubic-bezier(.2,.8,.3,1)' });
+      anim.onfinish = (function (el) { return function () { el.remove(); }; })(s);
+    }
+  }
+  if (spin) spin.addEventListener('click', function () {
+    if (performance.now() < suppress) return;
+    box.classList.add('has-spun');
+    vel = Math.max(vel, 0) + 10;       // a flick
+    kick();
+    sparkle();
+  });
 })();

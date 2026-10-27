@@ -95,3 +95,15 @@
   .og-detail span { font-size: 1.05rem; line-height: 1.5; color: rgba(12, 0, 84, 0.78); }
   .og-detail strong:empty, .og-detail span:empty { display: none; }
 }
+
+/* the fidget spinner in the middle: it turns with the ring (faster), and wobbles until someone first spins it */
+.og-spin { position: relative; width: clamp(112px, 12vw, 190px); aspect-ratio: 1; }
+.og-spinner { display: block; width: 100%; height: 100%; overflow: visible; will-change: transform; }
+@media (prefers-reduced-motion: no-preference) {
+  .og:not(.has-spun) .og-spin { animation: ogWobble 2.2s ease-in-out infinite; }
+}
+@keyframes ogWobble { 0%, 100% { transform: rotate(-9deg) scale(1); } 50% { transform: rotate(9deg) scale(1.05); } }
+
+.og-spin { pointer-events: auto; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.og.has-focus .og-spin { pointer-events: none; }
+.og-spark { position: absolute; left: 50%; top: 50%; pointer-events: none; opacity: 0; }

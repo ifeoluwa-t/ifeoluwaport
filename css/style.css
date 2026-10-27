@@ -4635,12 +4635,70 @@ img.img-placeholder {
   }
 }
 
-/* Work page: the heading sits on white; the pale panel starts where the cards start and wraps them
-   (the same treatment as the Brand Storytelling gallery). */
-.work-page::before { content: none; }
-.work-page .work-grid {
+/* "What I Did" (landing) and the Work page: the heading sits on white; the pale panel starts where the cards
+   start and wraps them (the same treatment as the Brand Storytelling gallery). */
+.work::before { content: none; }
+.work .work-grid {
   margin-top: 0;
   background: var(--pale);
   border-radius: 32px;
   padding: clamp(16px, 3vw, 36px);
 }
+.work:not(.work-page) .section-heading-row { margin-bottom: clamp(22px, 3vw, 36px); }
+@media (max-width: 640px) {
+  .work .work-grid { border-radius: 26px; padding: 14px; }
+  .work:not(.work-page) { padding-top: 44px; padding-bottom: 44px; }
+}
+
+/* Phones/tablets: the one-liner card is centred, and the logo row runs exactly as wide as the
+   "Some of the places I've done this" line above it (first logo under its first letter, last under its last). */
+@media (max-width: 900px) {
+  .hero-left-stack { align-items: center; text-align: center; width: 100%; max-width: 342px; margin-left: auto; margin-right: auto; box-sizing: border-box; }
+  .hero-left-stack .hero-oneliner-card { width: 100%; }
+  .hero-left-stack .hero-oneliner { text-align: center; }
+  .hero-left-stack .hero-worked-at { width: fit-content; max-width: 100%; margin: 0 auto; }
+  .hero-left-stack .hero-worked-at-label { text-align: center; }
+  .hero-left-stack .hero-worked-at-logos { width: 100%; max-width: none; }
+}
+
+/* Phones: less air between "I've Done This At" and the first company card */
+@media (max-width: 640px) {
+  .experience-grid { margin-top: 22px; }
+}
+
+/* Landing "What I Did": the panel is a little wider than the Brand Storytelling one (1240px / screen - 40px). */
+.work:not(.work-page) { overflow-x: clip; }
+.work:not(.work-page) .work-grid {
+  width: min(calc(100vw - 28px), 1300px);
+  margin-left: calc(50% - min(calc(100vw - 28px), 1300px) / 2);
+  box-sizing: border-box;
+}
+
+/* ...but the cards keep their original size, centred inside the wider panel (1060px of cards). */
+.work:not(.work-page) .work-grid {
+  padding-left: max(clamp(14px, 3vw, 36px), calc((min(100vw - 28px, 1300px) - 1060px) / 2));
+  padding-right: max(clamp(14px, 3vw, 36px), calc((min(100vw - 28px, 1300px) - 1060px) / 2));
+}
+
+/* a little more room above and below the cards inside the panel */
+.work:not(.work-page) .work-grid {
+  padding-top: clamp(22px, 4vw, 52px);
+  padding-bottom: clamp(22px, 4vw, 52px);
+}
+
+/* subtext under "What I Did" */
+.work-sub {
+  margin: 10px auto clamp(22px, 3vw, 34px);
+  max-width: 560px;
+  text-align: center;
+  text-wrap: balance;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: 1.5;
+  color: rgba(12, 0, 84, 0.72);
+}
+.work:not(.work-page) .section-heading-row { margin-bottom: 0; }
+@media (min-width: 1100px) { .work-sub { font-size: 1rem; } }
+
+/* Work and Events pages: the subtext sits right under the heading */
+.work-page-heading:has(+ .work-sub), .ev-heading:has(+ .work-sub) { margin-bottom: 0; }
+.work-page .work-sub, .ev-section .work-sub { margin-bottom: clamp(26px, 4vw, 44px); }
