@@ -739,3 +739,13 @@ body > .sq2-music.is-away { opacity: 0; transform: translate(-50%, 26px); pointe
 .rot-row.is-current .rot-genre { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85); }
 .rot-genre[data-genre="Worship"] { background: #ffe7a3; color: #0c0054; }
 .rot-genre[data-genre="Choral"] { background: #c9f0ff; color: #0c0054; }
+
+/* phones: no music bar at the bottom (the music icon in the top bar does the job); desktop: no extra icon */
+@media (max-width: 899px) {
+  body > .sq2-music { display: none; }
+  .sq2-music-slot, .sq2-cta, .sq2-cta-gap { display: none; }
+}
+@media (min-width: 900px) { body[data-page="side-quests"] .nav-music { display: none; } }
+.sqw-hub { width: 17%; }
+.sqw-hub i { margin: 0; font-size: clamp(7px, 2.5cqw, 11px); line-height: 1.15; letter-spacing: 0.06em; text-align: center; font-weight: 700; color: var(--blue); }
+.sqw-hub .sqw-the { color: var(--navy); }   /* "THE" in the darkest blue of the palette */

@@ -180,7 +180,7 @@
             '<div class="sqw-square">' +
               '<svg class="sqw-stand" viewBox="0 0 400 400" fill="none" aria-hidden="true"><path d="M200 184 146 362M200 184 254 362M124 362H276" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>' +
               '<div class="sqw-wheel"><span class="sqw-ring2"></span>' + rim + cars + '</div>' +
-              '<div class="sqw-hub" aria-hidden="true"><b>' + (n < 10 ? '0' : '') + n + '</b><i>QUESTS</i></div>' +
+              '<div class="sqw-hub" aria-hidden="true"><i>SPIN<br><span class="sqw-the">THE</span><br>WHEEL</i></div>' +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -206,7 +206,7 @@
     function fit() {
       if (!smallMQ.matches) { photo.style.removeProperty('--fit-h'); return; }
       var top = photo.getBoundingClientRect().top + window.scrollY;
-      photo.style.setProperty('--fit-h', Math.max(150, window.innerHeight - top - 92) + 'px');
+      photo.style.setProperty('--fit-h', Math.max(150, window.innerHeight - top - 18) + 'px');
     }
     window.addEventListener('resize', fit);
     window.addEventListener('orientationchange', fit);
@@ -237,6 +237,9 @@
     }
 
     // ----- endless turning: page scroll, drag + fling, and a gentle idle drift all spin it, either way -----
+    // On phones the picture that is chosen is the one at the bottom of the wheel (nearest the big picture);
+    // on larger screens it is the one at the top.
+    function off() { return smallMQ.matches ? n / 2 : 0; }
     var tAngle = 0, vel = 0, lastY = window.scrollY, idleAt = 0, visible = false, hover = false;
     var PX_PER_PICTURE = 320, DRIFT = 7;                      // scroll distance per picture; idle drift in degrees per second
     var lastT = performance.now();
@@ -249,14 +252,14 @@
       }
       angle += (tAngle - angle) * (reduce.matches ? 1 : (dragging ? 0.35 : 0.14));
       paint(angle);
-      var idx = ((Math.round(angle / step) % n) + n) % n;
+      var idx = ((Math.round(angle / step) + off()) % n + n) % n;
       if (idx !== shown) showDetail(idx);
       if (running) requestAnimationFrame(frame);
     }
     function start() { if (!running) { running = true; lastT = performance.now(); requestAnimationFrame(frame); } }
     function stop() { running = false; }
     function turnTo(i) {                                       // shortest way round to picture i
-      var cur = ((Math.round(tAngle / step) % n) + n) % n, d = i - cur;
+      var cur = ((Math.round(tAngle / step) + off()) % n + n) % n, d = i - cur;
       if (d > n / 2) d -= n; else if (d < -n / 2) d += n;
       vel = 0; tAngle = Math.round(tAngle / step) * step + d * step; idleAt = performance.now();
     }
@@ -267,6 +270,7 @@
     stage.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') hover = true; });
     stage.addEventListener('pointerleave', function () { hover = false; });
 
+    if (smallMQ.matches) { tAngle = angle = ((n - off()) % n) * step; }   // start on the first picture, at the bottom
     showDetail(0); paint(0); fit(); setTimeout(fit, 400);
     carsEl.forEach(function (c, i) { c.addEventListener('click', function () { if (performance.now() >= suppress) turnTo(i); }); });
     root.addEventListener('keydown', function (e) {
@@ -476,6 +480,7 @@
       setTimeout(function () {
         // an empty block of the same size takes its place, so the wheel does not jump
         var gap = document.createElement('div');
+        gap.className = 'sq2-cta-gap';
         gap.setAttribute('aria-hidden', 'true');
         gap.style.height = (cta.offsetHeight + 12) + 'px';
         cta.replaceWith(gap);
@@ -608,3 +613,19 @@
         .then(function () { btn.disabled = false; btn.textContent = 'Put me on'; });
     });
   })();
+
+// Phones: the music bar is hidden, so the music icon in the top bar plays / pauses the playlist instead.
+(function () {
+  var btn = document.getElementById('nav-music'), play = document.getElementById('sq2-play'), player = document.getElementById('sq2-music');
+  if (!btn || !play || !player) return;
+  function sync() {
+    var on = player.classList.contains('is-playing');
+    btn.classList.toggle('is-on', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
+  }
+  btn.addEventListener('click', function () { play.click(); });
+  if (window.MutationObserver) new MutationObserver(sync).observe(player, { attributes: true, attributeFilter: ['class'] });
+  document.addEventListener('sqmusic', sync);
+  sync();
+})();
