@@ -2416,6 +2416,9 @@ button.work-slide-media-link::before {
   color: var(--navy);
 }
 .cs-meta-item .work-card-pill { margin-bottom: 0; }
+.cs-meta-line { display: flex; flex-wrap: nowrap; align-items: baseline; gap: 4px 12px; }
+.cs-meta-line-value { min-width: 0; }
+.cs-meta-line-value { font-size: 0.95rem; font-weight: 400; color: var(--navy); }
 .cs-skills {
   display: flex;
   flex-wrap: wrap;
@@ -3468,9 +3471,27 @@ img.cs-results-media {
 @media (max-width: 900px) {
   .cs-hero-top,
   .cs-hero-top.cs-hero-top--landscape { grid-template-columns: 1fr; }
-  .cs-hero-media { max-width: 420px; margin-left: 0; }
+  .cs-hero-media { max-width: 420px; margin-left: auto; margin-right: auto; }
   .cs-hero-media.cs-hero-media--landscape { max-width: 100%; }
+  /* phones and tablets: the picture comes straight after the subtitle, before the meta details */
+  .cs-hero-top { display: flex; flex-direction: column; gap: 28px; }
+  .cs-hero-top .cs-hero-copy { display: contents; }
+  .cs-hero-top .cs-hero-copy > *:not(.cs-meta-row) { order: 1; }
+  .cs-hero-media { order: 1; }
+  .cs-hero-top .cs-meta-row { order: 2; text-align: center; }
+  .cs-hero-top .cs-meta-top-row { justify-content: center; }
+  .cs-hero-top .cs-meta-item { align-items: center; }
+  .cs-hero-top .cs-meta-line { justify-content: center; text-align: center; }
+  .cs-hero-top .cs-skills { justify-content: center; }
   .cs-pullquote-row { grid-template-columns: 1fr; }
+  /* phones and tablets: the challenge text comes first, then its picture */
+  .cs-pullquote-row > div:not(.cs-pullquote-slides) { order: 1; }
+  .cs-pullquote-slides { order: 2; }
+  /* phones and tablets: tighter, even spacing between the project sections */
+  .cs-pullquote-section, .cs-approach-section, .cs-results-section { padding-top: 48px; padding-bottom: 48px; }
+  .cs-section-label { margin-bottom: 10px; }
+  .cs-section-heading { margin-bottom: 14px; }
+  .cs-section-intro { margin-bottom: 0; }
   .cs-pullquote-media.img-placeholder,
   img.cs-pullquote-media { max-width: 420px; }
   .cs-pullquote-slides { max-width: 560px; }
@@ -4715,4 +4736,701 @@ img.img-placeholder {
 @media (min-width: 1537px) {
   .hero-inner { zoom: var(--hero-zoom, 1); }
   .hero { padding-top: calc(110px * var(--hero-zoom, 1)); }
+}
+
+/* Featured project pages on phones and tablets: everything aligns to the left edge, like the owoetoni.com case studies. */
+@media (max-width: 900px) {
+  .cs-hero .cs-headline,
+  .cs-pullquote-section .cs-section-heading,
+  .cs-approach-section .cs-section-heading,
+  .cs-results-section .cs-section-heading,
+  .cs-approach-section .cs-section-intro,
+  .cs-results-section .cs-section-intro,
+  .cs-approach-section .section-inner,
+  .cs-results-section .section-inner {
+    text-align: left !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+  }
+  .cs-hero-top .cs-meta-row,
+  .cs-hero-top .cs-meta-top-row,
+  .cs-hero-top .cs-meta-item,
+  .cs-hero-top .cs-meta-line,
+  .cs-hero-top .cs-skills {
+    text-align: left;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .cs-hero-top .cs-meta-line { align-items: baseline; }
+  .cs-hero-media { margin-left: 0; margin-right: auto; }
+}
+
+/* The results line under the subtitle on the featured project pages. */
+.cs-subdesc-results { margin-top: 10px; }
+
+/* The big-number results under the subtitle on the featured project pages. */
+.cs-hero-stats { display: flex; flex-wrap: nowrap; gap: 22px 28px; margin-top: 22px; }
+.cs-hero-stat { display: flex; flex-direction: column; flex: 1 1 0; min-width: 0; max-width: 180px; }
+.cs-hero-stat-value { font-size: clamp(1.9rem, 3.4vw, 2.6rem); font-weight: 700; line-height: 1; color: var(--navy); }
+.cs-hero-stat-label { margin-top: 8px; font-size: clamp(0.78rem, 2.4vw, 0.88rem); line-height: 1.35; color: rgba(12, 0, 84, 0.72); }
+
+/* The hero details use one value style: same font, size and weight for the year, role, team and skills. */
+.cs-hero-top .cs-meta-year,
+.cs-hero-top .cs-meta-line-value { font-family: inherit; font-size: 1rem; font-weight: 400; }
+
+/* Featured project hero on phones and tablets: tighter space between the headline, subtitle, results and picture. */
+@media (max-width: 900px) {
+  .cs-hero .cs-headline { margin: 0 0 4px; }
+  .cs-hero-top .cs-subdesc { margin-top: 0; }
+  .cs-hero-top .cs-hero-stats { margin-top: 8px; }
+  .cs-hero-top { gap: 20px; }
+  .cs-hero-top .cs-hero-copy > .cs-hero-stats { order: 3; }
+}
+
+/* Role and team: the values start at the same point, so they line up under each other. */
+.cs-hero-top .cs-meta-line .cs-meta-item-label { flex: 0 0 56px; }
+
+/* Phones and tablets: the divider sits between the details block and the results, not above the details. */
+@media (max-width: 900px) {
+  .cs-hero-top .cs-meta-row { border-top: 0; padding-top: 0; margin-top: 0; }
+  .cs-hero-top .cs-hero-copy > .cs-hero-stats { border-top: 1px solid rgba(12, 0, 84, 0.12); padding-top: 18px; }
+}
+
+/* Featured project hero on phones: the headline, subtitle, picture and details up to the skills fit on the first screen, with the picture at its full size. */
+@media (max-width: 640px) {
+  .cs-hero .cs-hero-logo { display: none; }
+  .cs-hero .cs-headline { font-size: 1.75rem; }
+  .cs-hero-top .cs-subdesc { font-size: 1rem; line-height: 1.5; }
+  .cs-hero-top { gap: 14px; }
+  .cs-hero-top .cs-meta-row { margin-top: 0; padding-top: 10px; }
+  .cs-hero { justify-content: flex-start; padding-top: 72px; padding-bottom: 12px; }
+  .cs-hero .cs-headline { font-size: 1.6rem; }
+  .cs-hero-top .cs-subdesc { font-size: 1rem; }
+  .cs-hero-top .cs-skill-tag { padding-top: 8px; padding-bottom: 8px; }
+}
+
+/* The challenge and results backgrounds are the same inset, softly cornered panel as the Work section, with white around it, on every screen. */
+.cs-pullquote-section,
+.cs-results-section {
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+}
+.cs-pullquote-section::before,
+.cs-results-section::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: max(clamp(18px, 2.5vw, 40px), min(56px, calc(40px + (100vw - 1600px) * 0.05)));
+  right: max(clamp(18px, 2.5vw, 40px), min(56px, calc(40px + (100vw - 1600px) * 0.05)));
+  background: #fff;
+  border: 1.5px solid var(--periwinkle);
+  border-radius: 28px;
+  z-index: -1;
+}
+
+/* Phones: the challenge picture comes before its text, sits inside the panel with a clear margin, and has square corners. */
+@media (max-width: 900px) {
+  .cs-pullquote-row > div:not(.cs-pullquote-slides) { order: 2; }
+  .cs-pullquote-slides {
+    order: 1;
+    width: calc(100% - 32px);
+    margin: 0 16px;
+    border-radius: 0;
+  }
+}
+
+/* Phones: the challenge picture has a slight curve, and the challenge and approach text are centred. */
+@media (max-width: 900px) {
+  .cs-pullquote-slides { border-radius: 12px; }
+  .cs-pullquote-row > div:not(.cs-pullquote-slides) { text-align: center; }
+  .cs-pullquote-row .cs-pullquote { margin-left: auto; margin-right: auto; }
+  .cs-approach-section .section-inner,
+  .cs-approach-section .cs-section-label,
+  .cs-approach-section .cs-section-heading,
+  .cs-approach-section .cs-section-intro,
+  .cs-approach-section .cs-approach-did {
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+/* Phones: the story and event titles on the Storytelling and Events pages are centred, like the other topics. */
+@media (max-width: 900px) {
+  .st-story-title,
+  .ev-title,
+  .ev-detail-title { text-align: center; }
+}
+
+/* Phones: the results section is centred throughout: label, heading, intro and the figures. */
+@media (max-width: 900px) {
+  .cs-results-section .section-inner,
+  .cs-results-section .cs-results-solo,
+  .cs-results-section .cs-section-label,
+  .cs-results-section .cs-section-heading,
+  .cs-results-section .cs-section-intro,
+  .cs-results-section .cs-results-stats,
+  .cs-results-section .cs-stat {
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  .cs-results-section .cs-results-stats { justify-items: center; }
+}
+
+/* Featured project pages: the page behind the cards is white, not the pale blue. */
+body:has(.cs-hero) { background: #fff; }
+
+/* Desktop: the challenge and results boxes are narrower, about 960px wide, and centred. */
+@media (min-width: 901px) {
+  .cs-pullquote-section::before,
+  .cs-results-section::before {
+    left: max(40px, calc(50% - 480px));
+    right: max(40px, calc(50% - 480px));
+  }
+}
+
+/* The challenge and results boxes hold their content with clear space inside the border, on every screen. */
+.cs-pullquote-section .section-inner,
+.cs-results-section .section-inner {
+  padding-left: 28px;
+  padding-right: 28px;
+}
+.cs-pullquote-section::before,
+.cs-results-section::before {
+  left: 12px;
+  right: 12px;
+}
+@media (min-width: 901px) {
+  .cs-pullquote-section::before,
+  .cs-results-section::before {
+    left: clamp(40px, 6vw, 140px);
+    right: clamp(40px, 6vw, 140px);
+  }
+  .cs-pullquote-section .section-inner,
+  .cs-results-section .section-inner {
+    max-width: min(1100px, calc(100vw - 2 * clamp(40px, 6vw, 140px) - 96px));
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* The challenge and results boxes keep their white background; their border (the strip) is the indigo from the palette. */
+.cs-pullquote-section::before,
+.cs-results-section::before {
+  border-color: var(--indigo);
+}
+
+/* The challenge quote uses the same navy as the page topics. */
+.cs-pullquote { color: var(--navy); }
+
+/* The other pills on the featured project pages use the category pill colour: light periwinkle with navy text. */
+.cs-challenge-tag,
+.cs-section-label,
+.cs-approach-did-heading {
+  background: var(--periwinkle);
+  color: var(--navy);
+}
+
+/* The two challenge pictures stack one on top of the other, both visible, instead of alternating. */
+.cs-pullquote-slides--stacked {
+  aspect-ratio: auto;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.cs-pullquote-slides--stacked .cs-slide {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  opacity: 1 !important;
+  object-fit: cover;
+}
+
+/* The stacked challenge pictures keep their curved corners: 22px on desktop, 12px on phones and tablets. */
+.cs-pullquote-slides--stacked .cs-slide { border-radius: 22px; }
+@media (max-width: 900px) {
+  .cs-pullquote-slides--stacked .cs-slide { border-radius: 12px; }
+}
+
+/* Desktop: the challenge section is more compact, so it fits the screen without scrolling. */
+@media (min-width: 901px) {
+  .cs-pullquote-section:has(.cs-pullquote-slides--stacked) { padding-top: 40px; padding-bottom: 40px; }
+  .cs-pullquote-slides--stacked { max-width: 400px; gap: 12px; }
+  .cs-pullquote-section:has(.cs-pullquote-slides--stacked) .cs-pullquote { font-size: clamp(1.2rem, 1.9vw, 1.5rem); line-height: 1.35; }
+}
+
+/* EUR/GBP challenge on desktop: the text sits on the left and the stacked pictures on the right, with an "Onboard to the rescue" pill above them. */
+@media (min-width: 901px) {
+  .cs-pullquote-row:has(.cs-pullquote-slides--stacked) > div:not(.cs-pullquote-slides) { order: 1; }
+  .cs-pullquote-row:has(.cs-pullquote-slides--stacked) > .cs-pullquote-slides--stacked { order: 2; }
+}
+.cs-rescue-pill {
+  align-self: flex-start;
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--periwinkle);
+  color: var(--navy);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+/* Work pages on desktop: the challenge text sits on the left and the images on the right, with the "Onboard to the rescue" pill centred above the images. */
+@media (min-width: 901px) {
+  .cs-pullquote-row > div:not(.cs-pullquote-slides):not(.cs-pullquote-picture) { order: 1; text-align: center; }
+  .cs-pullquote-row > div.cs-pullquote-picture { order: 2; position: relative; }
+  .cs-pullquote-picture .cs-rescue-pill { position: absolute; left: 50%; bottom: 100%; transform: translateX(-50%); margin-bottom: 12px; white-space: nowrap; }
+  .cs-pullquote-row > .cs-pullquote-slides { order: 2; }
+  .cs-pullquote-row > .cs-pullquote-picture { order: 2; }
+  .cs-pullquote-row .cs-pullquote { margin-left: auto; margin-right: auto; }
+  .cs-pullquote-row > .cs-pullquote-slides:not(.cs-pullquote-slides--stacked) { overflow: visible; }
+  .cs-pullquote-row > .cs-pullquote-slides:not(.cs-pullquote-slides--stacked) .cs-rescue-pill {
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    transform: translateX(-50%);
+    margin-bottom: 12px;
+    white-space: nowrap;
+  }
+}
+.cs-pullquote-slides--stacked .cs-rescue-pill { align-self: center; }
+
+/* Phones: the challenge picture still comes first, above the text, on the single-image pages too. */
+@media (max-width: 900px) {
+  .cs-pullquote-row > div.cs-pullquote-picture { order: 1; }
+  .cs-pullquote-row > div:not(.cs-pullquote-picture):not(.cs-pullquote-slides) { order: 2; }
+  .cs-pullquote-picture .cs-rescue-pill { position: static; transform: none; display: inline-block; margin: 0 0 12px; white-space: normal; }
+}
+
+/* Challenge boxes: on desktop the text is left-aligned in a narrower box; on phones the challenge text comes first, then the pill and picture (the EUR/GBP page keeps its picture first). */
+@media (min-width: 901px) {
+  .cs-pullquote-section::before,
+  .cs-results-section::before {
+    left: clamp(60px, 10vw, 200px);
+    right: clamp(60px, 10vw, 200px);
+  }
+  .cs-pullquote-section .section-inner {
+    max-width: min(1100px, calc(100vw - 2 * clamp(60px, 10vw, 200px) - 96px));
+  }
+  .cs-pullquote-row > div:not(.cs-pullquote-slides):not(.cs-pullquote-picture) { text-align: left; }
+  .cs-pullquote-row .cs-pullquote { margin-left: 0; margin-right: 0; }
+}
+@media (max-width: 900px) {
+  .cs-pullquote-row:not(:has(.cs-pullquote-slides--stacked)) > div:not(.cs-pullquote-slides):not(.cs-pullquote-picture) { order: 1; }
+  .cs-pullquote-row:not(:has(.cs-pullquote-slides--stacked)) > div.cs-pullquote-picture,
+  .cs-pullquote-row:not(:has(.cs-pullquote-slides--stacked)) > .cs-pullquote-slides { order: 2; }
+}
+
+/* "Onboard to the rescue" is a bright blue pill on every work page. */
+.cs-rescue-pill {
+  background: #5b3dff;
+  color: #fff;
+}
+
+/* Challenge and rescue side by side only when there is room; below 1100px the challenge text comes first, then the pill and picture. */
+@media (max-width: 1099px) {
+  .cs-pullquote-row:not(:has(.cs-pullquote-slides--stacked)) > div:not(.cs-pullquote-slides):not(.cs-pullquote-picture) { order: 1; text-align: center; }
+  .cs-pullquote-row:not(:has(.cs-pullquote-slides--stacked)) > div.cs-pullquote-picture,
+  .cs-pullquote-row:not(:has(.cs-pullquote-slides--stacked)) > .cs-pullquote-slides { order: 2; }
+  .cs-pullquote-picture .cs-rescue-pill,
+  .cs-pullquote-row > .cs-pullquote-slides:not(.cs-pullquote-slides--stacked) .cs-rescue-pill {
+    position: static;
+    transform: none;
+    display: inline-block;
+    margin: 0 0 12px;
+    white-space: normal;
+  }
+}
+
+/* EUR/GBP scrolling posters use the home page's panel: pale background, soft corners and a thin periwinkle edge. */
+.cs-posters-section {
+  /* the same panel as the Brand Storytelling scroller on the home page */
+  width: min(calc(100vw - 40px), 1240px);
+  margin: 8px 0 0 calc(50% - min(calc(100vw - 40px), 1240px) / 2);
+  padding: 22px 0 28px;
+  overflow: hidden;
+  border-radius: 28px;
+  background: var(--pale);
+  box-shadow: 0 0 0 1.5px var(--periwinkle), 0 12px 34px -16px rgba(12, 0, 84, 0.2);
+}
+
+/* EUR/GBP: the challenge text comes before the stacked images on every screen. */
+.cs-pullquote-row:has(.cs-pullquote-slides--stacked) > div:not(.cs-pullquote-slides) { order: 1; }
+.cs-pullquote-row:has(.cs-pullquote-slides--stacked) > .cs-pullquote-slides--stacked { order: 2; }
+
+/* Results: a clear gap below the scrolling posters, and on PC the box is only as tall as its content. */
+.cs-results-section { margin-top: 48px; }
+@media (min-width: 901px) {
+  .cs-results-section { padding-top: 40px; padding-bottom: 40px; }
+  .cs-results-section .section-inner { padding-top: 0; padding-bottom: 0; }
+}
+
+/* More Projects on the work pages uses the home page's work cards: the grid borrows those card rules, without the home section's padding or panel. */
+.cs-more-grid.work { padding: 0; background: transparent; isolation: auto; }
+
+/* The More Projects heading uses the same navy as the other topics on the project pages. */
+.cs-more-projects .section-heading { color: var(--navy); }
+
+/* The challenge quote is the same size on every work page as on the EUR/GBP page. */
+@media (min-width: 901px) {
+  .cs-pullquote-section .cs-pullquote { font-size: clamp(1.2rem, 1.9vw, 1.5rem); line-height: 1.35; }
+}
+
+/* The pale Product Consumer Pages section sits in an inset pale panel, with the white page showing down both sides, like the challenge and results sections. */
+.cs-products-section.cs-products-section--pale {
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+}
+.cs-products-section.cs-products-section--pale::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: max(clamp(18px, 2.5vw, 40px), min(56px, calc(40px + (100vw - 1600px) * 0.05)));
+  right: max(clamp(18px, 2.5vw, 40px), min(56px, calc(40px + (100vw - 1600px) * 0.05)));
+  background: var(--pale);
+  border-radius: 28px;
+  z-index: -1;
+}
+
+/* The pale Product Consumer Pages panel has less space above and below its content. */
+.cs-products-section.cs-products-section--pale { padding-top: 40px; padding-bottom: 40px; }
+
+/* Consumer Product Pages: the App/Play-Store screens sit above it. On PC the section has no blue panel; on phones and tablets the heading sits above the panel and the panel is tighter. */
+.cs-heading-outside { display: none; }
+.cs-products-section.cs-products-section--pale::before { content: none; }
+.cs-products-section.cs-products-section--pale { background: transparent; }
+@media (max-width: 900px) {
+  .cs-heading-inside { display: none; }
+  .cs-heading-outside { display: block; text-align: center; margin: 48px auto 24px; }
+  .cs-products-section.cs-products-section--pale::before { content: ''; }
+  .cs-products-section.cs-products-section--pale { padding-top: 28px; padding-bottom: 28px; }
+}
+/* The App/Play-Store screens use the EUR/GBP scroller panel. */
+#app-play-store-redesign {
+  width: min(calc(100vw - 40px), 1240px);
+  margin: 8px 0 0 calc(50% - min(calc(100vw - 40px), 1240px) / 2);
+  padding: 22px 0 28px;
+  overflow: hidden;
+  border-radius: 28px;
+  background: var(--pale);
+  box-shadow: 0 0 0 1.5px var(--periwinkle), 0 12px 34px -16px rgba(12, 0, 84, 0.2);
+}
+
+/* The App/Play-Store heading and hint sit above the scroller panel, not inside it. */
+.cs-screens-head-wrap .cs-screens-head { display: flex; flex-direction: column; align-items: center; text-align: center; margin: 48px auto 24px; }
+
+/* "Hover a topic to see how it looks" sits under the Consumer Product Pages heading, in the same pill as the app screens hint. */
+.cs-topics-hint { justify-content: center; margin: 10px auto 24px; width: fit-content; }
+.cs-topics-hint.cs-heading-outside { display: none; }
+@media (max-width: 900px) {
+  .cs-topics-hint.cs-heading-inside { display: none; }
+  .cs-topics-hint.cs-heading-outside { display: flex; }
+}
+
+/* On PC the Consumer Product Pages section sits the same 48px below the app screens as the app screens sit below the website refresh. */
+@media (min-width: 901px) {
+  #product-consumer-pages { margin-top: 104px; }
+}
+
+/* Consumer Product Pages panel: less space at the top, so the Global Accounts card starts close to the panel's top edge. */
+.cs-products-section--pale .section-inner > .cs-tabs-card { margin-top: 0; }
+.cs-products-section--pale .cs-tabs-list { padding-top: 0; }
+@media (max-width: 900px) {
+  #product-consumer-pages { padding-top: 16px; }
+}
+
+/* Phones: more white space between the app screens panel and the Consumer Product Pages heading. */
+@media (max-width: 900px) {
+  .cs-products-heading.cs-heading-outside { margin-top: 104px; }
+}
+
+/* App/Play-Store screens: the phone images sit centred vertically in their panel. */
+#app-play-store-redesign .section-inner { padding-top: 0; margin-top: -40px; }
+
+/* Global Accounts and Cards side by side on PC: no blue panel behind them, and the topic accordion is light blue. */
+@media (min-width: 901px) {
+  .cs-products-section--pale .cs-tabs-card--wide { background: transparent; }
+  .cs-products-section--pale .cs-tabs-card--wide .cs-tab-item { background: #fff; }
+  .cs-products-section--pale .cs-tabs-card--wide .cs-tab-item.is-active { background: var(--pale); }
+  .cs-products-section--pale .cs-tabs-card--wide .cs-tab-item:hover { background: var(--pale); }
+  .cs-products-section--pale .cs-tabs-card--wide .cs-tabs-visual { background: var(--pale); }
+}
+
+/* PC: the Global Accounts / Cards picture is smaller so the topics and the picture fit on one screen. */
+@media (min-width: 901px) {
+  .cs-products-section--pale .cs-tabs-card--wide .cs-tabs-visual--landscape .cs-tabs-visual-inner {
+    max-width: 752px;
+    margin: 0 auto;
+  }
+}
+
+/* PC: the picture panel behind the Global Accounts / Cards images hugs the image, with no extra white space. */
+@media (min-width: 901px) {
+  .cs-products-section--pale .cs-tabs-card--wide .cs-tabs-visual {
+    width: fit-content;
+    margin: 0 auto;
+    padding: 0;
+    border-radius: 18px;
+  }
+  .cs-products-section--pale .cs-tabs-card--wide .cs-tabs-visual--landscape .cs-tabs-visual-inner {
+    width: 752px;
+    max-width: 100%;
+  }
+}
+
+/* PC: one pale panel holds the topics and the picture together, closed up tight around both, with a few pixels of space. */
+@media (min-width: 901px) {
+  .cs-products-section--pale .cs-tabs-card--wide {
+    width: 768px;
+    max-width: 100%;
+    margin: 40px auto 0;
+    padding: 8px;
+    background: var(--pale);
+    border-radius: 18px;
+  }
+  .cs-products-section--pale .cs-tabs-card--wide .cs-tabs-list { width: 100%; }
+  .cs-products-section--pale .cs-tabs-card--wide .cs-tab-item { background: transparent; }
+  /* the light blue covers only the half of the panel under the active topic: Global Accounts on the left, Cards on the right */
+  .cs-products-section--pale .cs-tabs-card--wide {
+    background: transparent;
+    padding: 0;
+  }
+  .cs-products-section--pale .cs-tabs-card--wide .cs-tabs-list {
+    position: relative;
+    background: #fff;
+    border-radius: 18px 18px 0 0;
+    padding: 8px 8px 0;
+    isolation: isolate;
+  }
+  /* the light blue half sits under the active topic, with curved inner corners where it meets the white half */
+  .cs-products-section--pale .cs-tabs-card--wide .cs-tabs-list::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0;
+    width: 50%;
+    background: var(--pale);
+    border-radius: 18px 18px 18px 0;
+    z-index: -1;
+  }
+  .cs-products-section--pale .cs-tabs-card--wide:has(.cs-tab-item:nth-child(2).is-active) .cs-tabs-list::before {
+    left: auto;
+    right: 0;
+    border-radius: 18px 18px 0 18px;
+  }
+  /* the picture has its own light blue background, closed up around the image only */
+  .cs-products-section--pale .cs-tabs-card--wide .cs-tabs-visual {
+    background: var(--pale);
+    padding: 8px;
+    border-radius: 0 0 18px 18px;
+  }
+  .cs-products-section--pale .cs-tabs-card--wide .cs-tabs-visual { width: 100%; }
+  .cs-products-section--pale .cs-tabs-card--wide .cs-tabs-visual--landscape .cs-tabs-visual-inner { width: 100%; }
+}
+
+/* The results box on the consumer page: clickable pills sit at the base of the box, inside it. */
+.cs-results-links {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+.cs-results-pill {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #fff;
+  transition: transform 0.15s ease;
+}
+.cs-results-pill:hover { transform: translateY(-2px); }
+.cs-results-pill--navy { background: var(--navy); }
+.cs-results-pill--indigo { background: var(--indigo); }
+.cs-results-pill--blue { background: var(--blue); }
+.cs-results-pill--purple { background: #5b3dff; }
+.cs-results-pill--periwinkle { background: var(--periwinkle); color: var(--navy); }
+.cs-results-pill--pale { background: var(--pale); color: var(--navy); box-shadow: inset 0 0 0 1.5px var(--periwinkle); }
+
+/* Results box with the link pills: the figures sit higher so the pills at the base never overlap them. */
+.cs-results-section:has(.cs-results-links) .cs-results-stats { margin-top: 0; margin-bottom: 0; }
+.cs-results-section:has(.cs-results-links) .cs-results-solo { padding-bottom: 0; }
+.cs-results-section:has(.cs-results-links) .cs-section-intro { margin-bottom: 0; }
+@media (min-width: 901px) {
+  .cs-results-section:has(.cs-results-links) { min-height: 427px; box-sizing: border-box; }
+}
+
+/* Results box with link pills: the pills sit inside the box, below the figures, in the flow; the box grows to fit them. */
+.cs-results-section:has(.cs-results-links) { min-height: 0; }
+.cs-results-links {
+  position: static;
+  left: auto; right: auto; bottom: auto;
+  margin-top: 32px;
+  gap: 10px;
+}
+.cs-results-pill {
+  padding: 10px 18px;
+  font-size: 0.88rem;
+}
+.cs-results-pill--navy { background: var(--navy); color: #fff; }
+.cs-results-pill--blue { background: var(--blue); color: #fff; }
+.cs-results-pill--purple { background: #5b3dff; color: #fff; }
+/* PC: the results box is a little narrower. */
+@media (min-width: 901px) {
+  .cs-results-section::before,
+  .cs-results-section::after {
+    left: clamp(110px, 15vw, 260px);
+    right: clamp(110px, 15vw, 260px);
+  }
+  .cs-results-section .section-inner {
+    max-width: min(1100px, calc(100vw - 2 * clamp(110px, 15vw, 260px) - 96px));
+  }
+}
+
+/* Phones: the Results box with link pills has less unnecessary white space. */
+@media (max-width: 900px) {
+  .cs-results-section:has(.cs-results-links) { padding-top: 32px; padding-bottom: 28px; }
+  .cs-results-section:has(.cs-results-links) .cs-results-stats { margin-top: 20px; }
+  .cs-results-section:has(.cs-results-links) .cs-results-links { margin-top: 24px; }
+}
+
+/* The Personal, Global accounts, Cards and Design process pills each have their own palette colour. */
+.cs-results-pill--indigo { background: var(--indigo); color: #fff; }
+.cs-results-pill--periwinkle { background: var(--periwinkle); color: var(--navy); }
+
+/* "Another project?" uses the same font as the topics on the project pages. */
+.cs-more-projects .section-heading { font-family: var(--font-body); font-weight: 700; }
+
+/* Phones: the Results figures sit side by side, closer together, and the link pills form two per row. */
+@media (max-width: 900px) {
+  .cs-results-section:has(.cs-results-links) .cs-results-solo > .cs-section-intro { margin-top: 0; }
+  .cs-results-section:has(.cs-results-links) .cs-section-heading { margin-bottom: 8px; }
+  .cs-results-section:has(.cs-results-links) .cs-results-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .cs-results-section:has(.cs-results-links) .cs-stat { padding: 10px 6px; }
+  .cs-results-section:has(.cs-results-links) .cs-results-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .cs-results-section:has(.cs-results-links) .cs-results-pill {
+    padding: 10px 10px;
+    font-size: 0.8rem;
+    text-align: center;
+    white-space: normal;
+  }
+}
+
+/* Phones: each pill is only as wide as its text, so the curved edge ends where the words end. */
+@media (max-width: 900px) {
+  .cs-results-section:has(.cs-results-links) .cs-results-pill {
+    justify-self: center;
+    width: max-content;
+    max-width: 100%;
+  }
+}
+
+/* The link pills sit together as one group: a soft pale tray with the pills closely packed inside it. */
+.cs-results-links {
+  padding: 12px;
+  border-radius: 24px;
+  background: var(--pale);
+  box-shadow: inset 0 0 0 1px var(--periwinkle);
+}
+@media (max-width: 900px) {
+  .cs-results-section:has(.cs-results-links) .cs-results-links {
+    gap: 6px;
+    padding: 10px;
+    border-radius: 20px;
+  }
+  .cs-results-section:has(.cs-results-links) .cs-results-pill {
+    box-shadow: 0 2px 0 rgba(12, 0, 84, 0.12);
+  }
+}
+
+/* The link pills have no tray. Each pill fills its column, with its text centred inside, like the footer signs. */
+.cs-results-links {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+@media (max-width: 900px) {
+  .cs-results-section:has(.cs-results-links) .cs-results-links {
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    gap: 10px;
+  }
+  .cs-results-section:has(.cs-results-links) .cs-results-pill {
+    width: 100%;
+    max-width: none;
+    justify-self: stretch;
+    text-align: center;
+    justify-content: center;
+    padding: 12px 10px;
+    box-shadow: 0 3px 0 rgba(12, 0, 84, 0.18);
+  }
+}
+.cs-results-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+}
+
+/* The link pills: Personal, Global accounts and Cards run down the left; App store screens, Results and Design process run down the right. */
+.cs-results-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(3, auto);
+  grid-auto-flow: column;
+  gap: 10px;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Tablets and larger screens: all six link pills sit on one horizontal line, with less space above them. */
+@media (min-width: 901px) {
+  .cs-results-links {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: auto;
+    grid-auto-flow: column;
+    max-width: 100%;
+    gap: 10px;
+  }
+  .cs-results-section:has(.cs-results-links) .cs-results-links { margin-top: 16px; }
+}
+
+/* "Another project?" is the same size as the other topic headings on the project pages. */
+.cs-more-projects .section-heading { font-size: clamp(1.7rem, 3.8vw, 2.5rem); }
+
+/* The "Launch carousel" pill sits centred above the EUR/GBP posters panel. */
+.cs-carousel-label { display: table; margin: 48px auto 0; }
+
+/* EUR/GBP on PC: equal white space between the approach text, "What I did", the Launch carousel pill and the posters panel. */
+@media (min-width: 901px) {
+  .cs-approach-section:has(~ .cs-carousel-label) { padding-bottom: 0; }
+  .cs-approach-section:has(~ .cs-carousel-label) .cs-approach-did { margin-top: 48px; }
+  .cs-carousel-label { margin-top: 48px; margin-bottom: 48px; }
 }

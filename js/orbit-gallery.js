@@ -47,10 +47,10 @@
       if (Math.abs(vel) > 0.02) { rot += vel; vel *= 0.94; }
       else { vel = 0; if (!reduce && picked < 0) rot += AUTO * (hover ? 0.25 : 1) * dt; }   // the ring rests while a picture is open
     }
-    // if the ring / spinner has been kept spinning for over 3 seconds, the hint teases about it
+    // only a hold that stays on the spinner for 3 straight seconds counts: letting go resets it, and the hint goes back after a short rest
     if (hint) {
-      if (dragging || Math.abs(vel) > 1.2) { spinMs += dt * 1000; idleMs = 0; }
-      else { idleMs += dt * 1000; if (idleMs > 3000) { spinMs = 0; if (teased) { hint.textContent = HINT; teased = false; } } }
+      if (dragging) { spinMs += dt * 1000; idleMs = 0; }
+      else { spinMs = 0; idleMs += dt * 1000; if (idleMs > 3000 && teased) { hint.textContent = HINT; teased = false; } }
       if (!teased && spinMs > 3000) { hint.textContent = 'You play a lot \u{1F602}'; teased = true; }
     }
     paint();

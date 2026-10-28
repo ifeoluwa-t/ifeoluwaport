@@ -29,9 +29,8 @@
     ['Into The Unknown (Instrumental)', 'Kristen Anderson-Lopez & Robert Lopez', 'mBrAj8ukGDE', 'Soundtrack'],
     ['Like a Prayer (Choir Version)', 'I\'ll Take You There Choir', 'pMPKTwESkxs', 'Choral'],
     ['Coping Mechanism', 'Omah Lay & Elmah', 'VWqdBp3OfVg', 'Afrobeats'],
-    ['Cry (Just A Little)', 'Bingo Players', 'ZBpWdwXzpMk', 'Dance'],
-    ['Worship', 'Asake & DJ Snake', 'RQOg16kmFJM', 'Afro-house'],
-    ['All Of You (Instrumental)', 'Lin-Manuel Miranda', '1mtHDkxIi28', 'Soundtrack'],
+    ['Cry (Just A Little) [General C\'mamane Remix]', 'Bingo Players', 'C9a86kKfUGk', 'Dance'],
+    ['Rora', 'Asake', 'Mz1zjBwUzoc', 'Afrobeats'],
     ['Gone', 'NF & Julia Michaels', 'f5ZaOGLZHoU', 'Hip-Hop'],
     ['The Wonder Years', 'Jon Bellion', 'WVDtoaO5C70', 'Pop'],
     ['Propeller', 'JAE5, BNXN & Dave', 'yEiGnvgL4fA', 'Afrobeats'],
@@ -51,11 +50,12 @@
     ['Echoes In Rain', 'Enya', 'oSVg3umy8_Q', 'Ambient'],
     ['Live Life', 'Show Dem Camp & Tems', 'gxXMhMApfW0', 'Alté'],
     ['Gratitude', 'Anendlessocean', 'LzAdpgIOzXI', 'Worship'],
+    ['War In Ba Sing Se', 'J0vanny', 'GfKmLnQhqBU', 'Electronic'],
     ['Everywhere, Everything', 'Noah Kahan & Gracie Abrams', 'dJPdkhsr0gU', 'Folk']
   ];
   // The nav-bar music icon starts one of these three, alternating between them. After that the
   // rest of the playlist plays on shuffle whenever next is pressed (or a song ends).
-  var DEFAULT_TITLES = ['Outro', 'All Of You (Instrumental)', 'Into The Unknown (Instrumental)'];
+  var DEFAULT_TITLES = ['Outro', 'Into The Unknown (Instrumental)'];
   var DEFAULTS = DEFAULT_TITLES.map(function (t) { for (var k = 0; k < SONGS.length; k++) if (SONGS[k][0] === t) return k; return 0; });
   function nextDefault() {
     var n = 0;
@@ -328,7 +328,7 @@
   // The music icon in the nav bar: first press starts one of the three default songs, then it plays / pauses.
   if (navBtn) {
     navBtn.addEventListener('click', function () {
-      if (!ctl) { try { sessionStorage.removeItem('sqMusicBarHidden'); } catch (e) {} init({ i: nextDefault(), t: 0, at: Date.now(), paused: false }, false); }
+      if (!ctl) { try { sessionStorage.removeItem('sqMusicBarHidden'); } catch (e) {} init({ i: nextDefault(), t: 0, at: Date.now(), paused: false }, true); }   // music started here carries on to the next page without asking
       else if (window.sqMusic && window.sqMusic.showBar && (function () { try { return sessionStorage.getItem('sqMusicBarHidden') === '1'; } catch (e) { return false; } })()) window.sqMusic.showBar();   // bar was put away: bring it back
       else ctl.toggle();
     });

@@ -471,7 +471,17 @@
     if (resume && SONGS[resume.i]) { current = resume.i; show(); start(resume.i, resume.t, resume.paused); }
 
     // Used by the "still want to listen?" prompt when the visitor leaves for another page.
+    // Music playing here carries on to the next page: the place is saved as it plays and when the page is left.
+    function saveSession() {
+      if (!player || !player.getCurrentTime || !window.sqMusicStore) return;
+      var t = 0; try { t = player.getCurrentTime(); } catch (e) {}
+      window.sqMusicStore.write({ i: current, t: Math.floor(t), at: Date.now(), paused: !playing });
+    }
+    setInterval(function () { if (playing) saveSession(); }, 1000);
+    window.addEventListener('pagehide', saveSession);
+    document.addEventListener('visibilitychange', function () { if (document.hidden) saveSession(); });
     window.sqMusic = {
+      consented: true,                                        // no "still want to listen?" question
       playing: function () { return playing; },
       index: function () { return current; },
       play: function (i) { start(i); },
