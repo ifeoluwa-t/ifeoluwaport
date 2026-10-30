@@ -369,7 +369,7 @@ body[data-page="side-quests"] main { position: relative; }
 .sqw-head { text-align: center; margin: 0 0 6px; font-size: clamp(2.6rem, 6vw, 4.4rem); }
 .sqw-mount { width: 100%; max-width: 1320px; margin: 0 auto; min-height: 0; }
 .sqw-grid { display: grid; gap: 14px; align-items: center; position: relative; }
-@media (min-width: 900px) { .sqw-grid { --g: clamp(40px, 8.33vw, 120px); --cw: max(200px, min(44vw, 620px, calc((100vw - 3 * var(--g) - 130px) / 2), calc(100svh - 300px))); grid-template-columns: var(--cw) var(--cw); justify-content: center; margin: -12px auto 0; gap: var(--g); } .sqw-left, .sqw-detail { justify-self: center; } }
+@media (min-width: 900px) { .sqw-grid { --g: clamp(40px, 8.33vw, 120px); --cw: max(200px, min(44vw, 620px, calc((100vw - 3 * var(--g) - 130px) / 2), calc(100svh - 300px))); grid-template-columns: var(--cw) var(--cw); justify-content: center; margin: -12px auto 0; gap: calc(var(--g) * 0.4); } .sqw-left { justify-self: end; } .sqw-detail { justify-self: start; } }
 
 .sqw-stage {
   position: relative;

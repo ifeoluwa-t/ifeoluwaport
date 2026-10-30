@@ -743,3 +743,36 @@
     document.addEventListener('click', function (e) { if (!btn.contains(e.target)) btn.classList.remove('is-flipped'); });
   });
 })();
+
+// PC: "SIDE" and "QUESTS" sit in the middle of the space on their side of the screen. "SIDE" is equally far from the
+// left edge of the screen and from the farthest picture on the wheel; "QUESTS" is equally far from the right edge and
+// from the large picture. They are placed once for the layout as it is, so they do not move as the wheel turns.
+(function () {
+  var wide = window.matchMedia('(min-width: 900px)');
+  var side = document.querySelector('.sqw-side--l'), quest = document.querySelector('.sqw-side--photo');
+  var wrap = document.querySelector('.sqw-photo-wrap'), photo = document.querySelector('.sqw-photo');
+  if (!side || !quest || !wrap || !photo) return;
+  function place() {
+    if (!wide.matches) { side.style.left = side.style.right = side.style.transform = ''; quest.style.left = quest.style.transform = ''; return; }
+    var vw = document.documentElement.clientWidth;
+    // SIDE: between the screen's left edge and the farthest picture on the wheel
+    var cars = document.querySelectorAll('.sqw-car'), farthest = Infinity;
+    for (var i = 0; i < cars.length; i++) farthest = Math.min(farthest, cars[i].getBoundingClientRect().left);
+    if (isFinite(farthest)) {
+      var sw = side.offsetWidth, sParent = side.offsetParent.getBoundingClientRect();
+      var sLeft = (farthest - sw) / 2;
+      side.style.right = 'auto';
+      side.style.left = (sLeft - sParent.left) + 'px';
+      side.style.transform = 'translateY(-50%)';
+    }
+    // QUESTS: between the large picture and the screen's right edge
+    var pr = photo.getBoundingClientRect(), qw = quest.offsetWidth, qParent = wrap.getBoundingClientRect();
+    var qLeft = pr.right + (vw - pr.right - qw) / 2;
+    quest.style.left = (qLeft - qParent.left) + 'px';
+    quest.style.transform = 'translateY(-50%)';
+  }
+  place();
+  window.addEventListener('load', place);
+  window.addEventListener('resize', place);
+  if (window.ResizeObserver) new ResizeObserver(place).observe(photo);
+})();
