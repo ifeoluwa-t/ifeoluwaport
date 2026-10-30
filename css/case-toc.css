@@ -42,7 +42,8 @@
   left: 16px;
   bottom: 66px;
   z-index: 90;
-  width: min(250px, calc(100vw - 32px));
+  width: max-content;
+  max-width: min(250px, calc(100vw - 32px));
   max-height: calc(100vh - 160px);
   overflow-y: auto;
   box-sizing: border-box;

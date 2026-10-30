@@ -369,7 +369,7 @@ body[data-page="side-quests"] main { position: relative; }
 .sqw-head { text-align: center; margin: 0 0 6px; font-size: clamp(2.6rem, 6vw, 4.4rem); }
 .sqw-mount { width: 100%; max-width: 1320px; margin: 0 auto; min-height: 0; }
 .sqw-grid { display: grid; gap: 14px; align-items: center; position: relative; }
-@media (min-width: 900px) { .sqw-grid { grid-template-columns: auto auto; justify-content: center; gap: clamp(20px, 3vw, 48px); margin-top: -12px; } }
+@media (min-width: 900px) { .sqw-grid { --g: clamp(40px, 8.33vw, 120px); --cw: max(200px, min(44vw, 620px, calc((100vw - 3 * var(--g) - 130px) / 2), calc(100svh - 300px))); grid-template-columns: var(--cw) var(--cw); justify-content: center; margin: -12px auto 0; gap: var(--g); } .sqw-left, .sqw-detail { justify-self: center; } }
 
 .sqw-stage {
   position: relative;
@@ -383,7 +383,7 @@ body[data-page="side-quests"] main { position: relative; }
   cursor: grab;
 }
 .sqw-stage.is-dragging { cursor: grabbing; }
-@media (min-width: 900px) { .sqw-stage { margin: 0; width: min(46vw, 860px, calc(100svh - 314px)); } .sqw-hint { width: min(46vw, 860px, calc(100svh - 314px)); } }
+@media (min-width: 900px) { .sqw-stage { margin: 0; width: var(--cw); } .sqw-hint { width: var(--cw); } }
 @media (max-width: 899px) { .sqw-stage { margin: 0 auto; width: min(100%, 40svh); } }
 .sqw-square { position: relative; aspect-ratio: 1; container-type: inline-size; }
 .sqw-square::before {
@@ -445,13 +445,13 @@ body[data-page="side-quests"] main { position: relative; }
 .sqw-left { min-width: 0; }
 .sqw-detail { display: flex; flex-direction: column; align-items: center; gap: 16px; min-width: 0; }
 /* Fixed column (as wide as the widest picture, a square) so the wheel never shifts as pictures change shape. */
-@media (min-width: 900px) { .sqw-detail { width: min(50svh, 560px, 32vw); } }
+@media (min-width: 900px) { .sqw-detail { width: min(54svh, 560px, 34vw); } }
 @media (max-width: 899px) { .sqw-detail { flex-direction: column; justify-content: center; align-items: center; gap: 10px; } .sqw-name { order: -1; } }
 /* The picture box takes each image's true shape (--ar = width / height), as large as fits. */
 .sqw-photo {
   --ar: 1;
   position: relative; display: block; flex: none;
-  width: min(calc(50svh * var(--ar)), 560px, 32vw);
+  width: min(calc(54svh * var(--ar)), 560px, 34vw);
   aspect-ratio: var(--ar);
   padding: 0; border: 0; overflow: hidden;
   border-radius: 18px; background: var(--periwinkle);
@@ -744,30 +744,45 @@ body > .sq2-music.is-away { opacity: 0; transform: translate(-50%, 26px); pointe
 .sqw-hub i { margin: 0; font-size: clamp(7px, 2.8cqw, 12px); line-height: 1.15; letter-spacing: 0.06em; text-align: center; font-weight: 700; color: var(--blue); }
 .sqw-hub .sqw-the { color: var(--navy); }   /* "THE" in the darkest blue of the palette */
 
-/* ---------- phones: "SIDE" and "QUESTS" run down either side of the wheel, level with each other ---------- */
-.sqw-side { display: none; }
+/* ---------- every screen: "SIDE" and "QUESTS" run down either side of the wheel, level with each other ---------- */
+.sqw-head { position: absolute; width: 1px; height: 1px; margin: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }   /* still there for screen readers */
+.sqw-pin { padding-top: 66px; }
+.sqw-side {
+  display: block;
+  position: absolute;
+  top: 52%;   /* the middle of the ring of pictures (they hang below the ring's own middle) */
+  transform: translateY(-50%);
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4.2vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  color: var(--sq-yellow);
+  pointer-events: none;
+}
+/* the words sit just outside the wheel, one on each side, on every screen */
+.sqw-side--l { right: calc(50% + var(--cw) / 2 + var(--g) - 39px); }
+/* the wheel and picture come closer together; the side words keep their place */
+@media (min-width: 900px) { .sqw-side--l { transform: translateY(-50%); } }
+.sqw-side--r { left: calc(50% + var(--cw) / 2 + 18px); }
+/* "QUESTS" sits beside the picture on the right, with the same gap as "SIDE" has to the wheel, on laptop and PC screens */
+.sqw-photo-wrap { position: relative; width: 100%; }
+.sqw-photo-wrap .sqw-photo { margin: 0 auto; }
+@media (min-width: 900px) {
+  .sqw-photo-wrap { width: fit-content; margin: 0 auto; }
+  .sqw-square > .sqw-side--r { display: none; }
+  .sqw-photo-wrap > .sqw-side--photo { display: block; inset: auto; top: 50%; left: 100%; right: auto; transform: translate(var(--g), -50%); }
+}
 @media (max-width: 899px) {
-  .sqw-head { position: absolute; width: 1px; height: 1px; margin: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }   /* still there for screen readers */
-  .sqw-pin { padding-top: 66px; }
-  .sqw-side {
-    display: block;
-    position: absolute;
-    top: 52%;   /* the middle of the ring of pictures (they hang below the ring's own middle) */
-    transform: translateY(-50%);
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-    font-family: var(--font-display);
-    font-size: clamp(1.5rem, 8.4vw, 2.2rem);
-    line-height: 1;
-    letter-spacing: 0;
-    text-transform: uppercase;
-    color: var(--sq-yellow);
-    pointer-events: none;
-  }
-  /* a little narrower wheel leaves a clear band down each side for the words, away from the pictures and the screen edge */
+  .sqw-photo-wrap > .sqw-side--photo { display: none; }
+}
+@media (max-width: 899px) {
+  /* a narrower wheel leaves a clear band down each side for the words, away from the pictures and the screen edge */
   .sqw-stage { width: min(calc(100% - 44px), 40svh); }
-  .sqw-side--l { left: calc(22px - (100vw - 100%) / 2); }
-  .sqw-side--r { right: calc(22px - (100vw - 100%) / 2); }
+  .sqw-side--l { right: auto; left: calc(22px - (100vw - 100%) / 2); }
+  .sqw-side--r { left: auto; right: calc(22px - (100vw - 100%) / 2); }
 }
 /* smooth: the big picture glides to each new shape instead of jumping, and the name fades */
 .sqw-photo { transition: width 0.45s cubic-bezier(0.3, 0.7, 0.2, 1), aspect-ratio 0.45s cubic-bezier(0.3, 0.7, 0.2, 1); }
@@ -812,7 +827,7 @@ body > .sq2-music.is-away { opacity: 0; transform: translate(-50%, 26px); pointe
 
 /* ---------- phones: the bar is a floating pill that folds into one icon (like the other pages) ---------- */
 .sq2-close { display: none; }
-@media (max-width: 899px) {
+@media (min-width: 0px) {
   body > .sq2-music { display: flex; bottom: 14px; left: 14px; transform: none; width: auto; max-width: calc(100vw - 28px); margin: 0; border-radius: 999px; padding: 6px 8px 6px 8px; touch-action: none; transition: padding 0.3s ease; }
   body > .sq2-music.is-gone { display: none; }
   body > .sq2-music .sq2-close { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: 0; border-radius: 50%; background: transparent; color: var(--navy); cursor: pointer; }
@@ -828,13 +843,14 @@ body > .sq2-music.is-away { opacity: 0; transform: translate(-50%, 26px); pointe
 
 /* the folded icon: the same music-note icon as on the other pages, kept in the Side Quests yellow */
 .sq2-music-icon .sq2-note { display: none; }
-@media (max-width: 899px) {
+@media (min-width: 0px) {
   body > .sq2-music.is-mini .sq2-music-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--sq-yellow); color: var(--navy); display: inline-flex; align-items: center; justify-content: center; }
   body > .sq2-music.is-mini .sq2-music-icon .sq2-eq { display: none; }
   body > .sq2-music.is-mini .sq2-music-icon .sq2-note { display: block; width: 18px; height: 18px; }
   body > .sq2-music.is-mini { border-radius: 999px; }
 }
 body > .sq2-music .sq2-music-icon .sq2-note { color: var(--navy); }
+}
 
 /* the doodles around the lore photo: things that are about me */
 .sq2-doodle--dc { width: 50px; right: -24px; top: 42%; transform: rotate(8deg); filter: drop-shadow(0 4px 6px rgba(12, 0, 84, 0.25)); }
@@ -921,3 +937,6 @@ body > .sq2-music .sq2-music-icon .sq2-note { color: var(--navy); }
 
 /* the volleyball / bishop now sits on the right-hand side, the bishop pointing straight across into the photo */
 .sq2-icon--bishop { left: auto; right: -26px; top: calc(34% - 38px); transform: rotate(-90deg); }
+
+/* Side Quests: the top music icon is hidden; the icon at the bottom is the one visitors use. */
+body[data-page="side-quests"] #nav-music { display: none !important; }

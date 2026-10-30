@@ -181,12 +181,12 @@
               '<svg class="sqw-stand" viewBox="0 0 400 400" fill="none" aria-hidden="true"><path d="M200 184 146 362M200 184 254 362M124 362H276" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>' +
               '<div class="sqw-wheel"><span class="sqw-ring2"></span>' + rim + cars + '</div>' +
               '<div class="sqw-hub" aria-hidden="true"><i>SPIN<br><span class="sqw-the">ME</span></i></div>' +
-              '<span class="sqw-side sqw-side--l" aria-hidden="true">SIDE</span><span class="sqw-side sqw-side--r" aria-hidden="true">QUESTS</span>' +
+              '<span class="sqw-side sqw-side--l" aria-hidden="true">SIDE</span><span class="sqw-side sqw-side--r sqw-side--wheel" aria-hidden="true">QUESTS</span>' +
             '</div>' +
           '</div>' +
         '</div>' +
         '<div class="sqw-detail">' +
-          '<div class="sqw-photo"><span class="sqw-photo-a"><img alt="" draggable="false"></span><span class="sqw-photo-b"><img alt="" draggable="false"></span></div>' +
+          '<div class="sqw-photo-wrap"><div class="sqw-photo"><span class="sqw-photo-a"><img alt="" draggable="false"></span><span class="sqw-photo-b"><img alt="" draggable="false"></span></div><span class="sqw-side sqw-side--r sqw-side--photo" aria-hidden="true">QUESTS</span></div>' +
           '<h3 class="sqw-name"></h3>' +
         '</div>' +
         '<span class="sqw-live" role="status" aria-live="polite"></span>' +
@@ -651,7 +651,7 @@
 // shows for 3 seconds when music starts, then folds into one round icon at the bottom, which can be dragged to either edge.
 // Both disappear while the "On Repeat" section is on screen.
 (function () {
-  var mq = window.matchMedia('(max-width: 899px)');
+  var mq = window.matchMedia('(max-width: 899px), (min-width: 900px)');   // draggable and folding on every screen
   var navBtn = document.getElementById('nav-music'), play = document.getElementById('sq2-play'), bar = document.getElementById('sq2-music');
   var closeBtn = document.getElementById('sq2-close');
   if (!navBtn || !play || !bar) return;
@@ -673,7 +673,8 @@
       if (window.SQ_RESUME) bar.classList.add('is-mini'); else wake();   // carried on from another page: just the icon
     }
   }
-  bar.classList.add('is-gone');                 // no bar until music is playing
+  bar.classList.remove('is-gone');              // the bottom icon is there from the start, folded
+  bar.classList.add('is-mini');
   if (window.SQ_RESUME && !window.SQ_RESUME.paused) navBtn.classList.add('is-carried');   // carried on from another page: the top icon never appears
   if (window.MutationObserver) {
     new MutationObserver(function () { sync(); place(); }).observe(bar, { attributes: true, attributeFilter: ['class'] });
@@ -685,7 +686,7 @@
   });
   if (closeBtn) closeBtn.addEventListener('click', function () {
     clearTimeout(hideTimer);
-    if (playing()) bar.classList.add('is-mini'); else bar.classList.add('is-gone');
+    bar.classList.add('is-mini');   // folds to the icon, which stays put
   });
   bar.addEventListener('click', function (e) { if (bar.classList.contains('is-mini') && !dragMoved && mq.matches) { e.preventDefault(); wake(); } }, true);
   bar.addEventListener('pointerdown', function (e) { if (!bar.classList.contains('is-mini')) armHide(); });

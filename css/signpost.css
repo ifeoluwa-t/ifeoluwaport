@@ -13,13 +13,65 @@
 ============================================ */
 .signpost-footer {
   position: relative;
-  overflow: hidden;
+  margin-top: clamp(40px, 5vw, 72px);
+  overflow-x: clip;
   padding: clamp(72px, 10vw, 128px) 20px 28px;
   color: #fff;
   background:
     radial-gradient(ellipse 900px 420px at 15% 0%, rgba(0, 82, 255, 0.4), transparent 70%),
     var(--navy);
 }
+
+/* The gap above the footer is white, so the page background does not show through as a pale strip. */
+.signpost-footer::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: clamp(40px, 5vw, 72px); background: #fff; }
+/* The skills ticker, copied from the landing page, sits on the top edge of the footer and tilts the same way. */
+.signpost-footer > .skills-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+.skills-strip {
+  position: relative;
+  z-index: 6;
+  height: 0;
+  overflow-x: clip;
+}
+.sk-band {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 112vw;
+  margin-left: -6vw;
+  padding: clamp(14px, 1.8vw, 22px) 0;
+  background: var(--blue);
+  color: #fff;
+  transform: translateY(-30%) rotate(-0.8deg);
+  box-shadow: 0 10px 0 var(--indigo);
+  overflow: hidden;
+}
+.sk-track {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2.4vw, 34px);
+  margin: 0;
+  padding: 0 clamp(18px, 2.4vw, 34px) 0 0;
+  list-style: none;
+  white-space: nowrap;
+  animation: sk-run 38s linear infinite;
+}
+.sk-track li {
+  font-size: clamp(1.25rem, 2.6vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+}
+.sk-star { display: flex; color: var(--periwinkle); }
+.sk-star svg { width: clamp(18px, 2vw, 28px); height: clamp(18px, 2vw, 28px); }
+@keyframes sk-run { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@media (prefers-reduced-motion: reduce) { .sk-track { animation: none; } }
 .signpost-footer > .sp-grid, .signpost-footer > .sp-base { position: relative; z-index: 1; }
 
 .sp-grid {
@@ -193,17 +245,6 @@
   background: var(--pale);
   color: var(--navy);
 }
-.sp-bubble::after { /* tail */
-  content: '';
-  position: absolute;
-  left: 36px;
-  bottom: -18px;
-  width: 0;
-  height: 0;
-  border-left: 0 solid transparent;
-  border-right: 26px solid transparent;
-  border-top: 22px solid var(--pale);
-}
 .sp-bubble > * { position: relative; }
 .sp-bubble h2 {
   margin: 0 0 12px;
@@ -256,6 +297,14 @@
   color: rgba(255, 255, 255, 0.75);
 }
 .sp-credit, .sp-credit-note { font-weight: 700; }
+/* The credit stays on one spread-out row whenever the screen can hold it: the text scales down with the window, and it only breaks onto two lines on very narrow screens. */
+.sp-credit {
+  white-space: nowrap;
+  font-size: clamp(0.62rem, 1.6vw, 0.9rem);
+}
+@media (max-width: 380px) {
+  .sp-credit { white-space: normal; }
+}
 .sp-credit-note { color: var(--periwinkle); }
 .sp-base a { color: #fff; font-weight: 600; }
 .sp-base a:hover { color: var(--periwinkle); }
@@ -299,11 +348,6 @@
   .sp-rotator .hero-highlight-slide p { flex: 1; font-size: 1rem; }
 }
 
-/* Phones/tablets: the name and year on the first line, the rest of the credit on the line below */
-@media (max-width: 900px) {
-  .sp-credit-note { display: block; }
-  .sp-dot { display: none; }
-}
 
 /* ---------- Phones: no pole, just two stacks of signs side by side ----------
    Work / Events / Storytelling on the left, Side-Quests / LinkedIn / X (and Instagram on Side Quests) on the right. */

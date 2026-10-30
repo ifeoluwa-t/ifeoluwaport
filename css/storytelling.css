@@ -29,7 +29,7 @@
   margin: 0 0 clamp(28px, 4vw, 48px);
 }
 /* Filter tabs: quiet text tabs with counts, active one in navy. */
-.st-filters { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 0 0 26px; }
+.st-filters { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; margin: 0 0 26px; }
 .st-filters[hidden] { display: none; }
 .st-filter {
   background: none;
@@ -181,6 +181,14 @@
 }
 
 .st-story-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+/* The category pill sits centred above each story title. */
+.st-story .st-pill { align-self: center; }
+/* The Q1 2026 Product Report pill is navy, so it stands out on its periwinkle story. */
+#q1-2026-product-report .st-pill { background: var(--navy); color: #fff; }
+/* The Sales Deck buttons sit centred under the story text. */
+#sales-deck .st-story-actions,
+#q1-2026-product-report .st-story-actions,
+#q3-2026-product-report .st-story-actions { align-self: center; justify-content: center; }
 .st-story-title {
   font-family: var(--font-body);
   font-weight: 700;
@@ -222,6 +230,8 @@
   transition: background-color 0.25s ease, transform 0.25s ease;
 }
 .st-cta svg { width: 18px; height: 18px; transition: transform 0.25s ease; }
+/* One arrow per button: the built-in pill arrow is off, the icon arrow stays. */
+a.st-cta[target="_blank"]::after { content: none; }
 .st-cta:hover { background: var(--navy); transform: translateY(-2px); }
 .st-cta:hover svg { transform: translate(2px, -2px); }
 .st-cta:focus-visible,

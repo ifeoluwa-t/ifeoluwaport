@@ -267,8 +267,29 @@
 }
 .ev-detail-title { margin: 0 0 10px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--blue); }
 .ev-detail-title:not(:first-child) { margin-top: 6px; }
-.ev-detail-list { margin: 0 0 14px; padding-left: 20px; line-height: 1.55; font-size: 0.95rem; }
+.ev-detail-list { margin: 0 0 14px; padding-left: 20px; line-height: 1.55; font-size: 0.95rem; list-style: disc; }
+.ev-detail-list li { list-style: disc; }
 .ev-detail-list li + li { margin-top: 4px; }
+
+/* Links inside the details list: brand blue, underlined, with a small arrow, a clear hover and a keyboard focus ring. */
+.ev-detail-list a {
+  color: var(--blue);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+  transition: color 0.2s ease;
+}
+.ev-detail-list a::after {
+  content: "\2197";
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 0.85em;
+  text-decoration: none;
+}
+.ev-detail-list a:hover { color: var(--navy); }
+.ev-detail-list a:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; border-radius: 4px; }
+
 .ev-link, .ev-play-btn {
   display: inline-flex;
   margin: 0 10px 0 0;
