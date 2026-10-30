@@ -955,3 +955,67 @@ body.cs-page { background: #fff; }
   text-decoration: none;
   transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
+
+/* =====================================================================
+   FIT TO SCREEN: each picture is capped by the screen height, so a whole
+   section fits a laptop screen without scrolling. A picture's width follows
+   its own shape (--r = width / height), so nothing is cropped.
+   ===================================================================== */
+:root { --cs-fit: clamp(220px, calc(100svh - 380px), 420px); }
+
+/* "Another project?" cards: the picture is capped by height, so the three cards fit the screen too. */
+.cs-page .cs-more-grid .work-card { max-width: calc(var(--cs-fit) * 0.8 + 32px); justify-self: start; }
+.cs-page .cs-more-grid .img-placeholder { width: 100%; }
+
+/* Short laptop screens: tighter panels and text. */
+@media (min-width: 900px) and (max-height: 800px) {
+  .cs-page .cs-panel { padding: 28px clamp(28px, 3.5vw, 52px); }
+  .cs-page .cs-panel > .section-inner + .section-inner { margin-top: 24px; }
+  .cs-page .cs-section-heading { margin-bottom: 10px; }
+  .cs-page .cs-section-intro { margin-bottom: 20px; }
+  .cs-page .cs-approach-list li { padding: 10px 12px; font-size: 0.9rem; line-height: 1.4; }
+  .cs-page .cs-approach-list { gap: 10px; }
+  .cs-page .cs-panel { padding: 24px clamp(28px, 3.5vw, 52px); }
+  .cs-page .cs-panel > .section-inner + .section-inner { margin-top: 18px; }
+  .cs-page .cs-section-label { height: 26px; margin-bottom: 12px; }
+  .cs-page .cs-tabs-card { margin-top: 18px; gap: 16px; }
+  .cs-page .cs-tabs-card--wide .cs-tab-item { padding: 10px 16px; }
+  .cs-page .cs-screens-hint { margin-bottom: 18px; }
+}
+
+/* Challenge: the rescue picture sits at the right, capped by height. */
+.cs-page .cs-pullquote-slides {
+  --r: calc(16 / 9);
+  width: min(100%, calc(var(--cs-fit) * var(--r)));
+  aspect-ratio: var(--r);
+  justify-self: end;
+}
+.cs-page .cs-pullquote-slides.cs-pullquote-slides--portrait { --r: calc(4 / 5); }
+.cs-page .cs-pullquote-picture { justify-self: end; }
+.cs-page .cs-pullquote-picture { --r: 1; width: min(100%, calc(var(--cs-fit) * var(--r))); aspect-ratio: var(--r); }
+.cs-page .cs-pullquote-picture > img.cs-pullquote-media { width: 100%; height: 100%; aspect-ratio: auto; object-fit: contain; }
+
+/* Tab pictures: width follows the tab's own shape, height capped. */
+.cs-page .cs-tabs-visual { --r: 1; width: min(560px, calc(var(--cs-fit) * var(--r))); aspect-ratio: var(--r); justify-self: start; }
+.cs-page .cs-tabs-visual--poster,
+.cs-page .cs-tabs-visual--portrait { --r: calc(4 / 5); }
+.cs-page .cs-tabs-visual--landscape { --r: calc(16 / 10); }
+.cs-page .cs-tabs-visual--square { --r: 1; }
+.cs-page .cs-tabs-card--wide .cs-tabs-visual { --r: calc(16 / 10); width: min(100%, calc(var(--cs-fit) * var(--r))); aspect-ratio: var(--r); }
+.cs-page .cs-tabs-visual--duo .cs-duo-img { width: min(560px, var(--cs-fit)); max-width: 100%; }
+
+/* Before/after: the phone screens and the flip picture are sized by height too. */
+.cs-page .cs-screen { flex-basis: min(clamp(170px, 17vw, 220px), calc((var(--cs-fit) - 90px) * 0.4621)); }
+.cs-page .cs-flip-media { width: min(100%, calc(var(--cs-fit) * 1.847)); }
+
+/* Wins: each picture keeps its own shape, capped by height. */
+.cs-page .cs-win { width: 100%; }
+.cs-page .cs-win img { --r: 0.8; width: min(100%, calc(var(--cs-fit) * var(--r))); aspect-ratio: var(--r); height: auto; }
+.cs-page .cs-pullquote-picture:has(> .cs-pullquote-slides--portrait) { --r: calc(4 / 5); }
+.cs-page .cs-pullquote-picture:has(> .cs-pullquote-slides) { --r: calc(16 / 9); }
+
+/* Very short screens (about 650px and under): panels get a little less padding so they still fit below the nav. */
+@media (min-width: 900px) and (max-height: 650px) {
+  .cs-page .cs-panel { padding: 18px clamp(28px, 3.5vw, 52px); }
+  .cs-page .cs-screens-hint { margin-bottom: 14px; }
+}
