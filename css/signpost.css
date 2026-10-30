@@ -305,7 +305,7 @@
 @media (max-width: 380px) {
   .sp-credit { white-space: normal; }
 }
-.sp-credit-note { color: var(--periwinkle); }
+.sp-credit-note { color: #fff; }
 .sp-base a { color: #fff; font-weight: 600; }
 .sp-base a:hover { color: var(--periwinkle); }
 

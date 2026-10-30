@@ -21,11 +21,12 @@
 <meta name="twitter:title" content="Consumer Product Refresh — Ifeoluwa Taiwo">
 <meta name="twitter:description" content="Leading creative direction and content across a full consumer refresh, from new web pages to a redesigned app and Play Store presence.">
 <meta name="twitter:image" content="https://ifeoluwaport.vercel.app/assets/images/og-image.jpg">
-<link rel="stylesheet" href="css/style.css?v=569">
+<link rel="stylesheet" href="css/style.css?v=571">
 <link rel="stylesheet" href="css/fx.css?v=9">
-<link rel="stylesheet" href="css/case-toc.css?v=2">
-<link rel="stylesheet" href="css/signpost.css?v=54">
+<link rel="stylesheet" href="css/case-toc.css?v=3">
+<link rel="stylesheet" href="css/signpost.css?v=55">
 <link rel="stylesheet" href="css/hero-lines.css?v=3">
+<link rel="stylesheet" href="css/case-study.css?v=8">
 </head>
 <!-- CASE STUDY PAGE — built from the shared template (see
      project-eur-gbp-global-accounts.html for the fully-annotated
@@ -48,7 +49,7 @@
      - None of the three new sections above carry a sub-heading
        intro line, by request — just the section heading itself (the
        two flip sections add one small "hover to see" hint instead). -->
-<body data-page="work" style="--cs-accent: var(--indigo);">
+<body data-page="work" class="cs-page">
 
 <div class="page-transition" aria-hidden="true">
   <div class="transition-card transition-card--accent"></div>
@@ -87,10 +88,10 @@
        full-viewport landing section, content centered, no scrolling
        needed to see it. -->
   <section class="cs-hero" id="overview" data-toc="Overview">
-    <div class="section-inner cs-hero-inner--wide">
-      <div class="cs-hero-logo exp-logo" aria-label="Onboard"><img width="160" height="160" src="assets/images/logos/onboard.jpg" alt="Onboard logo"></div>
-      <div class="cs-hero-top cs-hero-top--landscape">
+    <div class="section-inner">
+      <div class="cs-hero-top">
         <div class="cs-hero-copy">
+          <div class="cs-hero-logo exp-logo" aria-label="Onboard"><img width="160" height="160" src="assets/images/logos/onboard.jpg" alt="Onboard logo"></div>
           <h1 class="cs-headline">Repositioning and Redesigning Onboard</h1>
           <p class="cs-subdesc">Led creative direction and content across a full consumer refresh, from new web pages to a redesigned App and Play Store presence.</p>
           <div class="cs-hero-stats">
@@ -142,7 +143,8 @@
   </section>
 
   <!-- 5. CHALLENGES -->
-  <section class="cs-pullquote-section" id="challenge" data-toc="Challenge">
+  <div class="cs-narrative">
+  <section class="cs-panel cs-pullquote-section" id="challenge" data-toc="Challenge">
     <div class="section-inner">
       <div class="cs-pullquote-row">
         <div class="cs-pullquote-picture">
@@ -159,11 +161,13 @@
 
   <!-- 6. OUR APPROACH — full-width text only; the sections right
        after this one carry the visuals. -->
-  <section class="cs-approach-section" id="our-approach" data-toc="Our Approach">
+  <section class="cs-panel cs-approach-section" id="our-approach" data-toc="Our Approach">
     <div class="section-inner">
+      <div class="cs-approach-intro">
       <p class="cs-section-label">Our Approach</p>
       <h2 class="cs-section-heading">We rebuilt the pages people see before they sign up</h2>
       <p class="cs-section-intro">We rebuilt the consumer experience, starting with the pages and screens people see before they download Onboard</p>
+      </div>
 
       <div class="cs-approach-did">
         <h3 class="cs-approach-did-heading">What I Did</h3>
@@ -177,11 +181,12 @@
       </div>
     </div>
   </section>
+  </div>
 
   <!-- NEW SECTION: PERSONAL WEBSITE REFRESH — one card showing the redesigned
        Personal page that flips to the previous one on hover/tap. Both
        screens are the same size (2000x1083) so the swap is clean. -->
-  <section class="cs-compare-section" id="personal-website-refresh" data-toc="Personal Website Refresh">
+  <section class="cs-panel cs-compare-section" id="personal-website-refresh" data-toc="Personal Website Refresh">
     <div class="section-inner">
       <div class="cs-screens-head">
         <h2 class="cs-section-heading">Personal Website Refresh</h2>
@@ -207,8 +212,10 @@
        wide, full-width landscape screen (laptop scale) for web-page captures and 2 tabs (the Personal
        page has its own section above). Pale background gives it its
        own clear identity as a section. -->
-  <div class="cs-screens-head-wrap">
-    <div class="cs-screens-head">
+  <section class="cs-panel cs-products-section" id="app-play-store-redesign" data-toc="App/Play-Store Redesign">
+    <div class="section-inner">
+      <div class="cs-screens-head">
+
         <h2 class="cs-section-heading">App/Play-Store Redesign</h2>
         <p class="cs-screens-hint">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="M13 13l6 6"/></svg>
@@ -216,9 +223,6 @@
           <span class="cs-screens-hint-tap">Tap a screen to see how it looked before</span>
         </p>
       </div>
-  </div>
-  <section class="cs-products-section" id="app-play-store-redesign" data-toc="App/Play-Store Redesign">
-    <div class="section-inner">
 
       <div class="cs-screens-viewport" id="cs-screens">
         <div class="cs-screens-track">
@@ -281,13 +285,7 @@
     </div>
   </section>
 
-  <h2 class="cs-section-heading cs-heading-outside cs-products-heading">Consumer Product Pages</h2>
-  <p class="cs-screens-hint cs-topics-hint cs-heading-outside">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path><path d="M13 13l6 6"></path></svg>
-          <span class="cs-screens-hint-hover">Hover a topic to see more</span>
-          <span class="cs-screens-hint-tap">Tap a topic to see more</span>
-        </p>
-  <section class="cs-products-section cs-products-section--pale" id="product-consumer-pages" data-toc="Consumer Product Pages">
+  <section class="cs-panel cs-products-section" id="product-consumer-pages" data-toc="Consumer Product Pages">
     <div class="section-inner">
       <h2 class="cs-section-heading cs-heading-inside">Consumer Product Pages</h2>
       <p class="cs-screens-hint cs-topics-hint cs-heading-inside">
@@ -321,7 +319,7 @@
        before/after screens that auto-scrolls and can be dragged. -->
   <!-- 7. THE RESULTS — no side image on this page: just the copy and
        stats, in a single readable column (.cs-results-solo). -->
-  <section class="cs-results-section cs-results-section--dark-stats" id="the-results" data-toc="The Results">
+  <section class="cs-panel cs-results-section" id="the-results" data-toc="The Results">
     <div class="section-inner">
       <div class="cs-results-solo">
         <p class="cs-section-label">Results</p>
@@ -351,7 +349,7 @@
   </section>
 
   <!-- 8. MORE PROJECTS -->
-  <section class="cs-more-projects">
+  <section class="cs-panel cs-more-projects">
     <div class="section-inner">
       <h2 class="section-heading">Another project?</h2>
 
@@ -441,9 +439,10 @@
 </main>
 
 <script src="js/script.js?v=122"></script>
-<script src="js/case-toc.js?v=1"></script>
+<script src="js/case-toc.js?v=2"></script>
+<script src="js/case-study.js?v=2"></script>
 <script src="js/signpost.js?v=1"></script>
-<script src="js/music-keep.js?v=25"></script>
+<script src="js/music-keep.js?v=26"></script>
 <script src="js/fx.js?v=18"></script>
 <script src="js/hero-lines.js?v=5"></script>
 </body>

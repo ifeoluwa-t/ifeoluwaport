@@ -4,7 +4,7 @@
   const targets = Array.from(document.querySelectorAll('[data-toc]'));
   if (targets.length < 2) return;
   const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const WIDE = window.matchMedia('(min-width: 1580px)');
+  const WIDE = window.matchMedia('(min-width: 1280px)');
 
   const arrow = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.83 11H20v2H7.83l5.36 5.36-1.41 1.42L4 12l7.78-7.78 1.41 1.42z"/></svg>';
   const listIcon = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h10v2H4v-2z"/></svg>';
@@ -31,6 +31,7 @@
     a.className = 'cs-toc-link';
     a.href = '#' + t.id;
     a.textContent = t.dataset.toc;
+    a.dataset.label = t.dataset.toc;
     a.addEventListener('click', (e) => {
       e.preventDefault();
       if (t === targets[0]) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });

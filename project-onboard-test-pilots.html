@@ -21,11 +21,12 @@
 <meta name="twitter:title" content="Onboard Test Pilots — Ifeoluwa Taiwo">
 <meta name="twitter:description" content="Managing a community of product testers who validate new features before they ever reach the public.">
 <meta name="twitter:image" content="https://ifeoluwaport.vercel.app/assets/images/og-image.jpg">
-<link rel="stylesheet" href="css/style.css?v=569">
+<link rel="stylesheet" href="css/style.css?v=571">
 <link rel="stylesheet" href="css/fx.css?v=9">
-<link rel="stylesheet" href="css/case-toc.css?v=2">
-<link rel="stylesheet" href="css/signpost.css?v=54">
+<link rel="stylesheet" href="css/case-toc.css?v=3">
+<link rel="stylesheet" href="css/signpost.css?v=55">
 <link rel="stylesheet" href="css/hero-lines.css?v=3">
+<link rel="stylesheet" href="css/case-study.css?v=8">
 </head>
 <!-- CASE STUDY PAGE — built from the shared template (see
      project-eur-gbp-global-accounts.html for the fully-annotated
@@ -33,7 +34,7 @@
      ("What I Did" as the fuller bullet list), The Results (no side
      image, .cs-results-solo), then a "Wins" row of two testimonial
      cards (.cs-wins) before More Projects. -->
-<body data-page="work" style="--cs-accent: var(--indigo);">
+<body data-page="work" class="cs-page">
 
 <div class="page-transition" aria-hidden="true">
   <div class="transition-card transition-card--accent"></div>
@@ -73,9 +74,9 @@
        needed to see it. -->
   <section class="cs-hero" id="overview" data-toc="Overview">
     <div class="section-inner">
-      <div class="cs-hero-logo exp-logo" aria-label="Onboard"><img width="160" height="160" src="assets/images/logos/onboard.jpg" alt="Onboard logo"></div>
       <div class="cs-hero-top">
         <div class="cs-hero-copy">
+          <div class="cs-hero-logo exp-logo" aria-label="Onboard"><img width="160" height="160" src="assets/images/logos/onboard.jpg" alt="Onboard logo"></div>
           <h1 class="cs-headline">Building the Feedback Engine Behind Onboard's Features</h1>
           <p class="cs-subdesc">Launched &amp; managed a community of product testers who validated new features before they ever reached the public</p>
           <div class="cs-hero-stats">
@@ -127,7 +128,8 @@
   </section>
 
   <!-- 5. CHALLENGES -->
-  <section class="cs-pullquote-section" id="challenge" data-toc="Challenge">
+  <div class="cs-narrative">
+  <section class="cs-panel cs-pullquote-section" id="challenge" data-toc="Challenge">
     <div class="section-inner">
       <div class="cs-pullquote-row">
         <div class="cs-pullquote-picture">
@@ -143,11 +145,13 @@
   </section>
 
   <!-- 6. OUR APPROACH — full-width text with "What I Did" as the fuller bullet list. -->
-  <section class="cs-approach-section" id="our-approach" data-toc="Our Approach">
+  <section class="cs-panel cs-approach-section" id="our-approach" data-toc="Our Approach">
     <div class="section-inner">
+      <div class="cs-approach-intro">
       <p class="cs-section-label">Our Approach</p>
       <h2 class="cs-section-heading">We turned testers into co-builders</h2>
       <p class="cs-section-intro">We built a community of verified product testers who got early access to new features and gave honest, structured feedback and raw ideas alongside</p>
+      </div>
 
       <div class="cs-approach-did">
         <h3 class="cs-approach-did-heading">What I Did</h3>
@@ -162,9 +166,10 @@
 
     </div>
   </section>
+  </div>
 
   <!-- 7. THE RESULTS — single column, no side image (.cs-results-solo). -->
-  <section class="cs-results-section cs-results-section--dark-stats" id="the-results" data-toc="The Results">
+  <section class="cs-panel cs-results-section" id="the-results" data-toc="The Results">
     <div class="section-inner">
       <div class="cs-results-solo">
         <p class="cs-section-label">Results</p>
@@ -182,7 +187,7 @@
           </div>
         </div>
       </div>
-      <nav class="cs-results-links cs-results-links--centred" aria-label="Related links">
+      <nav class="cs-results-links" aria-label="Related links">
         <a class="cs-results-pill cs-results-pill--purple" href="https://x.com/_WillOG/status/2060061523838370031?a=JhV2-yjtCvCfqNYbi1Y&amp;s=20" target="_blank" rel="noopener">Impact</a>
         <a class="cs-results-pill cs-results-pill--periwinkle" href="https://x.com/YeleBademosi/status/1965008757865185619?a=WPwwz37Yr3i8y26wzQ8&amp;s=20" target="_blank" rel="noopener">Announcement post</a>
         <a class="cs-results-pill cs-results-pill--navy" href="https://x.com/Decim8e/status/2014537725152497875" target="_blank" rel="noopener">Feedback</a>
@@ -198,7 +203,7 @@
     <p class="cs-section-intro">Some of our testers didn&rsquo;t just help us build. They built their own careers along the way.</p>
   </div>
 
-  <section class="cs-wins-section" id="wins" data-toc="Wins">
+  <section class="cs-panel cs-wins-section" id="wins" data-toc="Wins">
     <div class="section-inner">
       <ul class="cs-wins">
         <li class="cs-win"><img src="assets/images/test-pilots-wins/win-1.webp" width="1100" height="1372" alt="Onboard Test Pilots chat: a tester shares a payout for a testing gig and says Onboard taught them to test a product and paid them for it" loading="lazy" decoding="async"></li>
@@ -208,7 +213,7 @@
   </section>
 
   <!-- 8. MORE PROJECTS -->
-  <section class="cs-more-projects">
+  <section class="cs-panel cs-more-projects">
     <div class="section-inner">
       <h2 class="section-heading">Another project?</h2>
 
@@ -298,9 +303,10 @@
 </main>
 
 <script src="js/script.js?v=122"></script>
-<script src="js/case-toc.js?v=1"></script>
+<script src="js/case-toc.js?v=2"></script>
+<script src="js/case-study.js?v=2"></script>
 <script src="js/signpost.js?v=1"></script>
-<script src="js/music-keep.js?v=25"></script>
+<script src="js/music-keep.js?v=26"></script>
 <script src="js/fx.js?v=18"></script>
 <script src="js/hero-lines.js?v=5"></script>
 </body>

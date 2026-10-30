@@ -21,11 +21,12 @@
 <meta name="twitter:title" content="Onboard Business Pivot — Ifeoluwa Taiwo">
 <meta name="twitter:description" content="Leading product, content, and brand marketing for Onboard's launch into B2B global payments.">
 <meta name="twitter:image" content="https://ifeoluwaport.vercel.app/assets/images/og-image.jpg">
-<link rel="stylesheet" href="css/style.css?v=569">
+<link rel="stylesheet" href="css/style.css?v=571">
 <link rel="stylesheet" href="css/fx.css?v=9">
-<link rel="stylesheet" href="css/case-toc.css?v=2">
-<link rel="stylesheet" href="css/signpost.css?v=54">
+<link rel="stylesheet" href="css/case-toc.css?v=3">
+<link rel="stylesheet" href="css/signpost.css?v=55">
 <link rel="stylesheet" href="css/hero-lines.css?v=3">
+<link rel="stylesheet" href="css/case-study.css?v=8">
 </head>
 <!-- CASE STUDY PAGE — built from the shared template (see
      project-eur-gbp-global-accounts.html for the fully-annotated
@@ -41,7 +42,7 @@
        sits between Our Approach and The Results — see the "PRODUCTS
        LAUNCHED" block in css/style.css and initProductTabs in
        js/script.js for the interactive hover/tap-to-switch behavior. -->
-<body data-page="work" style="--cs-accent: var(--blue);">
+<body data-page="work" class="cs-page">
 
 <div class="page-transition" aria-hidden="true">
   <div class="transition-card transition-card--accent"></div>
@@ -81,9 +82,9 @@
        needed to see it. -->
   <section class="cs-hero" id="overview" data-toc="Overview">
     <div class="section-inner">
-      <div class="cs-hero-logo exp-logo" aria-label="Onboard"><img width="160" height="160" src="assets/images/logos/onboard.jpg" alt="Onboard logo"></div>
       <div class="cs-hero-top">
         <div class="cs-hero-copy">
+          <div class="cs-hero-logo exp-logo" aria-label="Onboard"><img width="160" height="160" src="assets/images/logos/onboard.jpg" alt="Onboard logo"></div>
           <h1 class="cs-headline">Building Onboard's Cross-Border Payments Products for Businesses</h1>
           <p class="cs-subdesc">Led product, content and brand marketing for Onboard's launch into B2B global payments.</p>
           <div class="cs-hero-stats">
@@ -135,7 +136,8 @@
   </section>
 
   <!-- 5. CHALLENGES -->
-  <section class="cs-pullquote-section" id="challenge" data-toc="Challenge">
+  <div class="cs-narrative">
+  <section class="cs-panel cs-pullquote-section" id="challenge" data-toc="Challenge">
     <div class="section-inner">
       <div class="cs-pullquote-row">
         <div class="cs-pullquote-picture">
@@ -157,11 +159,13 @@
   <!-- 6. OUR APPROACH — full-width text (no side-by-side pair on this
        page), "What I Did" as the fuller bullet list, then one
        full-width supporting image below the bullets. -->
-  <section class="cs-approach-section" id="our-approach" data-toc="Our Approach">
+  <section class="cs-panel cs-approach-section" id="our-approach" data-toc="Our Approach">
     <div class="section-inner">
+      <div class="cs-approach-intro">
       <p class="cs-section-label">Our Approach</p>
       <h2 class="cs-section-heading">Consumer trust turned into infrastructure for businesses</h2>
       <p class="cs-section-intro">We took everything that made Onboard trusted by individual professionals and rebuilt it as infrastructure businesses could use directly</p>
+      </div>
 
       <div class="cs-approach-did">
         <h3 class="cs-approach-did-heading">What I Did</h3>
@@ -176,12 +180,13 @@
       </div>
     </div>
   </section>
+  </div>
 
   <!-- NEW: PRODUCTS LAUNCHED — interactive tabs card (vanilla port of
        a Framer "Tabs card" component). Hover a tab on desktop, or tap
        it on mobile, to switch the active square image — see
        initProductTabs in script.js. -->
-  <section class="cs-products-section" id="products-launched" data-toc="Products Launched">
+  <section class="cs-panel cs-products-section" id="products-launched" data-toc="Products Launched">
     <div class="section-inner">
       <p class="cs-section-label">Products Launched</p>
       <h2 class="cs-section-heading">Four products, built on one platform</h2>
@@ -220,12 +225,11 @@
           </div>
         </div>
       </div>
-    </div>
   </section>
 
   <!-- BLOG ARTICLES — cover images of Onboard blog posts in a seamless,
        auto-scrolling, draggable strip (initAutoStrips), then a CTA to the blog. -->
-  <section class="cs-articles-section" id="blog-articles" data-toc="Blog Articles">
+  <section class="cs-panel cs-articles-section" id="blog-articles" data-toc="Blog Articles">
     <div class="section-inner cs-articles-inner">
       <p class="cs-section-label">Blog</p>
       <h2 class="cs-section-heading">Onboard Business articles</h2>
@@ -246,13 +250,13 @@
   </section>
 
   <!-- DECKS — the two decks side by side: the sales deck cover and the Q3 2026 Product Report cover. -->
-  <div class="cs-decks-head">
+  <section class="cs-panel cs-decks-section" id="decks" data-toc="Decks">
+    <div class="section-inner cs-decks-inner">
+      <div class="cs-decks-head">
     <p class="cs-section-label">Decks</p>
     <h2 class="cs-section-heading">The decks we sell with</h2>
     <p class="cs-section-intro">The sales deck that took Onboard Business to market, and the Q3 product report that tracked what came after 3 months.</p>
-  </div>
-  <section class="cs-decks-section" id="decks" data-toc="Decks">
-    <div class="section-inner cs-decks-inner">
+      </div>
       <ul class="cs-decks">
         <li class="cs-deck">
           <img src="assets/images/deck-sales-deck.webp" width="1600" height="900" alt="Onboard Business sales deck cover: stablecoin liquidity, FX and cross-border payments infrastructure for Africa and beyond" loading="lazy" decoding="async">
@@ -267,7 +271,7 @@
   </section>
 
   <!-- 7. THE RESULTS — single centred column, no side image (.cs-results-solo). -->
-  <section class="cs-results-section cs-results-section--dark-stats" id="the-results" data-toc="The Results">
+  <section class="cs-panel cs-results-section" id="the-results" data-toc="The Results">
     <div class="section-inner">
       <div class="cs-results-solo">
         <p class="cs-section-label">Results</p>
@@ -297,7 +301,7 @@
   </section>
 
   <!-- 8. MORE PROJECTS -->
-  <section class="cs-more-projects">
+  <section class="cs-panel cs-more-projects">
     <div class="section-inner">
       <h2 class="section-heading">Another project?</h2>
 
@@ -387,9 +391,10 @@
 </main>
 
 <script src="js/script.js?v=122"></script>
-<script src="js/case-toc.js?v=1"></script>
+<script src="js/case-toc.js?v=2"></script>
+<script src="js/case-study.js?v=2"></script>
 <script src="js/signpost.js?v=1"></script>
-<script src="js/music-keep.js?v=25"></script>
+<script src="js/music-keep.js?v=26"></script>
 <script src="js/fx.js?v=18"></script>
 <script src="js/hero-lines.js?v=5"></script>
 </body>

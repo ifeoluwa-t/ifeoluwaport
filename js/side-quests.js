@@ -231,15 +231,17 @@
       var t = ++token;
       function apply() {
         if (t !== token) return;                               // a newer picture was chosen meanwhile
-        spanA.getAnimations && spanA.getAnimations().forEach(function (a) { a.cancel(); });
-        spanB.getAnimations && spanB.getAnimations().forEach(function (a) { a.cancel(); });
+        // the new picture sits fully opaque underneath; the old one (on top) fades out over it, so the
+        // background never shows through mid-fade. A quick second pick carries on from where the fade is.
+        var running = spanB.getAnimations ? spanB.getAnimations() : [];
+        var from = running.length ? getComputedStyle(spanB).opacity : 1;   // mid-fade: carry on from here; otherwise start fully shown
+        running.forEach(function (a) { a.cancel(); });
         imgB.src = imgA.src || d.src;
         imgA.src = d.src;
         imgA.alt = d.alt || d.title;
         photo.style.setProperty('--ar', (d.w / d.h).toFixed(4));
-        if (prev >= 0 && !reduce.matches && spanA.animate) {
-          spanA.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 450, easing: 'ease-in-out' });
-          spanB.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 450, easing: 'ease-in-out' });
+        if (prev >= 0 && !reduce.matches && spanB.animate) {
+          spanB.animate([{ opacity: from }, { opacity: 0 }], { duration: 450, easing: 'ease-in-out' });
         }
       }
       var im = imgCache[d.src];

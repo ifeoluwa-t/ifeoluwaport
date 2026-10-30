@@ -112,24 +112,63 @@
 /* Anchored sections stop clear of the fixed nav. */
 [data-toc] { scroll-margin-top: 90px; }
 
-/* Wide enough to sit in the left margin without touching the content:
-   an always-open sidebar, near the top like a table of contents. */
-@media (min-width: 1580px) {
+/* Desktop and laptop (1280px and up): a slim rail of ticks down the left edge, one per section.
+   The current section is the blue tick. Hovering or focusing a tick shows its name beside it, so
+   the rail never sits over the page content. */
+@media (min-width: 1280px) {
   .cs-toc-toggle { display: none; }
   .cs-toc {
-    left: 24px;
-    top: 120px;
+    left: 14px;
+    top: 50%;
     bottom: auto;
-    width: 200px;
-    max-height: calc(100vh - 150px);
+    width: auto;
+    max-width: none;
+    max-height: none;
+    padding: 0;
+    gap: 0;
     background: transparent;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     box-shadow: none;
-    padding: 0;
-    transform: none;
+    transform: translateY(-50%);
   }
   .cs-toc-on .cs-toc { opacity: 1; visibility: visible; pointer-events: auto; }
+  .cs-toc-back, .cs-toc-label { display: none; }
+  .cs-toc-list { gap: 12px; }
+  .cs-toc-link {
+    position: relative;
+    width: 22px;
+    height: 6px;
+    padding: 0;
+    border-radius: 3px;
+    background: rgba(12, 0, 84, 0.22);
+    color: transparent;
+    font-size: 0;
+  }
+  .cs-toc-link:hover,
+  .cs-toc-link:focus-visible { background: rgba(12, 0, 84, 0.45); }
+  .cs-toc-link.is-active { width: 30px; background: var(--blue); }
+  .cs-toc-link::after {
+    content: attr(data-label);
+    position: absolute;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 0 0 1.5px var(--navy);
+    color: var(--navy);
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  .cs-toc-link:hover::after,
+  .cs-toc-link:focus-visible::after { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {

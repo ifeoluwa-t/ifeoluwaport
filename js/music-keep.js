@@ -51,7 +51,8 @@
     ['Live Life', 'Show Dem Camp & Tems', 'gxXMhMApfW0', 'Alté'],
     ['Gratitude', 'Anendlessocean', 'LzAdpgIOzXI', 'Worship'],
     ['War In Ba Sing Se', 'J0vanny', 'GfKmLnQhqBU', 'Electronic'],
-    ['Everywhere, Everything', 'Noah Kahan & Gracie Abrams', 'dJPdkhsr0gU', 'Folk']
+    ['Everywhere, Everything', 'Noah Kahan & Gracie Abrams', 'dJPdkhsr0gU', 'Folk'],
+    ['Come and Get Your Love', 'Redbone', 'BA4rSO-h9Io', 'Rock']
   ];
   // The nav-bar music icon starts one of these three, alternating between them. After that the
   // rest of the playlist plays on shuffle whenever next is pressed (or a song ends).

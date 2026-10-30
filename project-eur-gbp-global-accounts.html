@@ -21,11 +21,12 @@
 <meta name="twitter:title" content="EUR/GBP Global Accounts — Ifeoluwa Taiwo">
 <meta name="twitter:description" content="Turning currency friction into Onboard's neobank moment — owning the launch of EUR and GBP accounts.">
 <meta name="twitter:image" content="https://ifeoluwaport.vercel.app/assets/images/og-image.jpg">
-<link rel="stylesheet" href="css/style.css?v=569">
+<link rel="stylesheet" href="css/style.css?v=571">
 <link rel="stylesheet" href="css/fx.css?v=9">
-<link rel="stylesheet" href="css/case-toc.css?v=2">
-<link rel="stylesheet" href="css/signpost.css?v=54">
+<link rel="stylesheet" href="css/case-toc.css?v=3">
+<link rel="stylesheet" href="css/signpost.css?v=55">
 <link rel="stylesheet" href="css/hero-lines.css?v=3">
+<link rel="stylesheet" href="css/case-study.css?v=8">
 </head>
 <!-- CASE STUDY PAGE TEMPLATE
      One page per Featured Project, modeled on sanjaya.framer.ai/projects.
@@ -39,7 +40,7 @@
      cards. Every major section pairs one big square image with its
      text, alternating sides (hero: image right, challenges: image
      left, approach: image right, results: image left). -->
-<body data-page="work" style="--cs-accent: var(--indigo);">
+<body data-page="work" class="cs-page">
 
 <div class="page-transition" aria-hidden="true">
   <div class="transition-card transition-card--accent"></div>
@@ -80,9 +81,9 @@
        it), so nothing here needs scrolling to see. -->
   <section class="cs-hero" id="overview" data-toc="Overview">
     <div class="section-inner">
-      <div class="cs-hero-logo exp-logo" aria-label="Onboard"><img width="160" height="160" src="assets/images/logos/onboard.jpg" alt="Onboard logo"></div>
       <div class="cs-hero-top">
         <div class="cs-hero-copy">
+          <div class="cs-hero-logo exp-logo" aria-label="Onboard"><img width="160" height="160" src="assets/images/logos/onboard.jpg" alt="Onboard logo"></div>
           <h1 class="cs-headline">Launching EUR &amp; GBP Accounts for People Paid Across Borders</h1>
           <p class="cs-subdesc">Owned end-to-end product marketing of EUR and GBP accounts launch for global professionals</p>
           <div class="cs-hero-stats">
@@ -135,7 +136,8 @@
 
   <!-- 5. CHALLENGES — a big square image on the left, as conspicuous
        as the hero image, with a small "Challenge" tag above the quote. -->
-  <section class="cs-pullquote-section" id="challenge" data-toc="Challenge">
+  <div class="cs-narrative">
+  <section class="cs-panel cs-pullquote-section" id="challenge" data-toc="Challenge">
     <div class="section-inner">
       <div class="cs-pullquote-row">
         <div class="cs-pullquote-slides cs-pullquote-slides--stacked" data-slideshow data-interval="2000">
@@ -153,11 +155,13 @@
 
   <!-- 6. OUR APPROACH — full-width text with "What I Did" as the fuller
        bullet list (no side image). -->
-  <section class="cs-approach-section" id="our-approach" data-toc="Our Approach">
+  <section class="cs-panel cs-approach-section" id="our-approach" data-toc="Our Approach">
     <div class="section-inner">
+      <div class="cs-approach-intro">
       <p class="cs-section-label">Our Approach</p>
       <h2 class="cs-section-heading">We gave people a direct path from earning to spending</h2>
       <p class="cs-section-intro">We built EUR and GBP accounts so professionals could finally receive funds and send money out in the currency they want to.</p>
+      </div>
 
       <div class="cs-approach-did">
         <h3 class="cs-approach-did-heading">What I Did</h3>
@@ -171,13 +175,14 @@
       </div>
     </div>
   </section>
+  </div>
 
   <!-- LAUNCH CREATIVE — the five launch posters in one straight horizontal
        line that scrolls by itself and can be dragged (initAutoStrips),
        straight on from Our Approach. -->
-  <p class="cs-section-label cs-carousel-label">Launch carousel</p>
-  <section class="cs-posters-section" id="launch-creative" data-toc="Launch Creative">
+  <section class="cs-panel cs-posters-section" id="launch-creative" data-toc="Launch Creative">
     <div class="section-inner cs-posters-inner">
+      <p class="cs-section-label cs-carousel-label">Launch carousel</p>
       <div class="cs-screens-viewport cs-posters-viewport" data-autoscroll aria-label="Launch posters, scrolling automatically; drag to move">
         <div class="cs-screens-track">
           <figure class="cs-poster"><img src="assets/images/eur-gbp-posters/paid-in-eur-gbp.webp" width="800" height="1000" alt="Paid in EUR or GBP? Onboard poster: a hand holding a phone showing GBP and EUR accounts" loading="lazy" decoding="async"></figure>
@@ -191,7 +196,7 @@
   </section>
 
   <!-- 7. THE RESULTS — single centred column, no side image (.cs-results-solo). -->
-  <section class="cs-results-section cs-results-section--dark-stats" id="the-results" data-toc="The Results">
+  <section class="cs-panel cs-results-section" id="the-results" data-toc="The Results">
     <div class="section-inner">
       <div class="cs-results-solo">
         <p class="cs-section-label">Results</p>
@@ -209,7 +214,7 @@
           </div>
         </div>
       </div>
-      <nav class="cs-results-links cs-results-links--three" aria-label="Related links">
+      <nav class="cs-results-links" aria-label="Related links">
         <a class="cs-results-pill cs-results-pill--navy" href="https://x.com/OnboardGlobal/status/2046216287378923732?a=PPSQiZIAtZpL1ZrEI6s&s=20" target="_blank" rel="noopener">Launch video</a>
         <a class="cs-results-pill cs-results-pill--periwinkle" href="https://www.onboard.xyz/post/how-to-receive-eur-gbp-payments-easily-a-better-way-for-remote-workers-freelancers" target="_blank" rel="noopener">Launch blog</a>
         <a class="cs-results-pill cs-results-pill--blue" href="https://www.youtube.com/watch?v=RfwaeAjSYxM&list=PLPGn24wW9Wcg&index=8" target="_blank" rel="noopener">Guide video</a>
@@ -218,7 +223,7 @@
   </section>
 
   <!-- 8. MORE PROJECTS -->
-  <section class="cs-more-projects">
+  <section class="cs-panel cs-more-projects">
     <div class="section-inner">
       <h2 class="section-heading">Another project?</h2>
 
@@ -308,9 +313,10 @@
 </main>
 
 <script src="js/script.js?v=122"></script>
-<script src="js/case-toc.js?v=1"></script>
+<script src="js/case-toc.js?v=2"></script>
+<script src="js/case-study.js?v=2"></script>
 <script src="js/signpost.js?v=1"></script>
-<script src="js/music-keep.js?v=25"></script>
+<script src="js/music-keep.js?v=26"></script>
 <script src="js/fx.js?v=18"></script>
 <script src="js/hero-lines.js?v=5"></script>
 </body>
