@@ -1,0 +1,69 @@
+/* ============================================
+   LANDING HERO, desktop (1024px and up).
+   The design reference is a 1512x860 viewport. Every size below is that layout multiplied by one shared
+   scale, worked out from the viewport's width AND height (see the small script in the head of index.html):
+
+     --hn  the name, "hi, i'm" and all the vertical spacing
+     --hp  the photo
+     --hc  the two card groups (left card, right buttons): never smaller than 0.82 so their text stays readable
+     --hh  the hero's height in px (the photo always ends on the hero's bottom edge)
+
+   On a wide, short screen the name and the spacing shrink a little more than the photo, so the photo keeps
+   close to its reference size. Growth stops at the size reached at 1920x950; beyond that the hero keeps that
+   size and sits centred. Below 1024px nothing here applies (phone and tablet heroes are untouched).
+============================================ */
+@media (min-width: 1024px) {
+  .hero {
+    padding: 0 24px;
+    height: var(--hh, 860px);
+    min-height: 0;
+  }
+  .hero .hero-inner {
+    zoom: 1;
+    height: 100%;
+    min-height: 0;
+    max-width: calc(1180px * var(--hn, 1));
+    padding-top: calc(110px * var(--hn, 1));
+  }
+  .hero .hero-heading { transform: translateY(calc(47.244px * var(--hn, 1))); }
+  .hero .hero-kicker {
+    font-size: calc(19.2px * var(--hn, 1));
+    line-height: calc(29px * var(--hn, 1));
+  }
+  .hero .hero-name {
+    font-size: calc(288px * var(--hn, 1));
+    margin-top: calc(-6px * var(--hn, 1));
+  }
+
+  /* The photo stands on the hero's bottom edge; its head sits on the page's centre line. */
+  .hero .hero-row {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+  }
+  .hero .hero-photo {
+    width: calc(564.868px * var(--hp, 1));
+    transform: translateX(calc(-17.79px * var(--hp, 1)));
+  }
+
+  /* The hero's own text sizes are fixed px, so they follow the hero's scale and not the page's larger type on wide screens */
+  .hero .hero-oneliner, .hero .hero-cta-btn { font-size: 19.2px; }
+  .hero .hero-worked-at-label { font-size: 11.52px; }
+
+  /* Left card starts where the name's first letter starts; right buttons end where its last letter ends.
+     (34px and 36px are the gaps between the name's box and its drawn letters at the reference size.) */
+  .hero .hero-left-stack {
+    top: calc(474.1px * var(--hn, 1));
+    left: calc(34px * var(--hn, 1));
+    right: auto;
+    margin-top: 0;
+    scale: var(--hc, 1);
+    transform-origin: 0 0;
+  }
+  .hero .hero-cta {
+    top: calc(490.1px * var(--hn, 1));
+    right: calc(36px * var(--hn, 1));
+    left: auto;
+    scale: var(--hc, 1);
+    transform-origin: 100% 0;
+  }
+}

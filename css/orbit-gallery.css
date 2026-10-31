@@ -1,5 +1,5 @@
-/* Events (landing page): a ring of pictures from my events that turns slowly; drag it to spin it,
-   tap a picture to see it bigger in the middle. Built by js/orbit-gallery.js. */
+/* Events (landing page): a ring of pictures from my events that steps round by itself; the picture on the anchor pops up
+   large in the featured card beside it (tap one to feature it, drag to spin). Built by js/orbit-gallery.js. */
 .events { background: #fff; padding: clamp(40px, 6vw, 64px) 0 clamp(40px, 6vw, 72px); overflow-x: clip; }   /* the space under the button belongs to the white section, so no strip of page colour shows before the footer */
 .og-sub { margin: 10px auto 0; max-width: 560px; text-align: center; text-wrap: balance; font-size: clamp(1rem, 1.6vw, 1.15rem); line-height: 1.5; color: rgba(12, 0, 84, 0.72); }
 .og {
@@ -35,8 +35,7 @@
 .og-card img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
 @media (hover: hover) { .og-card:hover { box-shadow: 0 0 0 3px var(--blue), 0 14px 26px -10px rgba(0, 82, 255, 0.5); } }   /* an outline only: nothing grows or moves */
 .og-card:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
-.og.has-focus .og-card { opacity: 0.55; }
-.og.has-focus .og-card.is-picked { opacity: 0.2; }
+.og-card.is-featured { box-shadow: 0 0 0 3px var(--blue), 0 14px 26px -10px rgba(0, 82, 255, 0.5); }
 
 /* the middle of the ring */
 .og-centre {
@@ -52,23 +51,6 @@
 }
 .og-guide { display: flex; flex-direction: column; align-items: center; gap: 10px; transition: opacity 0.25s ease; }
 .og-guide p { margin: 0; font-size: clamp(0.8rem, 1.5vw, 1rem); font-weight: 500; line-height: 1.45; color: rgba(12, 0, 84, 0.72); }
-.og.has-focus .og-guide { opacity: 0; }
-
-.og-focus { position: absolute; inset: 0; margin: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
-.og-focus[hidden] { display: none; }
-/* the picture at its own shape (nothing cropped), dead centre of the ring */
-.og-focus img { display: block; flex: none; object-fit: contain; pointer-events: auto; cursor: pointer; border-radius: 16px; box-shadow: 0 0 0 2px var(--periwinkle), 0 22px 40px -12px rgba(12, 0, 84, 0.45); }
-
-/* the words sit outside the picture, under the ring */
-.og-caption { min-height: 3.6em; margin: clamp(6px, 1.4vw, 14px) auto 0; max-width: 780px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); align-items: center; gap: 0 22px; }
-.og-caption strong { justify-self: end; text-align: right; font-family: var(--font-display); font-weight: 400; font-size: clamp(1.1rem, 2.6vw, 1.6rem); line-height: 1.05; color: var(--blue); }
-.og-caption span { justify-self: start; text-align: left; padding-left: 22px; border-left: 2px solid var(--periwinkle); font-size: clamp(0.85rem, 1.5vw, 1rem); line-height: 1.4; color: rgba(12, 0, 84, 0.75); }
-.og-caption strong:empty, .og-caption span:empty { visibility: hidden; }
-@media (max-width: 560px) {
-  .og-caption { grid-template-columns: minmax(0, 1fr); gap: 4px; text-align: center; }
-  .og-caption strong { justify-self: center; text-align: center; }
-  .og-caption span { justify-self: center; text-align: center; padding-left: 0; border-left: 0; }
-}
 
 .og-cta { margin: 18px 0 0; text-align: center; }
 
@@ -79,22 +61,43 @@
 .og:not(.is-ready) .og-centre { display: none; }
 @media (prefers-reduced-motion: reduce) { .og-card { transition: none; } }
 
-/* Wide screens: the heading and its line on the left of the wheel, and the topic + line of the opened
-   picture on the right. Narrower screens stack: heading on top, the words under the ring. */
-.og-detail { display: none; }
+/* Wide screens: the heading and its line on the left, the wheel in the middle and the featured picture on the right.
+   Narrower screens stack them: heading, wheel, then the featured picture full width underneath. */
 @media (min-width: 1100px) {
-  .og-layout { display: grid; grid-template-columns: minmax(190px, 1fr) minmax(0, 760px) minmax(190px, 1fr); align-items: center; column-gap: 56px; }
-  .og-intro { text-align: left; margin-left: -28px; }   /* a little further left, away from the wheel */
+  .og-layout { display: grid; grid-template-columns: minmax(190px, 0.8fr) minmax(0, 1.55fr) minmax(250px, 1.05fr); align-items: center; column-gap: clamp(28px, 3.4vw, 52px); }
+  .og-intro { text-align: left; }
   .og-intro .section-heading-row { justify-content: flex-start; text-align: left; }
   .og-intro .og-sub { margin: 12px 0 0; max-width: 340px; font-size: 1rem; text-align: left; text-wrap: balance; }   /* two lines */
   .og-intro .og-cta { text-align: left; }
   .og-layout .og { margin-top: 0; }
-  .og-caption { visibility: hidden; min-height: 0; height: 0; margin: 0; overflow: hidden; }
-  .og-detail { display: flex; flex-direction: column; gap: 10px; text-align: left; max-width: 280px; }
-  .og-detail strong { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.6rem, 2.6vw, 2.3rem); line-height: 1.04; color: var(--blue); }
-  .og-detail span { font-size: 1.05rem; line-height: 1.5; color: rgba(12, 0, 84, 0.78); }
-  .og-detail strong:empty, .og-detail span:empty { display: none; }
 }
+
+/* The featured picture: the same rounded corners and 3D layer as the cards above, the event name under it. */
+.og-feature { --ar: 1; margin: 18px auto 0; width: 100%; max-width: 640px; display: flex; flex-direction: column; align-items: center; gap: 16px; min-width: 0; }
+.og-feature[hidden] { display: none; }
+.og-feature-card {
+  position: relative; display: block; flex: none;
+  width: 100%;
+  aspect-ratio: var(--ar);
+  border-radius: var(--card-radius, 20px);
+  background: var(--periwinkle);
+  transition: width 0.45s cubic-bezier(0.3, 0.7, 0.2, 1), aspect-ratio 0.45s cubic-bezier(0.3, 0.7, 0.2, 1);
+  cursor: pointer;
+}
+.og-feature-card:focus-visible { outline: 3px solid var(--blue); outline-offset: 6px; }
+.og-feature-a, .og-feature-b { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; }
+.og-feature-b { opacity: 0; }                    /* the previous picture, only shown while it fades out */
+.og-feature-a img, .og-feature-b img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.og-feature-name { width: 100%; text-align: center; display: flex; flex-direction: column; gap: 6px; }
+.og-feature-name strong { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.3rem, 2.6vw, 2rem); line-height: 1.05; color: var(--blue); }
+.og-feature-name span { font-size: clamp(0.85rem, 1.5vw, 1rem); line-height: 1.4; color: rgba(12, 0, 84, 0.75); text-wrap: balance; }
+.og-feature-name strong:empty, .og-feature-name span:empty { display: none; }
+@media (min-width: 1100px) {
+  .og-feature { margin-top: 0; max-width: none; }
+  /* as large as fits the screen's height, at the picture's own shape */
+  .og-feature-card { width: min(100%, calc(min(54svh, 480px) * var(--ar))); }
+}
+@media (prefers-reduced-motion: reduce) { .og-feature-card { transition: none; } }
 
 /* the fidget spinner in the middle: it turns with the ring (faster), and wobbles until someone first spins it */
 .og-spin { position: relative; width: clamp(112px, 12vw, 190px); aspect-ratio: 1; }
@@ -105,5 +108,4 @@
 @keyframes ogWobble { 0%, 100% { transform: rotate(-9deg) scale(1); } 50% { transform: rotate(9deg) scale(1.05); } }
 
 .og-spin { pointer-events: auto; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.og.has-focus .og-spin { pointer-events: none; }
 .og-spark { position: absolute; left: 50%; top: 50%; pointer-events: none; opacity: 0; }

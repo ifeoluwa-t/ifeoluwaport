@@ -276,6 +276,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const desktop = window.matchMedia('(min-width: 901px)');
 
     function align() {
+      /* From 1024px up the hero is laid out in CSS from one shared scale (css/hero-fit.css), so nothing is measured or
+         positioned here; clear anything an earlier run left behind. */
+      if (window.innerWidth >= 1024) {
+        card.style.left = ''; card.style.right = ''; card.style.top = '';
+        stack.style.left = ''; stack.style.right = ''; stack.style.top = '';
+        photo.style.width = ''; photo.style.transform = '';
+        kicker.style.left = '';
+        document.documentElement.style.setProperty('--hero-zoom', '1');
+        return;
+      }
       if (!desktop.matches) {
         card.style.left = '';
         card.style.right = '';
