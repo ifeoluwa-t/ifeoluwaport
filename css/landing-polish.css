@@ -8,36 +8,8 @@
    - company logo tooltips in the hero
 ============================================ */
 
-/* ---------- tokens ---------- */
-body[data-page="home"] {
-  --container: 1180px;
-  --section-gap: 120px;      /* the white space between one section and the next */
-  --card-radius: 20px;       /* every card on this page */
-  --edge: #b6caf5;           /* the 3D layer's light sides ... */
-  --edge-deep: #7fa2ee;      /* ... and its outer edge */
-  background: #fff;          /* no pale hairline can show between two white sections */
-}
-@media (max-width: 1023px) { body[data-page="home"] { --section-gap: 80px; } }
-@media (max-width: 640px)  { body[data-page="home"] { --section-gap: 56px; } }
-/* wide screens: a modestly larger container, and the type (rem) grows with it */
-@media (min-width: 1920px) {
-  html:has(body[data-page="home"]) { font-size: 112%; }
-  body[data-page="home"] { --container: 1320px; --section-gap: 134px; }
-}
-@media (min-width: 2400px) {
-  html:has(body[data-page="home"]) { font-size: 122%; }
-  body[data-page="home"] { --container: 1440px; --section-gap: 146px; }
-}
-
-/* ---------- one left and right edge ---------- */
-/* The container's edges are 24px in from a narrow screen's sides, and the container's own edges on wide ones.
-   The logo, the email pill, every heading, the text, the cards, the pale boxes and the footer all sit on them. */
-body[data-page="home"] .site-header { padding: 0 24px; }
-body[data-page="home"] .header-inner { max-width: var(--container); }
-body[data-page="home"] .section-inner { max-width: calc(var(--container) + 48px); }
-body[data-page="home"] .signpost-footer { padding-left: 24px; padding-right: 24px; }
-body[data-page="home"] .sp-grid,
-body[data-page="home"] .sp-base { max-width: var(--container); }
+/* ---------- landing-only tokens (the shared ones are in css/layout-tokens.css) ---------- */
+body[data-page="home"] { background: #fff; }
 
 /* The two pale boxes are exactly as wide as the container */
 body[data-page="home"] .gw { width: 100%; margin: 8px 0 0; border-radius: 32px; }
@@ -128,36 +100,6 @@ body[data-page="home"] .og-card:hover { box-shadow:
     0 0 0 1px var(--edge), 0 0 0 2px var(--edge), 0 0 0 3px var(--blue), 0 0 0 4px var(--blue),
     0 16px 26px -8px rgba(0, 82, 255, 0.45); }
 body[data-page="home"] .og-card.is-featured { --edge: var(--blue); --edge-deep: var(--blue); }
-
-/* ---------- the reaction game: behind the page, uncovered by the footer ---------- */
-html.has-curtain .page-layer {
-  position: relative;
-  z-index: 2;
-  background: #fff;
-  margin-bottom: var(--game-h, 0px);                       /* as tall as the game: the footer slides up this far */
-  box-shadow: 0 22px 34px -14px rgba(4, 0, 60, 0.55);      /* a soft shadow falls on the game as the curtain lifts */
-}
-html.has-curtain .games.games--landing {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  z-index: 1;
-  visibility: hidden;                                      /* can't be clicked or tabbed to while the page covers it */
-  transform: translateY(100%);                             /* and it sits off screen, so its line animation is paused until it is revealed */
-}
-html.has-curtain .games.games--landing.is-revealed { visibility: visible; transform: none; }
-/* the footer's bottom edge: a thin tilted band of the skills strip's blue, so the curtain edge looks meant */
-html.has-curtain .signpost-footer::after {
-  content: "";
-  position: absolute;
-  left: -4vw; right: -4vw;
-  bottom: -6px;
-  height: 14px;
-  background: var(--blue);
-  box-shadow: 0 5px 0 var(--indigo);
-  transform: rotate(-0.8deg);
-  pointer-events: none;
-  z-index: 2;
-}
 
 /* ---------- hero: company logo tooltips ---------- */
 .hero-worked-at-logo { position: relative; overflow: visible; cursor: default; }

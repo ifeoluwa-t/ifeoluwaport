@@ -4,6 +4,20 @@
 <meta charset="UTF-8">
 <script>if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js-reveal');</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+/* Side-Quests top section (900px and up): the wheel and the photo card scale as one pair, from the viewport's width AND height.
+   The reference is a 1512x860 viewport; growth stops at the size reached at 1920x950. See css/side-quests-polish.css. */
+(function () {
+  var d = document.documentElement;
+  function fit() {
+    if (window.innerWidth < 900) { d.style.removeProperty('--su'); return; }
+    var u = Math.min(window.innerWidth / 1512, window.innerHeight / 860, 1.1047);
+    d.style.setProperty('--su', Math.max(0.5, u).toFixed(4));
+  }
+  fit();
+  window.addEventListener('resize', fit);
+})();
+</script>
 <title>Side-Quests | Ifeoluwa Taiwo</title>
 <meta name="description" content="What Ifeoluwa Taiwo gets up to outside of marketing: music, books, comics, sport, birthdays, photography, design and health.">
 <link rel="icon" href="favicon.ico" sizes="any">
@@ -22,12 +36,14 @@
 <meta name="twitter:description" content="What Ifeoluwa Taiwo gets up to outside of marketing: music, books, comics, sport, birthdays, photography, design and health.">
 <meta name="twitter:image" content="https://ifeoluwaport.vercel.app/assets/images/og-image.jpg">
 <link rel="stylesheet" href="css/style.css?v=571">
-<link rel="stylesheet" href="css/fx.css?v=9">
+<link rel="stylesheet" href="css/fx.css?v=10">
+<link rel="stylesheet" href="css/layout-tokens.css?v=1">
 <link rel="stylesheet" href="css/hero-lines.css?v=3">
 <link rel="stylesheet" href="css/side-quests.css?v=125">
 <link rel="stylesheet" href="css/signpost.css?v=55">
 <link rel="stylesheet" href="css/reaction.css?v=5">
-<link rel="stylesheet" href="css/games.css?v=7">
+<link rel="stylesheet" href="css/games.css?v=8">
+<link rel="stylesheet" href="css/side-quests-polish.css?v=9">
 </head>
 <body data-page="side-quests">
 
@@ -63,6 +79,10 @@
 </header>
 
 <main>
+
+  <!-- The raised layer: the whole page down to the footer. The reaction game sits behind it, pinned to the bottom of the screen,
+       and is uncovered as the footer slides up (shared with the landing page: css/layout-tokens.css, js/footer-game.js). -->
+  <div class="page-layer" id="page-layer">
 
   <!-- PART 1: one continuous, auto-scrolling row of equal-height tiles.
        Tile media are striped placeholders; swap each .sq2-tile-media for a real <img loading="lazy"> later. -->
@@ -130,7 +150,7 @@
           <p>Asides marketing, I'm a creative at heart.<br>I plan <button type="button" class="sq2-term" data-quest="events" aria-haspopup="true">events and hangouts</button> for my friends the way I plan launches, with a theme, proper documentation and a flow. I live inside <button type="button" class="sq2-term" data-quest="music" aria-haspopup="true">playlists</button>, <button type="button" class="sq2-term" data-quest="books" aria-haspopup="true">books</button> and <button type="button" class="sq2-term" data-quest="books" aria-haspopup="true">comics</button>. I sometimes design when a project needs it and take <button type="button" class="sq2-term" data-quest="photo" aria-haspopup="true">JPEGs</button> leisurely.</p>
           <p>My training as a <button type="button" class="sq2-term" data-quest="health" aria-haspopup="true">pharmacist</button> has further taught me to explain complicated things simply and I carry that into everything I make.</p>
           <p>Being a side-quester puts me in rooms with people I would never have met otherwise, and that has taught me more about audiences than any report.</p>
-          <p class="sq2-story-kicker"><mark>Side-quests are where many of my best ideas come from</mark></p>
+          <p class="sq2-story-kicker"><mark>Side-quests are where many of my best ideas come&nbsp;from</mark></p>
 
           <div class="sq2-pop" id="sq2-pop" role="dialog" aria-live="polite" hidden></div>
         </div>
@@ -282,6 +302,44 @@
     </div>
   </section>
 
+  <!-- PLAYLISTS I MADE: live names and covers from Spotify (api/playlists.js); the links work even without them -->
+  <section class="sq2-playlists" id="playlists" aria-labelledby="pl-heading">
+    <div class="section-inner">
+      <h2 class="sq2-rotation-heading" id="pl-heading">Playlists I made</h2>
+      <p class="sq2-rotation-sub">Press play on my taste.</p>
+      <ul class="pl-row" id="pl-row">
+        <li class="pl-item pl-item--yellow">
+          <a class="pl-card" href="https://open.spotify.com/playlist/4UBiBzbkyOObMCmcTsZdTo" target="_blank" rel="noopener" aria-label="Open playlist on Spotify" data-id="4UBiBzbkyOObMCmcTsZdTo">
+            <span class="pl-sleeve"><span class="pl-vinyl" aria-hidden="true"></span><span class="pl-cover"><img alt="" width="300" height="300" decoding="async" draggable="false" hidden></span></span>
+            <span class="pl-name">Playlist</span>
+            <span class="pl-pill"><svg class="pl-spot" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#1ED760"/><path d="M5.7 9.1c4.2-1.2 9.4-.9 12.9 1.2M6.4 12.6c3.5-1 7.6-.7 10.6 1M7.2 15.9c2.8-.8 6-.5 8.4.9" fill="none" stroke="#0c0054" stroke-width="1.7" stroke-linecap="round"/></svg><span>Open in Spotify</span></span>
+          </a>
+        </li>
+        <li class="pl-item pl-item--coral">
+          <a class="pl-card" href="https://open.spotify.com/playlist/5jEZ1WxiyDqSyEpgUSdyCX" target="_blank" rel="noopener" aria-label="Open playlist on Spotify" data-id="5jEZ1WxiyDqSyEpgUSdyCX">
+            <span class="pl-sleeve"><span class="pl-vinyl" aria-hidden="true"></span><span class="pl-cover"><img alt="" width="300" height="300" decoding="async" draggable="false" hidden></span></span>
+            <span class="pl-name">Playlist</span>
+            <span class="pl-pill"><svg class="pl-spot" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#1ED760"/><path d="M5.7 9.1c4.2-1.2 9.4-.9 12.9 1.2M6.4 12.6c3.5-1 7.6-.7 10.6 1M7.2 15.9c2.8-.8 6-.5 8.4.9" fill="none" stroke="#0c0054" stroke-width="1.7" stroke-linecap="round"/></svg><span>Open in Spotify</span></span>
+          </a>
+        </li>
+        <li class="pl-item pl-item--lime">
+          <a class="pl-card" href="https://open.spotify.com/playlist/0CvhxTnxu8oEydxP8ocdLw" target="_blank" rel="noopener" aria-label="Open playlist on Spotify" data-id="0CvhxTnxu8oEydxP8ocdLw">
+            <span class="pl-sleeve"><span class="pl-vinyl" aria-hidden="true"></span><span class="pl-cover"><img alt="" width="300" height="300" decoding="async" draggable="false" hidden></span></span>
+            <span class="pl-name">Playlist</span>
+            <span class="pl-pill"><svg class="pl-spot" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#1ED760"/><path d="M5.7 9.1c4.2-1.2 9.4-.9 12.9 1.2M6.4 12.6c3.5-1 7.6-.7 10.6 1M7.2 15.9c2.8-.8 6-.5 8.4.9" fill="none" stroke="#0c0054" stroke-width="1.7" stroke-linecap="round"/></svg><span>Open in Spotify</span></span>
+          </a>
+        </li>
+        <li class="pl-item pl-item--violet">
+          <a class="pl-card" href="https://open.spotify.com/playlist/18MbXOaQsXyCuUdn3FsXQm" target="_blank" rel="noopener" aria-label="Open playlist on Spotify" data-id="18MbXOaQsXyCuUdn3FsXQm">
+            <span class="pl-sleeve"><span class="pl-vinyl" aria-hidden="true"></span><span class="pl-cover"><img alt="" width="300" height="300" decoding="async" draggable="false" hidden></span></span>
+            <span class="pl-name">Playlist</span>
+            <span class="pl-pill"><svg class="pl-spot" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#1ED760"/><path d="M5.7 9.1c4.2-1.2 9.4-.9 12.9 1.2M6.4 12.6c3.5-1 7.6-.7 10.6 1M7.2 15.9c2.8-.8 6-.5 8.4.9" fill="none" stroke="#0c0054" stroke-width="1.7" stroke-linecap="round"/></svg><span>Open in Spotify</span></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
   <!-- SIGNPOST FOOTER -->
   <footer class="signpost-footer" id="site-footer">
   <div class="skills-strip" aria-hidden="true">
@@ -325,8 +383,10 @@
     </div>
   </footer>
 
-  <!-- REACTION SPEED TEST: the tap area on the left, start + results on the right -->
-  <section class="games" id="games" aria-label="Reaction speed test">
+  </div><!-- /.page-layer -->
+
+  <!-- REACTION SPEED TEST: behind the page, uncovered by the footer (a plain section after the footer on small screens, iOS and with reduced motion) -->
+  <section class="games games--landing" id="games" aria-label="Reaction speed test">
     <div class="rx-game">
 
       <div class="rx-left">
@@ -351,29 +411,26 @@
           <p class="rx-claim-msg" id="rx-claim-msg" role="status"></p>
         </form>
 
-        <div class="rx-stats rx-stats--two">
+        <div class="rx-stats rx-stats--grid">
           <div class="rx-stat">
             <p class="rx-stat-label">Your average</p>
-            <p class="rx-stat-value" id="rx-mine">—</p>
+            <p class="rx-stat-value is-empty" id="rx-mine">Play a round</p>
           </div>
           <div class="rx-stat">
             <p class="rx-stat-label">Your best</p>
-            <p class="rx-stat-value" id="rx-best">—</p>
+            <p class="rx-stat-value is-empty" id="rx-best">Play a round</p>
           </div>
-        </div>
-
-        <div class="rx-stats rx-stats--three">
           <div class="rx-stat">
             <p class="rx-stat-label">People who've played</p>
-            <p class="rx-stat-value" id="rx-players-count">—</p>
+            <p class="rx-stat-value is-empty" id="rx-players-count">Be the first to play!</p>
           </div>
           <div class="rx-stat">
             <p class="rx-stat-label">Everyone's average</p>
-            <p class="rx-stat-value" id="rx-everyone">—</p>
+            <p class="rx-stat-value is-empty" id="rx-everyone">Be the first to play!</p>
           </div>
           <div class="rx-stat">
             <p class="rx-stat-label">Fastest ever</p>
-            <p class="rx-stat-value" id="rx-fastest">—</p>
+            <p class="rx-stat-value is-empty" id="rx-fastest">Be the first to play!</p>
           </div>
         </div>
 
@@ -395,9 +452,12 @@
 <script src="js/script.js?v=122"></script>
 <script src="js/music-keep.js?v=26"></script>
 <script src="js/hero-lines.js?v=5"></script>
-<script src="js/side-quests.js?v=68"></script>
+<script src="js/side-quests.js?v=70"></script>
 <script src="js/signpost.js?v=1"></script>
-<script src="js/reaction.js?v=8"></script>
+<script src="js/reaction.js?v=9"></script>
+<script src="js/footer-game.js?v=3"></script>
+<script src="js/playlists.js?v=1"></script>
+<script src="js/side-quests-polish.js?v=1"></script>
 <script src="js/fx.js?v=18"></script>
 </body>
 </html>

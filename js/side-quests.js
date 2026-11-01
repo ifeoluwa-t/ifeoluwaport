@@ -660,7 +660,20 @@
   var EDGE = 14, side = 'L', hideTimer = 0, started = false, dragSt = null, dragMoved = false;
   function playing() { return bar.classList.contains('is-playing'); }
   function edgeLeft() { return side === 'R' ? Math.max(EDGE, window.innerWidth - bar.offsetWidth - EDGE) : EDGE; }
-  function place() { if (mq.matches) { bar.style.left = edgeLeft() + 'px'; bar.style.transform = 'none'; } else { bar.style.left = ''; bar.style.transform = ''; } }
+  var dock = window.matchMedia('(max-width: 899px)');   // phones and stacked layouts: the button sits in the top bar beside the menu button
+  function place() {
+    if (dock.matches) {
+      bar.style.left = ''; bar.style.transform = '';
+      var t = document.getElementById('nav-toggle');
+      if (t) {
+        var r = t.getBoundingClientRect();
+        document.documentElement.style.setProperty('--dock-right', Math.round(window.innerWidth - r.left + 8) + 'px');
+        document.documentElement.style.setProperty('--dock-top', Math.round(r.top + r.height / 2 - 21) + 'px');
+      }
+      return;
+    }
+    if (mq.matches) { bar.style.left = edgeLeft() + 'px'; bar.style.transform = 'none'; } else { bar.style.left = ''; bar.style.transform = ''; }
+  }
   function armHide() { clearTimeout(hideTimer); hideTimer = setTimeout(function () { if (mq.matches) bar.classList.add('is-mini'); }, 3000); }
   function wake() { bar.classList.remove('is-mini'); armHide(); }
   function sync() {
@@ -694,7 +707,7 @@
   bar.addEventListener('pointerdown', function (e) { if (!bar.classList.contains('is-mini')) armHide(); });
   // drag along the bottom edge, then settle on the nearest side
   bar.addEventListener('pointerdown', function (e) {
-    if (!mq.matches || e.button !== 0) return;
+    if (!mq.matches || dock.matches || e.button !== 0) return;
     dragSt = { id: e.pointerId, x: e.clientX, left: bar.getBoundingClientRect().left }; dragMoved = false;
   });
   bar.addEventListener('pointermove', function (e) {
@@ -718,6 +731,7 @@
   bar.addEventListener('pointerup', endDrag); bar.addEventListener('pointercancel', endDrag);
   window.addEventListener('resize', place);
   mq.addEventListener && mq.addEventListener('change', function () { place(); });
+  dock.addEventListener && dock.addEventListener('change', function () { place(); });
   // away on the On Repeat section: the top icon and the bottom icon both go
   var rot = document.getElementById('on-rotation');
   if (rot && window.IntersectionObserver) {
@@ -746,35 +760,4 @@
   });
 })();
 
-// PC: "SIDE" and "QUESTS" sit in the middle of the space on their side of the screen. "SIDE" is equally far from the
-// left edge of the screen and from the farthest picture on the wheel; "QUESTS" is equally far from the right edge and
-// from the large picture. They are placed once for the layout as it is, so they do not move as the wheel turns.
-(function () {
-  var wide = window.matchMedia('(min-width: 900px)');
-  var side = document.querySelector('.sqw-side--l'), quest = document.querySelector('.sqw-side--photo');
-  var wrap = document.querySelector('.sqw-photo-wrap'), photo = document.querySelector('.sqw-photo');
-  if (!side || !quest || !wrap || !photo) return;
-  function place() {
-    if (!wide.matches) { side.style.left = side.style.right = side.style.transform = ''; quest.style.left = quest.style.transform = ''; return; }
-    var vw = document.documentElement.clientWidth;
-    // SIDE: between the screen's left edge and the farthest picture on the wheel
-    var cars = document.querySelectorAll('.sqw-car'), farthest = Infinity;
-    for (var i = 0; i < cars.length; i++) farthest = Math.min(farthest, cars[i].getBoundingClientRect().left);
-    if (isFinite(farthest)) {
-      var sw = side.offsetWidth, sParent = side.offsetParent.getBoundingClientRect();
-      var sLeft = (farthest - sw) / 2;
-      side.style.right = 'auto';
-      side.style.left = (sLeft - sParent.left) + 'px';
-      side.style.transform = 'translateY(-50%)';
-    }
-    // QUESTS: between the large picture and the screen's right edge
-    var pr = photo.getBoundingClientRect(), qw = quest.offsetWidth, qParent = wrap.getBoundingClientRect();
-    var qLeft = pr.right + (vw - pr.right - qw) / 2;
-    quest.style.left = (qLeft - qParent.left) + 'px';
-    quest.style.transform = 'translateY(-50%)';
-  }
-  place();
-  window.addEventListener('load', place);
-  window.addEventListener('resize', place);
-  if (window.ResizeObserver) new ResizeObserver(place).observe(photo);
-})();
+// (SIDE and QUESTS are placed in CSS now: a fixed distance from the wheel and the photo, scaled with them. See css/side-quests-polish.css.)

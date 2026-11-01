@@ -1,0 +1,66 @@
+/* ============================================
+   SHARED LAYOUT (landing page, Events, Side-Quests): the container, the spacing token, wide-screen scaling,
+   and the curtain reveal that uncovers the reaction game behind the footer (see js/footer-game.js).
+============================================ */
+
+/* ---------- tokens ---------- */
+body:is([data-page="home"], [data-page="events"], [data-page="side-quests"]) {
+  --container: 1180px;
+  --section-gap: 120px;      /* the white space between one section and the next */
+  --card-radius: 20px;       /* every card */
+  --edge: #b6caf5;           /* the 3D layer's light sides ... */
+  --edge-deep: #7fa2ee;      /* ... and its outer edge */
+}
+body[data-page="home"] { background: #fff; }   /* no pale hairline can show between two white sections */
+@media (max-width: 1023px) { body:is([data-page="home"], [data-page="events"], [data-page="side-quests"]) { --section-gap: 80px; } }
+@media (max-width: 640px)  { body:is([data-page="home"], [data-page="events"], [data-page="side-quests"]) { --section-gap: 56px; } }
+/* wide screens: a modestly larger container, and the type (rem) grows with it */
+@media (min-width: 1920px) {
+  html:has(body:is([data-page="home"], [data-page="events"], [data-page="side-quests"])) { font-size: 112%; }
+  body:is([data-page="home"], [data-page="events"], [data-page="side-quests"]) { --container: 1320px; --section-gap: 134px; }
+}
+@media (min-width: 2400px) {
+  html:has(body:is([data-page="home"], [data-page="events"], [data-page="side-quests"])) { font-size: 122%; }
+  body:is([data-page="home"], [data-page="events"], [data-page="side-quests"]) { --container: 1440px; --section-gap: 146px; }
+}
+
+/* ---------- the container's edges ---------- */
+/* The logo, the email pill, headings, text, cards, pale boxes and the footer all sit on the container's left and right edges
+   (24px in from a narrow screen's sides, the container's own edges on wide ones). */
+body:is([data-page="home"], [data-page="events"], [data-page="side-quests"]) .site-header { padding: 0 24px; }
+body:is([data-page="home"], [data-page="events"], [data-page="side-quests"]) .header-inner { max-width: var(--container); }
+body:is([data-page="home"], [data-page="events"], [data-page="side-quests"]) .section-inner { max-width: calc(var(--container) + 48px); }
+body:is([data-page="home"], [data-page="events"], [data-page="side-quests"]) .signpost-footer { padding-left: 24px; padding-right: 24px; }
+body:is([data-page="home"], [data-page="events"], [data-page="side-quests"]) .sp-grid,
+body:is([data-page="home"], [data-page="events"], [data-page="side-quests"]) .sp-base { max-width: var(--container); }
+
+/* ---------- the reaction game: behind the page, uncovered by the footer ---------- */
+html.has-curtain .page-layer {
+  position: relative;
+  z-index: 2;
+  background: #fff;
+  margin-bottom: var(--game-h, 0px);                       /* as tall as the game: the footer slides up this far */
+  box-shadow: 0 22px 34px -14px rgba(4, 0, 60, 0.55);      /* a soft shadow falls on the game as the curtain lifts */
+}
+html.has-curtain .games.games--landing {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 1;
+  visibility: hidden;                                      /* can't be clicked or tabbed to while the page covers it */
+  transform: translateY(100%);                             /* and it sits off screen, so its line animation is paused until it is revealed */
+}
+html.has-curtain .games.games--landing.is-revealed { visibility: visible; transform: none; }
+/* the footer's bottom edge: a thin tilted band of the skills strip's blue, so the curtain edge looks meant */
+html.has-curtain .signpost-footer::after {
+  content: "";
+  position: absolute;
+  left: -4vw; right: -4vw;
+  bottom: -6px;
+  height: 14px;
+  background: var(--blue);
+  box-shadow: 0 5px 0 var(--indigo);
+  transform: rotate(-0.8deg);
+  pointer-events: none;
+  z-index: 2;
+}
+

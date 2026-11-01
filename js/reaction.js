@@ -79,12 +79,17 @@
     const avg = mine.length ? Math.round(mine.reduce((a, b) => a + b, 0) / mine.length) : null;
     const best = mine.length ? Math.min.apply(null, mine) : null;
     const online = !!(global && global.count > 0);
-    const ms = (v) => (v == null ? '—' : v + ' ms');
-    el('rx-mine').textContent = ms(avg);
-    el('rx-best').textContent = ms(best);
-    el('rx-players-count').textContent = online && global.players > 0 ? global.players.toLocaleString() : '—';
-    el('rx-everyone').textContent = online ? ms(global.average) : '—';
-    el('rx-fastest').textContent = online ? ms(global.fastest) : '—';
+    // Until there is data, each box says something friendly instead of a dash
+    const set = (id, v, emptyText) => {
+      const e = el(id);
+      e.textContent = v == null ? emptyText : v;
+      e.classList.toggle('is-empty', v == null);
+    };
+    set('rx-mine', avg == null ? null : avg + ' ms', 'Play a round');
+    set('rx-best', best == null ? null : best + ' ms', 'Play a round');
+    set('rx-players-count', online && global.players > 0 ? global.players.toLocaleString() : null, 'Be the first to play!');
+    set('rx-everyone', online && global.average != null ? global.average + ' ms' : null, 'Be the first to play!');
+    set('rx-fastest', online && global.fastest != null ? global.fastest + ' ms' : null, 'Be the first to play!');
   }
 
   /* ---------- leaderboard: horizontally scrolling strip ---------- */
