@@ -52,7 +52,9 @@
     ['Gratitude', 'Anendlessocean', 'LzAdpgIOzXI', 'Worship'],
     ['War In Ba Sing Se', 'J0vanny', 'GfKmLnQhqBU', 'Electronic'],
     ['Everywhere, Everything', 'Noah Kahan & Gracie Abrams', 'dJPdkhsr0gU', 'Folk'],
-    ['Come and Get Your Love', 'Redbone', 'BA4rSO-h9Io', 'Rock']
+    ['Come and Get Your Love', 'Redbone', 'BA4rSO-h9Io', 'Rock'],
+    ['Anifowose', 'Olamide', 'E2S_NQAt0bM', 'Hip-Hop'],
+    ['FUN', 'Rema', 'sObg5b2nx44', 'Afrobeats']
   ];
   // The nav-bar music icon starts one of these three, alternating between them. After that the
   // rest of the playlist plays on shuffle whenever next is pressed (or a song ends).
