@@ -98,8 +98,14 @@
     cards.forEach(function (k, j) { k.classList.toggle('is-featured', j === i); if (j === i) k.setAttribute('aria-current', 'true'); else k.removeAttribute('aria-current'); });
     var title = c.getAttribute('data-title') || '', sub = c.getAttribute('data-sub') || '';
     fTitle.textContent = title; fSub.textContent = sub;
-    fCard.href = 'events.html#' + (c.getAttribute('data-event') || '');
-    fCard.setAttribute('aria-label', 'Open ' + title + ' on the events page');
+    var ev = c.getAttribute('data-event');
+    if (ev) {                                          // a picture of an event: the card opens that event on the events page
+      fCard.href = 'events.html#' + ev;
+      fCard.setAttribute('aria-label', 'Open ' + title + ' on the events page');
+    } else {                                           // a picture with no event page behind it: the card is just a picture, not a link
+      fCard.removeAttribute('href');
+      fCard.removeAttribute('aria-label');
+    }
     var ar = ((+img.getAttribute('width') || 1) / (+img.getAttribute('height') || 1)).toFixed(4);
     preload(i);
     function apply() {                                  // swap once the picture is decoded, so nothing flashes
