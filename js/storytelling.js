@@ -16,7 +16,7 @@
     var id = decodeURIComponent(hash.slice(1));
     var el = id && document.getElementById(id);
     if (!el) return false;
-    if (el.hidden) setFilter(el.getAttribute('data-cat') || 'all'); // open the story's own tab first
+    if (el.hidden) setFilter(el.getAttribute('data-cat') || 'all', true); // open the story's own tab first
     el.scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth', block: 'start' });
     if (push && window.location.hash !== hash) history.pushState(null, '', hash);
     try { el.focus({ preventScroll: true }); } catch (e) { /* ignore */ }
@@ -31,18 +31,18 @@
   var items = Array.prototype.slice.call(document.querySelectorAll('[data-cat]'));
 
   function restripe() {
-    // Keep backgrounds and image sides alternating across whichever stories are showing.
+    // Keep the panels (pale blue, then white) and the image sides alternating across whichever stories are showing.
     var n = 0;
     document.querySelectorAll('.st-story').forEach(function (s) {
       if (s.hidden) return;
       s.classList.toggle('st-story--pale', n % 2 === 0);
-      s.classList.toggle('st-story--periwinkle', n % 2 === 1);
+      s.classList.toggle('st-story--white', n % 2 === 1);
       s.classList.toggle('st-story--reverse', n % 2 === 1);
       n++;
     });
   }
 
-  function setFilter(name) {
+  function applyFilter(name) {
     tabs.forEach(function (t) {
       var on = t.getAttribute('data-filter') === name;
       t.classList.toggle('is-active', on);
@@ -59,9 +59,21 @@
     restripe();
   }
 
+  // The grid fades out, the cards change, and it fades back in, so a filter never snaps.
+  var gallery = document.querySelector('.st-gallery'), switching = 0;
+  function setFilter(name, instant) {
+    if (!gallery || instant || reduce.matches) { applyFilter(name); return; }
+    clearTimeout(switching);
+    gallery.classList.add('is-switching');
+    switching = setTimeout(function () {
+      applyFilter(name);
+      requestAnimationFrame(function () { gallery.classList.remove('is-switching'); });
+    }, 190);
+  }
+
   if (filters) {
     filters.hidden = false;
-    setFilter('all');
+    setFilter('all', true);
     tabs.forEach(function (t) {
       t.addEventListener('click', function () { setFilter(t.getAttribute('data-filter')); });
     });
