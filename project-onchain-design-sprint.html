@@ -22,11 +22,13 @@
 <meta name="twitter:description" content="Organising a design sprint with Dacoit Design and industry brands to create real, paid pathways into Web3 product design.">
 <meta name="twitter:image" content="https://ifeoluwaport.vercel.app/assets/images/og-image.jpg">
 <link rel="stylesheet" href="css/style.css?v=571">
-<link rel="stylesheet" href="css/fx.css?v=9">
+<link rel="stylesheet" href="css/fx.css?v=10">
+<link rel="stylesheet" href="css/layout-tokens.css?v=4">
 <link rel="stylesheet" href="css/case-toc.css?v=3">
 <link rel="stylesheet" href="css/signpost.css?v=55">
 <link rel="stylesheet" href="css/hero-lines.css?v=3">
-<link rel="stylesheet" href="css/case-study.css?v=18">
+<link rel="stylesheet" href="css/case-study.css?v=19">
+<link rel="stylesheet" href="css/case-study-polish.css?v=7">
 </head>
 <!-- CASE STUDY PAGE — built from the shared template (see
      project-eur-gbp-global-accounts.html for the fully-annotated
@@ -64,10 +66,6 @@
     </div>
 
     <div class="nav-actions">
-      <button type="button" class="nav-music" id="nav-music" aria-label="Play music" aria-pressed="false">
-        <span class="nav-eq" aria-hidden="true"><i></i><i></i><i></i></span>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6.5l10-2V16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="16.5" cy="16" r="2.5" fill="currentColor"/></svg>
-      </button>
       <a href="mailto:hi@ifeoluwa.xyz" class="nav-mail">hi@ifeoluwa.xyz</a>
       <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">/menu</button>
     </div>
@@ -137,7 +135,7 @@
 
   <!-- 5. CHALLENGES -->
   <div class="cs-narrative">
-  <section class="cs-panel cs-pullquote-section" id="challenge" data-toc="Challenge">
+  <section class="cs-panel cs-panel--open cs-pullquote-section" id="challenge" data-toc="Challenge">
     <div class="section-inner">
       <div class="cs-pullquote-row">
         <div class="cs-pullquote-picture">
@@ -180,7 +178,7 @@
        tap on touch) with four topics: Team (the FBI Africa and Dacoits
        posters side by side), Mentors, Partners and Products. The frame
        hugs whichever posters are showing. -->
-  <section class="cs-panel cs-products-section" id="sprint-details" data-toc="Sprint Details">
+  <section class="cs-panel cs-panel--open cs-products-section" id="sprint-details" data-toc="Sprint Details">
     <div class="section-inner">
       <p class="cs-section-label">Sprint Details</p>
       <h2 class="cs-section-heading">Who made the sprint happen</h2>
@@ -242,7 +240,7 @@
   </section>
 
   <!-- 7. THE RESULTS — single column, no side image (.cs-results-solo). -->
-  <section class="cs-panel cs-results-section" id="the-results" data-toc="The Results">
+  <section class="cs-panel cs-panel--open cs-panel--card cs-results-section" id="the-results" data-toc="The Results">
     <div class="section-inner">
       <div class="cs-results-solo">
         <p class="cs-section-label">Results</p>
@@ -289,7 +287,7 @@
   <!-- RESOURCES — the copy first, then the Starter Pack image, then a CTA to the
        pack itself. -->
     <!-- 8. MORE PROJECTS -->
-  <section class="cs-panel cs-more-projects">
+  <section class="cs-panel cs-panel--open cs-more-projects">
     <div class="section-inner">
       <h2 class="section-heading">Another project?</h2>
 
@@ -378,11 +376,12 @@
 
 </main>
 
-<script src="js/script.js?v=122"></script>
+<script src="js/script.js?v=125"></script>
 <script src="js/case-toc.js?v=2"></script>
 <script src="js/case-study.js?v=2"></script>
+<script src="js/cs-switcher.js?v=2"></script>
 <script src="js/signpost.js?v=1"></script>
-<script src="js/music-keep.js?v=27"></script>
+<script src="js/music-keep.js?v=30"></script>
 <script src="js/fx.js?v=18"></script>
 <script src="js/hero-lines.js?v=5"></script>
 </body>

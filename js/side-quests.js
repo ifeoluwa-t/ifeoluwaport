@@ -654,26 +654,13 @@
 // Both disappear while the "On Repeat" section is on screen.
 (function () {
   var mq = window.matchMedia('(max-width: 899px), (min-width: 900px)');   // draggable and folding on every screen
-  var navBtn = document.getElementById('nav-music'), play = document.getElementById('sq2-play'), bar = document.getElementById('sq2-music');
+  var navBtn = document.getElementById('nav-music') || document.createElement('button'), play = document.getElementById('sq2-play'), bar = document.getElementById('sq2-music');
   var closeBtn = document.getElementById('sq2-close');
   if (!navBtn || !play || !bar) return;
   var EDGE = 14, side = 'L', hideTimer = 0, started = false, dragSt = null, dragMoved = false;
   function playing() { return bar.classList.contains('is-playing'); }
   function edgeLeft() { return side === 'R' ? Math.max(EDGE, window.innerWidth - bar.offsetWidth - EDGE) : EDGE; }
-  var dock = window.matchMedia('(max-width: 899px)');   // phones and stacked layouts: the button sits in the top bar beside the menu button
-  function place() {
-    if (dock.matches) {
-      bar.style.left = ''; bar.style.transform = '';
-      var t = document.getElementById('nav-toggle');
-      if (t) {
-        var r = t.getBoundingClientRect();
-        document.documentElement.style.setProperty('--dock-right', Math.round(window.innerWidth - r.left + 8) + 'px');
-        document.documentElement.style.setProperty('--dock-top', Math.round(r.top + r.height / 2 - 21) + 'px');
-      }
-      return;
-    }
-    if (mq.matches) { bar.style.left = edgeLeft() + 'px'; bar.style.transform = 'none'; } else { bar.style.left = ''; bar.style.transform = ''; }
-  }
+  function place() { if (mq.matches) { bar.style.left = edgeLeft() + 'px'; bar.style.transform = 'none'; } else { bar.style.left = ''; bar.style.transform = ''; } }
   function armHide() { clearTimeout(hideTimer); hideTimer = setTimeout(function () { if (mq.matches) bar.classList.add('is-mini'); }, 3000); }
   function wake() { bar.classList.remove('is-mini'); armHide(); }
   function sync() {
@@ -707,7 +694,7 @@
   bar.addEventListener('pointerdown', function (e) { if (!bar.classList.contains('is-mini')) armHide(); });
   // drag along the bottom edge, then settle on the nearest side
   bar.addEventListener('pointerdown', function (e) {
-    if (!mq.matches || dock.matches || e.button !== 0) return;
+    if (!mq.matches || e.button !== 0) return;
     dragSt = { id: e.pointerId, x: e.clientX, left: bar.getBoundingClientRect().left }; dragMoved = false;
   });
   bar.addEventListener('pointermove', function (e) {
@@ -731,7 +718,6 @@
   bar.addEventListener('pointerup', endDrag); bar.addEventListener('pointercancel', endDrag);
   window.addEventListener('resize', place);
   mq.addEventListener && mq.addEventListener('change', function () { place(); });
-  dock.addEventListener && dock.addEventListener('change', function () { place(); });
   // away on the On Repeat section: the top icon and the bottom icon both go
   var rot = document.getElementById('on-rotation');
   if (rot && window.IntersectionObserver) {

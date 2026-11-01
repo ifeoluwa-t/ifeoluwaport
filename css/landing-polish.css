@@ -53,7 +53,7 @@ body[data-page="home"] .signpost-footer::before { display: none; }   /* the whit
 /* Same corners everywhere, and a 3D layer that goes evenly round all four sides (3px: another pixel thinner). */
 body[data-page="home"] .exp-card,
 body[data-page="home"] .exp-card:hover,
-body[data-page="home"] .work .work-card,
+body:is([data-page="home"], [data-page="work"]) .work .work-card,
 body[data-page="home"] .gw-item,
 body[data-page="home"] .og-card,
 body[data-page="home"] .og-feature-card {
@@ -69,7 +69,7 @@ body[data-page="home"] .og-card { border-radius: min(var(--card-radius), 22%); }
 body[data-page="home"] .og-card,
 body[data-page="home"] .og-feature-card { --edge: #b6caf5; --edge-deep: #7fa2ee; }
 body[data-page="home"] .exp-card:hover,
-body[data-page="home"] .work .work-card:hover,
+body:is([data-page="home"], [data-page="work"]) .work .work-card:hover,
 body[data-page="home"] .gw-item:hover,
 body[data-page="home"] .gw-item:focus-visible { --edge: #94b2f1; --edge-deep: #5d8aeb; }
 body[data-page="home"] .exp-card:hover { box-shadow:
@@ -86,7 +86,7 @@ body[data-page="home"] .exp-card:hover { box-shadow:
   }
 }
 /* pressing sinks the block straight down (no sideways shift), the layer losing two of its four pixels */
-body[data-page="home"] .work .work-card:active,
+body:is([data-page="home"], [data-page="work"]) .work .work-card:active,
 body[data-page="home"] .exp-card:active {
   translate: 0 2px;
   box-shadow:

@@ -36,11 +36,6 @@
 /* ---------- A. phones and stacked layouts: the picture's name sits under the picture ---------- */
 @media (max-width: 899px) {
   .sqw-name { order: 0; }
-  /* the sound switch no longer has to clear a music bar at the bottom */
-  body[data-page="side-quests"] .fx-sound { bottom: 10px; }
-  /* the music button docks in the top bar, beside the menu button, so it never sits on the photo or the text */
-  body > .sq2-music { top: var(--dock-top, 15px); bottom: auto; left: auto !important; right: var(--dock-right, 100px); transform: none !important; }
-  body > .sq2-music:not(.is-mini) { top: calc(var(--dock-top, 15px) + 52px); right: 14px; }
 }
 
 /* ---------- B. the lore highlight wraps cleanly ---------- */
@@ -178,3 +173,8 @@ a.pl-card[target="_blank"] { display: flex; }
 .pl-card.is-loading .pl-name { color: transparent; border-radius: 8px; background: linear-gradient(100deg, rgba(255, 255, 255, 0.3) 30%, rgba(255, 255, 255, 0.65) 50%, rgba(255, 255, 255, 0.3) 70%) 0 0 / 300% 100%; animation: pl-shimmer 1.3s linear infinite; min-height: 2.1em; }
 @keyframes pl-shimmer { to { background-position: -150% 0; } }
 @media (prefers-reduced-motion: reduce) { .pl-card.is-loading .pl-cover, .pl-card.is-loading .pl-name { animation: none; } }
+
+/* the music button pops in with a small bounce shortly after the page loads (the same as on the other pages) */
+@keyframes sqFabPop { 0% { scale: 0; opacity: 0; } 55% { scale: 1.22; opacity: 1; } 78% { scale: 0.92; } 100% { scale: 1; opacity: 1; } }
+body > .sq2-music { animation: sqFabPop 0.7s 0.7s cubic-bezier(0.3, 1.6, 0.5, 1) both; }
+@media (prefers-reduced-motion: reduce) { body > .sq2-music { animation: none; } }

@@ -4,35 +4,35 @@
 ============================================ */
 
 /* ---------- tokens ---------- */
-body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"]) {
+body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"]) {
   --container: 1180px;
   --section-gap: 120px;      /* the white space between one section and the next */
   --card-radius: 20px;       /* every card */
   --edge: #b6caf5;           /* the 3D layer's light sides ... */
   --edge-deep: #7fa2ee;      /* ... and its outer edge */
 }
-body:is([data-page="home"], [data-page="storytelling"]) { background: #fff; }   /* no pale hairline between white sections, and pale panels sit on white */
-@media (max-width: 1023px) { body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"]) { --section-gap: 80px; } }
-@media (max-width: 640px)  { body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"]) { --section-gap: 56px; } }
+body:is([data-page="home"], [data-page="storytelling"], [data-page="work"]) { background: #fff; }   /* no pale hairline between white sections, and pale panels sit on white */
+@media (max-width: 1023px) { body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"]) { --section-gap: 80px; } }
+@media (max-width: 640px)  { body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"]) { --section-gap: 56px; } }
 /* wide screens: a modestly larger container, and the type (rem) grows with it */
 @media (min-width: 1920px) {
-  html:has(body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"])) { font-size: 112%; }
-  body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"]) { --container: 1320px; --section-gap: 134px; }
+  html:has(body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"])) { font-size: 112%; }
+  body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"]) { --container: 1320px; --section-gap: 134px; }
 }
 @media (min-width: 2400px) {
-  html:has(body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"])) { font-size: 122%; }
-  body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"]) { --container: 1440px; --section-gap: 146px; }
+  html:has(body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"])) { font-size: 122%; }
+  body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"]) { --container: 1440px; --section-gap: 146px; }
 }
 
 /* ---------- the container's edges ---------- */
 /* The logo, the email pill, headings, text, cards, pale boxes and the footer all sit on the container's left and right edges
    (24px in from a narrow screen's sides, the container's own edges on wide ones). */
-body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"]) .site-header { padding: 0 24px; }
-body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"]) .header-inner { max-width: var(--container); }
-body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"]) .section-inner { max-width: calc(var(--container) + 48px); }
-body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"]) .signpost-footer { padding-left: 24px; padding-right: 24px; }
-body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"]) .sp-grid,
-body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"]) .sp-base { max-width: var(--container); }
+body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"]) .site-header { padding: 0 24px; }
+body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"]) .header-inner { max-width: var(--container); }
+body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"]):not(.cs-page) .section-inner { max-width: calc(var(--container) + 48px); }
+body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"]) .signpost-footer { padding-left: 24px; padding-right: 24px; }
+body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"]) .sp-grid,
+body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"]) .sp-base { max-width: var(--container); }
 
 /* ---------- the reaction game: behind the page, uncovered by the footer ---------- */
 html.has-curtain .page-layer {

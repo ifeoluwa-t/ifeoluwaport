@@ -1,0 +1,215 @@
+/* ============================================
+   PROJECT PAGES POLISH (loads after case-study.css; the six project-*.html pages)
+   - sections alternate boxed (pale panel) and open (white page, no box); never two boxes in a row
+   - the shared 3D card layer on every card, the shared container and wide-screen steps (css/layout-tokens.css)
+   - one switcher component (css/ + js/cs-switcher.js), side-by-side tab pictures, full-width comparison,
+     balanced products, centred wins, strips that fade at their edges, no orphan step cards
+============================================ */
+
+/* ---------- the shared card layer (3px, even on all four sides) ---------- */
+.cs-page {
+  --card-ring:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.92),
+    0 0 0 1px var(--edge), 0 0 0 2px var(--edge), 0 0 0 3px var(--edge-deep),
+    0 16px 26px -8px rgba(12, 0, 84, 0.3);
+}
+
+/* ---------- boxed and open sections ---------- */
+.cs-page .cs-panel--open {
+  background: none;
+  border-radius: 0;
+  padding: 0;
+}
+/* a soft brand tint, so a boxed Results band is clearly not the gallery panel */
+.cs-page .cs-panel--tint { background: color-mix(in srgb, var(--periwinkle) 38%, #fff); }
+/* an open Results section keeps its content in one white card with a light outline */
+.cs-page .cs-panel--card > .section-inner {
+  padding: clamp(24px, 3.5vw, 52px);
+  border-radius: 32px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1.5px var(--periwinkle);
+}
+/* cards on the white page get the shared 3D layer */
+.cs-page .cs-panel--open .cs-stat,
+.cs-page .cs-panel--open .cs-more-grid .work-card,
+.cs-page .cs-panel--open .cs-deck img { box-shadow: var(--card-ring); }
+.cs-page .cs-more-grid .work-card { background: #fff; border-radius: var(--card-radius, 20px); box-shadow: var(--card-ring); }
+.cs-page .cs-more-grid .work-card:hover { background: var(--periwinkle); }
+.cs-page .cs-panel--tint .cs-stat { background: #fff; }
+.cs-page .cs-approach-list li { box-shadow: var(--card-ring); border-color: transparent; }
+
+/* ---------- "What I did": no orphan step card (an odd last card spans the whole row) ---------- */
+.cs-page .cs-approach-list li:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+/* ---------- wide screens: the hero centres its content, and everything scales with the container ---------- */
+@media (min-width: 900px) {
+  .cs-page .cs-hero { align-items: center; }
+  .cs-page .cs-hero > .section-inner { align-self: center; }
+}
+@media (min-width: 1920px) {
+  .cs-page { --cs-nav-h: 96px; --cs-fit: clamp(260px, calc(100svh - 420px), 560px); }
+}
+@media (min-width: 2400px) {
+  .cs-page { --cs-nav-h: 104px; }
+}
+
+/* ---------- the switcher ---------- */
+.cs-page .cs-tabs-list { position: relative; }
+.cs-page .cs-sw-pill {
+  position: absolute; left: 0; top: 0; z-index: 0;
+  width: var(--pw, 0px); height: var(--ph, 0px);
+  transform: translate(var(--px, 0px), var(--py, 0px));
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--card-ring);
+  pointer-events: none;
+  transition: transform 0.5s cubic-bezier(0.3, 0.8, 0.2, 1), width 0.5s cubic-bezier(0.3, 0.8, 0.2, 1), height 0.5s cubic-bezier(0.3, 0.8, 0.2, 1);
+}
+.cs-page .cs-sw-pill::before {                    /* the brand-blue accent bar */
+  content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 4px;
+  border-radius: 0 4px 4px 0; background: var(--blue);
+}
+.cs-page .cs-sw .cs-tab-item {
+  position: relative; z-index: 1;
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 20px;
+  align-items: start; column-gap: 14px;
+  padding: 16px 18px 20px 18px;
+  background: transparent !important; box-shadow: none !important;
+  border-radius: 16px;
+}
+.cs-page .cs-sw .cs-tab-item:not(.has-desc) { grid-template-columns: 34px minmax(0, 1fr); }
+.cs-page .cs-sw .cs-tab-item:hover { background: transparent; }
+.cs-page .cs-sw .cs-tab-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: color-mix(in srgb, var(--periwinkle) 55%, #fff); color: var(--navy);
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.02em;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+.cs-page .cs-sw .cs-tab-item.is-active .cs-tab-num { background: var(--blue); color: #fff; transform: scale(1.06); }
+.cs-page .cs-sw .cs-tab-main { display: flex; flex-direction: column; min-width: 0; }
+.cs-page .cs-sw .cs-tab-title { line-height: 34px; transition: color 0.3s ease; }
+.cs-page .cs-sw .cs-tab-body { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.45s cubic-bezier(0.3, 0.8, 0.2, 1), opacity 0.3s ease; }
+.cs-page .cs-sw .cs-tab-item.is-active .cs-tab-body { grid-template-rows: 1fr; opacity: 1; transition-delay: 0s, 0.1s; }
+.cs-page .cs-sw .cs-tab-body-in { overflow: hidden; min-height: 0; }
+.cs-page .cs-sw .cs-tab-desc { display: block !important; margin: 2px 0 0; }
+.cs-page .cs-sw .cs-tab-chev {                     /* a chevron that turns when the item opens */
+  width: 20px; height: 34px; position: relative; opacity: 0.55; transition: transform 0.4s ease, opacity 0.3s ease;
+}
+.cs-page .cs-sw .cs-tab-chev::before {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px;
+  border-right: 2px solid var(--navy); border-bottom: 2px solid var(--navy);
+  transform: translate(-50%, -70%) rotate(45deg);
+}
+.cs-page .cs-sw .cs-tab-item.is-active .cs-tab-chev { transform: rotate(180deg); opacity: 1; }
+.cs-page .cs-sw .cs-tab-bar {                      /* the time left before it moves on */
+  position: absolute; left: 18px; right: 18px; bottom: 8px; height: 3px; border-radius: 3px;
+  background: rgba(12, 0, 84, 0.1); opacity: 0; transition: opacity 0.3s ease;
+}
+.cs-page .cs-sw .cs-tab-item.is-active .cs-tab-bar { opacity: 1; }
+.cs-page .cs-sw .cs-tab-bar i { display: block; height: 100%; border-radius: inherit; background: var(--blue); transform-origin: left; transform: scaleX(0); }
+@keyframes cs-sw-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.cs-page .cs-sw .cs-tab-item:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+/* row layouts (the wide card and the sprint tabs): the pill slides sideways */
+.cs-page .cs-tabs-card--wide .cs-tabs-list,
+.cs-page .cs-tabs-card--duo .cs-tabs-list { align-items: flex-start; }
+.cs-page .cs-tabs-card--duo .cs-sw .cs-tab-item,
+.cs-page .cs-tabs-card--duo.cs-sw .cs-tab-item { padding: 8px 20px 12px 10px; border-radius: 999px; grid-template-columns: 34px auto; }
+.cs-page .cs-tabs-card--duo .cs-sw-pill { border-radius: 999px; }
+.cs-page .cs-tabs-card--duo .cs-sw-pill::before { display: none; }
+.cs-page .cs-tabs-card--duo .cs-tab-bar { left: 22px; right: 22px; bottom: 5px; }
+.cs-page .cs-tabs-card--duo .cs-tabs-list { gap: 6px; }
+
+/* the paired picture crossfades with a slight slide and scale */
+.cs-page .cs-sw .cs-tabs-image {
+  opacity: 0; visibility: hidden;
+  transform: translateY(10px) scale(1.025);
+  transition: opacity 0.5s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0s 0.5s;
+}
+.cs-page .cs-sw .cs-tabs-image.is-active { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+
+/* the before / after control */
+.cs-page .cs-seg { position: relative; display: inline-flex; gap: 4px; margin: 0 0 8px; padding: 5px; border-radius: 999px; background: color-mix(in srgb, var(--periwinkle) 45%, #fff); }
+.cs-page .cs-seg .cs-tab-item {
+  position: relative; z-index: 1; display: inline-grid; grid-template-columns: 30px auto; align-items: center; column-gap: 10px;
+  width: auto; padding: 6px 20px 10px 6px; border-radius: 999px;
+}
+.cs-page .cs-seg .cs-tab-num { width: 30px; height: 30px; }
+.cs-page .cs-seg .cs-tab-title { margin: 0; font-size: 0.95rem; line-height: 30px; }
+.cs-page .cs-seg .cs-sw-pill { border-radius: 999px; }
+.cs-page .cs-seg .cs-sw-pill::before { display: none; }
+.cs-page .cs-seg .cs-tab-bar { left: 46px; right: 20px; bottom: 5px; }
+
+/* ---------- Design Sprint: each tab's pictures side by side, filling the width, uncropped ---------- */
+.cs-page .cs-tabs-card--duo .cs-tabs-visual.cs-tabs-visual--duo { width: 100%; max-width: none; justify-self: stretch; aspect-ratio: auto; height: auto; background: none; box-shadow: none; overflow: visible; }
+.cs-page .cs-tabs-visual--duo .cs-tabs-visual-inner { display: grid; }
+.cs-page .cs-tabs-visual--duo .cs-tabs-image.cs-duo {
+  grid-area: 1 / 1; position: relative; inset: auto;
+  display: flex; flex-direction: row; align-items: center; justify-content: center;
+  gap: clamp(14px, 2vw, 28px);
+}
+.cs-page .cs-tabs-visual--duo .cs-duo.is-active { display: flex; flex-direction: row; }
+.cs-page .cs-tabs-visual--duo .cs-duo-img {
+  flex: 1 1 0; min-width: 0; width: auto; max-width: calc(var(--cs-fit) * 1.25);
+  height: auto; aspect-ratio: auto; object-fit: contain;
+}
+@media (max-width: 760px) {
+  .cs-page .cs-tabs-visual--duo .cs-duo.is-active { flex-direction: column; }
+  .cs-page .cs-tabs-visual--duo .cs-duo-img { width: 100%; max-width: 420px; flex: none; }
+}
+
+/* ---------- Products (list beside a picture): both columns fill the width evenly ---------- */
+@media (min-width: 900px) {
+  .cs-page .cs-tabs-card:not(.cs-tabs-card--wide):not(.cs-tabs-card--duo) { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; }
+  .cs-page .cs-tabs-card:not(.cs-tabs-card--wide):not(.cs-tabs-card--duo) .cs-tabs-visual { justify-self: center; max-width: 100%; }
+}
+
+/* ---------- Consumer: the website comparison fills the section width, centred ---------- */
+.cs-page .cs-flip { display: flex; justify-content: center; }
+.cs-page .cs-flip-media {
+  width: min(100%, calc((100svh - 190px) * 1.847));
+  margin-left: auto; margin-right: auto;
+}
+
+/* ---------- strips: soft fades at both edges ---------- */
+.cs-page .cs-screens-viewport,
+.cs-page .cs-articles-viewport,
+.cs-page .cs-sessions-viewport,
+.cs-page .cs-posters-viewport {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 56px, #000 calc(100% - 56px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 56px, #000 calc(100% - 56px), transparent 100%);
+  padding-left: 56px; padding-right: 56px;
+}
+
+/* ---------- Test Pilots: the two chat screenshots, a larger centred pair with an even gap ---------- */
+.cs-page .cs-wins {
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start;
+  gap: clamp(20px, 4vw, 56px);
+  grid-template-columns: none;
+}
+.cs-page .cs-win { flex: 0 1 auto; width: auto; }
+.cs-page .cs-win img { width: calc((var(--cs-fit) + 90px) * var(--r)); max-width: 100%; height: auto; aspect-ratio: var(--r); }
+@media (max-width: 899px) {
+  .cs-page .cs-wins { display: flex; flex-wrap: nowrap; justify-content: flex-start; }
+  .cs-page .cs-win { flex: 0 0 min(78%, 420px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-page .cs-sw-pill, .cs-page .cs-sw .cs-tab-body, .cs-page .cs-sw .cs-tab-chev,
+  .cs-page .cs-sw .cs-tab-num, .cs-page .cs-sw .cs-tabs-image { transition: none; }
+  .cs-page .cs-sw .cs-tabs-image { transform: none; }
+}
+
+/* ---------- the floating music button sits at the bottom left of every page, so the contents button moves beside it ---------- */
+@media (max-width: 1279px) {
+  .cs-toc-toggle { left: 68px; }
+}
+
+/* ---------- edges: the logo, the hero copy and every panel share the container's left and right edges ---------- */
+body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
+.cs-page .cs-hero > .section-inner { max-width: calc(var(--cs-max) + 2 * var(--cs-gutter)); }
+
+/* the wide card's picture sits in the middle of the section */
+.cs-page .cs-tabs-card--wide .cs-tabs-visual { justify-self: center; }

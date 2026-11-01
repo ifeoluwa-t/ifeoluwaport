@@ -892,7 +892,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  initProductTabs();
+  // (the tabs cards are run by js/cs-switcher.js on the project pages)
 
   /* ---------- Flyer slideshows inside a tabs card ----------
      A [data-slideshow] image slot crossfades through its .cs-slide
@@ -959,7 +959,8 @@ document.addEventListener('DOMContentLoaded', () => {
     buildLoop();
     window.addEventListener('resize', () => { buildLoop(); offset = wrap(offset); apply(); });
 
-    new IntersectionObserver((entries) => { inView = entries[0].isIntersecting; },
+    let viewSince = 0;   // a strip waits a moment when it first comes into view, so it opens on a whole first item
+    new IntersectionObserver((entries) => { inView = entries[0].isIntersecting; viewSince = inView ? (viewSince || performance.now()) : 0; },
       { rootMargin: '100px 0px' }).observe(viewport);
 
     viewport.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') mouseOver = true; });
@@ -969,7 +970,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function tick(now) {
       const dt = (now - last) / 1000;
       last = now;
-      if (inView && !prefersReducedMotion.matches && !isDragging && !mouseOver && loopWidth > 0) {
+      if (inView && !prefersReducedMotion.matches && !isDragging && !mouseOver && loopWidth > 0 && now - viewSince > 1400) {
         offset = wrap(offset + PACE * dt);
         apply();
       }
@@ -1084,8 +1085,10 @@ document.addEventListener('DOMContentLoaded', () => {
     buildLoop();
     window.addEventListener('resize', () => { buildLoop(); offset = wrap(offset); apply(); });
 
+    let viewSince = 0;   // opens on a whole first screen for a moment
     new IntersectionObserver((entries) => {
       inView = entries[0].isIntersecting;
+      viewSince = inView ? (viewSince || performance.now()) : 0;
     }, { rootMargin: '100px 0px' }).observe(viewport);
 
     let mouseOver = false;
@@ -1107,7 +1110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function tick(now) {
       const dt = (now - last) / 1000;
       last = now;
-      if (inView && !prefersReducedMotion.matches && !isDragging && !mouseOver && loopWidth > 0 &&
+      if (inView && !prefersReducedMotion.matches && !isDragging && !mouseOver && loopWidth > 0 && now - viewSince > 1400 &&
           !track.querySelector('.cs-screen.is-previous')) {
         offset = wrap(offset + PACE * dt);
         apply();

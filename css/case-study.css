@@ -9,7 +9,7 @@
 ============================================ */
 
 :root {
-  --cs-max: 1200px;                                    /* the one content width */
+  --cs-max: var(--container, 1180px);                  /* the one content width: the shared container (1180, 1320 from 1920px, 1440 from 2400px) */
   --cs-gutter: clamp(16px, 5vw, 64px);                 /* side gutters */
   --cs-space: clamp(56px, 10.4vw, 120px);              /* gap between sections: 56 mobile, ~80 tablet, 120 desktop */
   --cs-half: calc(var(--cs-space) / 2);                /* each section's top and bottom padding */

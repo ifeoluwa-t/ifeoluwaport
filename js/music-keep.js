@@ -158,7 +158,41 @@
     write(null);
     return;
   }
+  // The one music button, on every page: a floating button at the bottom of the screen (the same yellow note as on Side-Quests).
+  // It pops in with a small bounce shortly after the page loads and then stays put. Once music plays, the player bar takes its place.
   var navBtn = document.getElementById('nav-music');
+  if (!navBtn) {
+    var fabCss = document.createElement('style');
+    fabCss.textContent =
+      '.mk-fab{position:fixed;left:14px;bottom:14px;z-index:9990;display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;padding:0;border:0;border-radius:50%;background:#fff;color:#0c0054;cursor:pointer;box-shadow:0 10px 30px rgba(7,0,46,.35);opacity:0;transform:scale(0);transition:opacity .3s ease,scale .25s ease}' +
+      '.mk-fab::before{content:"";position:absolute;inset:5px;border-radius:50%;background:#ffd23f}' +
+      '.mk-fab svg{position:relative;width:18px;height:18px}' +
+      '.mk-fab.is-in{opacity:1;transform:none;animation:mkFabPop .7s cubic-bezier(.3,1.6,.5,1) both}' +
+      '@keyframes mkFabPop{0%{transform:scale(0)}55%{transform:scale(1.22)}78%{transform:scale(.92)}100%{transform:scale(1)}}' +
+      '.mk-fab:hover{scale:1.06}.mk-fab:active{scale:.94}.mk-fab:focus-visible{outline:3px solid #0052ff;outline-offset:3px}' +
+      '.mk-fab.is-on,.mk-fab.is-carried{display:none}' +
+      '.mk-fab.is-away,.mk.is-away{opacity:0!important;pointer-events:none;transform:translateY(12px)}' +
+      '@media (prefers-reduced-motion:reduce){.mk-fab{transition:none}.mk-fab.is-in{animation:none}}';
+    document.head.appendChild(fabCss);
+    navBtn = document.createElement('button');
+    navBtn.type = 'button'; navBtn.id = 'nav-music'; navBtn.className = 'mk-fab';
+    navBtn.setAttribute('aria-label', 'Play music'); navBtn.setAttribute('aria-pressed', 'false');
+    navBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6.5l10-2V16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="16.5" cy="16" r="2.5" fill="currentColor"/></svg>';
+    document.body.appendChild(navBtn);
+    setTimeout(function () { navBtn.classList.add('is-in'); }, 700);
+    // it steps aside while the footer or the reaction game is at the bottom of the screen, so it never sits on them
+    if ('IntersectionObserver' in window) {
+      var strip = Math.max(1, window.innerHeight - 90);
+      var away = 0;
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) { away += e.isIntersecting ? 1 : -1; });
+        away = Math.max(0, away);
+        navBtn.classList.toggle('is-away', away > 0);
+        var mk = document.querySelector('.mk'); if (mk) mk.classList.toggle('is-away', away > 0);
+      }, { rootMargin: '-' + strip + 'px 0px 0px 0px' });
+      ['site-footer', 'games'].forEach(function (id) { var t = document.getElementById(id); if (t) io.observe(t); });
+    }
+  }
   var ctl = null;   // set once a player exists on this page
 
   function init(saved, consented) {
@@ -176,7 +210,8 @@
     '.mk button:focus-visible{outline:2px solid #0052ff;outline-offset:2px}.mk svg{width:14px;height:14px}.mk .i-pause{display:none}.mk.on .i-pause{display:block}.mk.on .i-play{display:none}' +
     '.mk-yt{position:fixed;left:-9999px;top:0;width:200px;height:200px;overflow:hidden;pointer-events:none}' +
     '.mk{transition:padding .3s ease,gap .3s ease}' +
-    '.mk-mini-ico{display:none;width:38px;height:38px;border:0;border-radius:50%;background:#0052ff;color:#fff;cursor:pointer;align-items:center;justify-content:center}.mk-mini-ico svg{width:18px;height:18px}' +
+    '.mk-mini-ico{display:none;width:32px;height:32px;border:0;border-radius:50%;background:#ffd23f;color:#0c0054;cursor:pointer;align-items:center;justify-content:center}.mk-mini-ico svg{width:17px;height:17px}' +
+    '.mk button.mk-mini-ico{background:#ffd23f;color:#0c0054}.mk button.mk-mini-ico:hover{background:#ffc400}' +
     '.mk.is-mini{padding:5px;gap:0}.mk.is-mini .mk-text,.mk.is-mini .mk-play,.mk.is-mini .mk-next,.mk.is-mini .mk-x{display:none}.mk.is-mini .mk-mini-ico{display:inline-flex}' +
     '.mk.is-mini.on .mk-mini-ico{animation:mkPulse 3.2s ease-in-out infinite}@keyframes mkPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,82,255,.3)}50%{box-shadow:0 0 0 7px rgba(0,82,255,0)}}' +
     '@media (prefers-reduced-motion:reduce){.mk.is-mini.on .mk-mini-ico{animation:none}}';
@@ -227,7 +262,7 @@
     write(null);
     pill.remove(); holder.remove();
     ctl = null; window.sqMusic = null;
-    if (navBtn) { navBtn.classList.remove('is-on'); navBtn.setAttribute('aria-pressed', 'false'); navBtn.setAttribute('aria-label', 'Play music'); }
+    if (navBtn) { navBtn.classList.remove('is-on'); navBtn.setAttribute('aria-pressed', 'false'); navBtn.setAttribute('aria-label', 'Play music'); navBtn.style.display = ''; }
   }
   label();
 
@@ -262,7 +297,7 @@
   // The cross only puts the bar away: the music keeps playing (the nav icon brings the bar back).
   var HIDE_KEY = 'sqMusicBarHidden';
   function barHidden(v) { try { if (v === undefined) return sessionStorage.getItem(HIDE_KEY) === '1'; if (v) sessionStorage.setItem(HIDE_KEY, '1'); else sessionStorage.removeItem(HIDE_KEY); } catch (e) {} return !!v; }
-  function applyHidden() { pill.style.display = barHidden() ? 'none' : ''; }
+  function applyHidden() { pill.style.display = barHidden() ? 'none' : ''; if (navBtn && navBtn.classList.contains('mk-fab')) navBtn.style.display = barHidden() ? '' : 'none'; }   // the floating button and the player bar never show together
   pill.querySelector('.mk-x').setAttribute('aria-label', 'Close the music bar');
 
   pill.querySelector('.mk-x').addEventListener('click', function () {
