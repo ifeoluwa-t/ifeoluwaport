@@ -67,44 +67,88 @@
 
   function resetVideo(item) { if (item._resetVideo) item._resetVideo(); }
 
-  function activate(item, focus) {
-    if (item.classList.contains('is-open')) return;
-    items.forEach(function (it, k) {
-      var on = it === item;
-      var wasOpen = it.classList.contains('is-open');
-      it.classList.toggle('is-open', on);
-      var t = it.querySelector('.ev-toggle');
-      t.setAttribute('aria-expanded', on ? 'true' : 'false');
-      t.tabIndex = on ? -1 : 0;
-      if (wasOpen && !on) { stories[k].stop(); resetVideo(it); }
-      if (on) stories[k].start();
-    });
-    if (focus) item.querySelector('.ev-toggle').focus({ preventScroll: true });
-    if (!wide.matches) {
-      setTimeout(function () {
-        var top = item.getBoundingClientRect().top;
-        if (top < 70 || top > window.innerHeight * 0.5) {
-          window.scrollTo({ top: window.scrollY + top - 84, behavior: reduce.matches ? 'auto' : 'smooth' });
-        }
-      }, 120);
+  // A row only counts as "hovered" when the mouse really moved: a page that scrolls under a resting pointer (our own scroll
+  // into view) must not open or close cards by itself.
+  var lastMove = 0;
+  document.addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') lastMove = performance.now(); }, { passive: true });
+  function moved() { return performance.now() - lastMove < 350; }
+
+  var header = document.getElementById('site-header');
+  function navClear() { return (header ? header.getBoundingClientRect().bottom : 56) + 18; }   // just below the sticky nav
+
+  // One place that opens or closes a card, so the class, both buttons' aria-expanded and the photo story always agree.
+  function setOpen(item, on) {
+    var k = items.indexOf(item);
+    var was = item.classList.contains('is-open');
+    item.classList.toggle('is-open', on);
+    var t = item.querySelector('.ev-toggle'), x = item.querySelector('.ev-close');
+    t.setAttribute('aria-expanded', on ? 'true' : 'false');
+    t.tabIndex = on ? -1 : 0;
+    if (x) { x.setAttribute('aria-expanded', on ? 'true' : 'false'); x.tabIndex = on ? 0 : -1; }
+    if (was && !on) { stories[k].stop(); resetVideo(item); }
+    if (on && !was) stories[k].start();
+  }
+
+  // Smoothly bring the opening card fully into view, just below the sticky nav. The card's final position is worked out up
+  // front (a card above it that is closing shrinks the page), so there is one smooth scroll rather than a jump at the end.
+  function bringIntoView(item, prevOpen) {
+    var smooth = reduce.matches ? 'instant' : 'smooth';
+    var clear = navClear(), finalTop, target;
+    if (wide.matches) {
+      finalTop = item.getBoundingClientRect().top;
+      if (prevOpen && items.indexOf(prevOpen) < items.indexOf(item)) {
+        finalTop -= Math.max(0, prevOpen.getBoundingClientRect().height - prevClosedH(prevOpen));
+      }
+      target = openFinalHeight(item);
+    } else {
+      // stacked rows: the open height depends on the text, so wait for the card to finish opening and use its real size
+      var r = item.getBoundingClientRect();
+      finalTop = r.top; target = r.height;
     }
+    if (finalTop >= clear - 2 && finalTop + target <= window.innerHeight - 8) return;       // already fully visible
+    window.scrollTo({ top: Math.max(0, window.scrollY + finalTop - clear), behavior: smooth });
+  }
+  function prevClosedH(it) {      // the height of a closed row
+    var tg = it.querySelector('.ev-toggle');
+    return tg ? tg.getBoundingClientRect().height + 2 * parseFloat(getComputedStyle(it.querySelector('.ev-pic')).marginTop || 10) : 116;
+  }
+  function openFinalHeight(it) {  // the height the open card will have once it has finished growing
+    var probe = parseFloat(getComputedStyle(it.querySelector('.ev-stage')).gridTemplateRows.split(' ').pop());
+    var val = getComputedStyle(acc.closest('.ev-section')).getPropertyValue('--ev-open-h');
+    var tmp = document.createElement('div');
+    tmp.style.cssText = 'position:absolute;visibility:hidden;height:' + val.trim() + ';width:0';
+    acc.closest('.ev-section').appendChild(tmp);
+    var h = tmp.getBoundingClientRect().height;
+    tmp.remove();
+    return h || probe || 590;
+  }
+
+  function activate(item, focus, how) {
+    if (item.classList.contains('is-open')) return;
+    var prevOpen = items.filter(function (it) { return it.classList.contains('is-open'); })[0] || null;
+    items.forEach(function (it) { setOpen(it, it === item); });
+    if (focus) item.querySelector('.ev-toggle').focus({ preventScroll: true });
+    // A card opened by resting the mouse on it stays put (a scroll would slide a different row under the pointer);
+    // clicks, taps, the keyboard and links bring it fully into view.
+    if (how !== 'hover') setTimeout(function () { bringIntoView(item, prevOpen); }, wide.matches ? 60 : (reduce.matches ? 60 : 800));
+  }
+
+  function closeItem(item, returnFocus) {
+    if (!item.classList.contains('is-open')) return;
+    setOpen(item, false);
+    if (returnFocus) item.querySelector('.ev-toggle').focus({ preventScroll: true });
   }
 
   // Desktop mouse: once the pointer leaves the whole accordion, every panel closes.
   var leaveTimer;
   function closeAll() {
-    items.forEach(function (it, k) {
+    items.forEach(function (it) {
       if (!it.classList.contains('is-open') || it.querySelector('.ev-video.is-playing')) return;
-      it.classList.remove('is-open');
-      var t = it.querySelector('.ev-toggle');
-      t.setAttribute('aria-expanded', 'false');
-      t.tabIndex = 0;
-      stories[k].stop();
-      resetVideo(it);
+      setOpen(it, false);
     });
   }
   acc.addEventListener('mouseleave', function () {
-    if (!wide.matches || !canHover.matches) return;
+    if (!wide.matches || !canHover.matches || !moved()) return;
     leaveTimer = setTimeout(closeAll, 250);
   });
   acc.addEventListener('mouseenter', function () { clearTimeout(leaveTimer); });
@@ -119,6 +163,8 @@
     var toggle = item.querySelector('.ev-toggle');
     toggle.tabIndex = item.classList.contains('is-open') ? -1 : 0;
     toggle.addEventListener('click', function () { activate(item); });
+    var closeBtn = item.querySelector('.ev-close');
+    if (closeBtn) closeBtn.addEventListener('click', function () { closeItem(item, true); });
     toggle.addEventListener('keydown', function (e) {
       var d = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
       if (e.key === 'Home') d = -k;
@@ -130,10 +176,16 @@
     // Desktop mouse: resting on a strip opens it after a brief moment.
     var intent;
     item.addEventListener('mouseenter', function () {
-      if (!wide.matches || !canHover.matches || item.classList.contains('is-open')) return;
-      intent = setTimeout(function () { activate(item); }, 150);
+      if (!wide.matches || !canHover.matches || item.classList.contains('is-open') || !moved()) return;
+      intent = setTimeout(function () { activate(item, false, 'hover'); }, 150);
     });
     item.addEventListener('mouseleave', function () { clearTimeout(intent); });
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    var open = items.filter(function (it) { return it.classList.contains('is-open'); })[0];
+    if (open) closeItem(open, true);
   });
 
   document.addEventListener('visibilitychange', function () {

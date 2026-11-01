@@ -374,3 +374,96 @@
 /* Thumbnail framing (the strip shows a wide slice of each first photo). */
 #sip-and-ship .ev-slide:first-child { object-position: 50% 44%; }
 #graph-advocate .ev-slide:first-child { object-position: 50% 35%; }
+
+
+/* ============================================
+   POLISH: shared edges and scale, a card that fits short laptops, a close button, even padding, left-aligned text
+   (the container, gutters and wide-screen scale come from css/layout-tokens.css)
+============================================ */
+.ev-section {
+  --evs: 1;                      /* the wide-screen scale: the same steps as the container (1180 / 1320 / 1440) */
+  --ev-nav: 84px;                /* the sticky nav and a little air */
+  --ev-pad: calc(clamp(18px, 1.8vw, 28px) * var(--evs));   /* one padding all round the text panel */
+  --ev-open-h: max(420px, min(calc(590px * var(--evs)), calc(100svh - var(--ev-nav) - 32px)));   /* the open card never outgrows the screen */
+}
+@media (min-width: 1920px) { .ev-section { --evs: 1.1186; } }
+@media (min-width: 2400px) { .ev-section { --evs: 1.2203; } }
+.ev-acc { overflow-anchor: none; }   /* the page does not shuffle itself while a card grows */
+.ev-plus { width: calc(28px * var(--evs)); height: calc(28px * var(--evs)); }
+.ev-plus::before, .ev-plus::after { width: calc(12px * var(--evs)); height: calc(2px * var(--evs)); }
+
+/* the close button: exactly where the + sits on the collapsed row, the same size and style */
+.ev-close {
+  position: absolute;
+  z-index: 5;
+  right: calc(28px * var(--evs));
+  top: calc(38px * var(--evs));
+  width: calc(28px * var(--evs)); height: calc(28px * var(--evs));
+  padding: 0; border: 0; border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 1.5px var(--periwinkle);
+  cursor: pointer;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0s 0.3s, transform 0.4s var(--ease);
+}
+.ev-close span::before, .ev-close span::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  width: calc(12px * var(--evs)); height: calc(2px * var(--evs));
+  background: var(--blue);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.ev-close span::after { transform: translate(-50%, -50%) rotate(-45deg); }
+.ev-item.is-open .ev-close { opacity: 1; visibility: visible; transition: opacity 0.4s ease 0.55s, visibility 0s 0.55s, transform 0.4s var(--ease); }
+.ev-close:hover { transform: rotate(90deg) scale(1.1); }
+.ev-close:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+
+/* the text side: even padding, and the panel lines up with the photo (same top, bottom and gap) */
+.ev-item.is-open .ev-text { padding: var(--ev-pad); }
+.ev-text .ev-count, .ev-text .ev-title, .ev-text .ev-brief, .ev-text .ev-detail-title, .ev-text .ev-detail-list { text-align: left; }   /* also on phones */
+
+@media (min-width: 900px) {
+  /* a tall screen centres the list instead of leaving it in the top quarter (a fixed offset, so nothing moves when a card opens) */
+  .ev-section {
+    min-height: 100svh; box-sizing: border-box;
+    padding-top: max(128px, calc((100svh - 960px * var(--evs)) / 2));
+    padding-bottom: max(clamp(64px, 9vw, 110px), calc((100svh - 960px * var(--evs)) / 2));
+  }
+  .ev-acc { gap: calc(14px * var(--evs)); }
+  .ev-stage { grid-template-rows: calc(116px * var(--evs)); }
+  .ev-item.is-open .ev-stage { grid-template-rows: var(--ev-open-h); }
+  .ev-pic, .ev-item.is-open .ev-pic { margin: calc(10px * var(--evs)); }
+  .ev-toggle { height: calc(96px * var(--evs)); padding: 0 calc(28px * var(--evs)); gap: calc(18px * var(--evs)); inset: calc(10px * var(--evs)) calc(10px * var(--evs)) auto; }
+  .ev-close { top: calc((10px + 34px) * var(--evs)); right: calc(38px * var(--evs)); }
+  .ev-item.is-open .ev-text { margin: calc(10px * var(--evs)) calc(10px * var(--evs)) calc(10px * var(--evs)) 0; justify-content: center; }
+  /* a touch tighter than before so the longest card fits its panel without scrolling */
+  .ev-count { margin-bottom: 10px; }
+  .ev-title { margin-bottom: 10px; }
+  .ev-brief { margin-bottom: 14px; }
+  .ev-detail { padding: 16px 18px 16px; }
+  .ev-detail-list { margin-bottom: 8px; }
+  .ev-detail-title { margin-bottom: 8px; }
+}
+/* short laptops: a little less type and spacing so the whole card still fits */
+@media (min-width: 900px) and (max-height: 760px) {
+  .ev-section { --ev-pad: 22px; }
+  .ev-title { font-size: clamp(1.5rem, 2.3vw, 2.1rem); margin-bottom: 8px; }
+  .ev-count { margin-bottom: 8px; }
+  .ev-brief { font-size: 0.95rem; line-height: 1.45; margin-bottom: 14px; }
+  .ev-detail { padding: 12px 16px 14px; }
+  .ev-detail-title { margin-bottom: 6px; }
+  .ev-detail-list { font-size: 0.9rem; line-height: 1.45; margin-bottom: 8px; }
+  .ev-detail-list li + li { margin-top: 2px; }
+}
+@media (min-width: 900px) and (max-height: 660px) {
+  .ev-section { --ev-pad: 18px; }
+  .ev-title { font-size: clamp(1.35rem, 2vw, 1.8rem); }
+  .ev-brief { font-size: 0.9rem; margin-bottom: 10px; }
+  .ev-detail-list { font-size: 0.86rem; }
+}
+/* phones: the close button sits where the + does on the stacked row */
+@media (max-width: 899px) {
+  .ev-close { right: 28px; top: 38px; }
+}
+@media (prefers-reduced-motion: reduce) { .ev-close { transition-duration: 0.01s !important; transition-delay: 0s !important; } }
