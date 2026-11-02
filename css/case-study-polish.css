@@ -340,3 +340,13 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
 }
 .cs-page .cs-next-all a:hover, .cs-page .cs-next-all a:focus-visible { background: var(--navy); color: #fff; transform: translateY(-2px); }
 .cs-page .cs-next-all a:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+
+/* the next-project picture keeps its own shape: smaller, never cropped */
+.cs-page .cs-next-card > img.img-placeholder {
+  width: auto !important; max-width: 100%;
+  height: auto !important; max-height: clamp(240px, 38svh, 400px);
+  aspect-ratio: auto !important;
+  object-fit: contain !important;
+  justify-self: center;
+  border-radius: 14px;
+}
