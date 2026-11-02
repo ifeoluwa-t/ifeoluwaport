@@ -248,10 +248,9 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
   padding: 14px 2px;
   border-bottom: 1px solid var(--cs-line);
 }
-.cs-page .cs-credit-role { font-size: 1.05rem; font-weight: 600; color: var(--navy); }
-.cs-page .cs-credit-me .cs-credit-role { font-weight: 700; }
-.cs-page .cs-credit-name { margin-right: 10px; font-weight: 700; }
-.cs-page .cs-credit-note { font-size: var(--cs-micro); color: rgba(12, 0, 84, 0.58); letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600; }
+.cs-page .cs-credit-role,
+.cs-page .cs-credit-name { font-size: 1.05rem; font-weight: 500; line-height: 1.4; color: var(--navy); }
+.cs-page .cs-credit-name { text-align: right; }
 
 /* ============================================
    ONE NEXT PROJECT
@@ -296,21 +295,6 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
   box-shadow: none !important;
   background: none !important;
 }
-.cs-page .cs-hero-media img,
-.cs-page .cs-hero-media--landscape img {
-  width: min(100%, calc((100svh - 190px) * 1.6));
-  height: auto;
-  aspect-ratio: 16 / 10;
-  object-fit: contain;
-  border-radius: var(--card-radius, 20px);
-  background: linear-gradient(150deg, color-mix(in srgb, var(--periwinkle) 70%, #fff), var(--pale));
-  animation: none;
-  box-shadow: inset 0 0 0 1.5px var(--periwinkle), 0 0 0 1px var(--edge), 0 0 0 2px var(--edge), 0 0 0 3px var(--edge-deep), 0 16px 26px -8px rgba(12, 0, 84, 0.3);
-}
-@media (max-width: 899px) {
-  .cs-page .cs-hero-media img, .cs-page .cs-hero-media--landscape img { width: 100%; max-width: 560px; aspect-ratio: 16 / 10; }
-}
-
 /* ============================================
    CHAPTER RAIL (1280px and up) and the restyled "In this file" pill below it
 ============================================ */
@@ -360,3 +344,17 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
 @media (prefers-reduced-motion: reduce) { .cs-rail, .cs-rail-link, .cs-rail-link::after { transition: none; } }
 .cs-page .cs-next.work { padding: 0; margin: 0; background: none; border-radius: 0; }
 .cs-page .cs-next.work::before { content: none; }
+
+/* the next-project card shows its whole outline and layer (nothing clips it) */
+.cs-page .cs-next.work { overflow: visible; padding: 6px 0 8px; }
+.cs-page .cs-next-all { margin: 28px 0 0; }
+.cs-page .cs-next-all a {
+  display: inline-flex; align-items: center;
+  height: 44px; padding: 0 22px;
+  border-radius: 999px;
+  background: var(--blue); color: #fff;
+  font-size: 0.9375rem; font-weight: 600; text-decoration: none;
+  transition: background-color 0.25s ease, transform 0.25s ease;
+}
+.cs-page .cs-next-all a:hover, .cs-page .cs-next-all a:focus-visible { background: var(--navy); color: #fff; transform: translateY(-2px); }
+.cs-page .cs-next-all a:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
