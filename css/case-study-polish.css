@@ -277,24 +277,6 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
 /* ============================================
    MATCHING COVERS: one frame for every project's key visual (hero, Work page, next project)
 ============================================ */
-.cs-cover {
-  position: relative; display: block; width: 100%;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border-radius: var(--card-radius, 20px);
-  background: linear-gradient(150deg, color-mix(in srgb, var(--periwinkle) 70%, #fff), var(--pale));
-  box-shadow: inset 0 0 0 1.5px var(--periwinkle);
-}
-.cs-cover img, .cs-cover .img-placeholder {
-  position: absolute; inset: 0;
-  width: 100% !important; height: 100% !important;
-  margin: 0 !important;
-  aspect-ratio: auto !important;
-  object-fit: contain !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  background: none !important;
-}
 /* ============================================
    CHAPTER RAIL (1280px and up) and the restyled "In this file" pill below it
 ============================================ */
