@@ -90,7 +90,7 @@
       });
       // a mouse resting on a tab selects it (touch screens use a tap, so nothing here depends on hover)
       var intent = 0;
-      t.addEventListener('mouseenter', function () { if (!canHover.matches) return; clearTimeout(intent); intent = setTimeout(function () { if (cur !== i) select(i, true); }, 90); });
+      t.addEventListener('mouseenter', function () { if (!canHover.matches) return; if (cur !== i) select(i, true); });
       t.addEventListener('mouseleave', function () { clearTimeout(intent); });
     });
     root.addEventListener('mouseenter', function () { if (canHover.matches) pause(); });

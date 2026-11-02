@@ -657,10 +657,12 @@
   var navBtn = document.getElementById('nav-music') || document.createElement('button'), play = document.getElementById('sq2-play'), bar = document.getElementById('sq2-music');
   var closeBtn = document.getElementById('sq2-close');
   if (!navBtn || !play || !bar) return;
-  var EDGE = 14, side = 'L', hideTimer = 0, started = false, dragSt = null, dragMoved = false;
+  function getSide() { try { return localStorage.getItem('sqMusicSide') === 'R' ? 'R' : 'L'; } catch (e) { return 'L'; } }
+  function setSide(v) { try { localStorage.setItem('sqMusicSide', v); } catch (e) {} }
+  var EDGE = 14, side = getSide(), hideTimer = 0, started = false, dragSt = null, dragMoved = false;
   function playing() { return bar.classList.contains('is-playing'); }
-  function edgeLeft() { return side === 'R' ? Math.max(EDGE, window.innerWidth - bar.offsetWidth - EDGE) : EDGE; }
-  function place() { if (mq.matches) { bar.style.left = edgeLeft() + 'px'; bar.style.transform = 'none'; } else { bar.style.left = ''; bar.style.transform = ''; } }
+  // the bar sits on the side the visitor chose (shared with every other page) and expands inward from it
+  function place() { bar.classList.toggle('is-right', side === 'R'); document.documentElement.classList.toggle('mk-right', side === 'R'); bar.style.left = ''; bar.style.right = ''; bar.style.transform = ''; }
   function armHide() { clearTimeout(hideTimer); hideTimer = setTimeout(function () { if (mq.matches) bar.classList.add('is-mini'); }, 3000); }
   function wake() { bar.classList.remove('is-mini'); armHide(); }
   function sync() {
@@ -701,16 +703,20 @@
     if (!dragSt || dragSt.id !== e.pointerId) return;
     var dx = e.clientX - dragSt.x;
     if (!dragMoved && Math.abs(dx) < 6) return;
-    if (!dragMoved) { dragMoved = true; try { bar.setPointerCapture(e.pointerId); } catch (x) {} bar.style.transition = 'none'; clearTimeout(hideTimer); }
+    if (!dragMoved) { dragMoved = true; try { bar.setPointerCapture(e.pointerId); } catch (x) {} bar.style.transition = 'none'; bar.style.right = 'auto'; clearTimeout(hideTimer); }
     bar.style.left = Math.max(EDGE, Math.min(window.innerWidth - bar.offsetWidth - EDGE, dragSt.left + dx)) + 'px';
   });
   function endDrag(e) {
     if (!dragSt || dragSt.id !== e.pointerId) return;
     dragSt = null;
     if (dragMoved) {
-      side = bar.getBoundingClientRect().left + bar.offsetWidth / 2 > window.innerWidth / 2 ? 'R' : 'L';
-      bar.style.transition = 'left .28s cubic-bezier(.2,.8,.3,1)'; place();
-      setTimeout(function () { bar.style.transition = ''; }, 320);
+      var r = bar.getBoundingClientRect();
+      side = r.left + r.width / 2 > window.innerWidth / 2 ? 'R' : 'L';
+      setSide(side);                                   // the only place the side changes
+      bar.style.transition = '';
+      place();
+      var nl = bar.getBoundingClientRect().left;
+      if (bar.animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) bar.animate([{ transform: 'translateX(' + (r.left - nl) + 'px)' }, { transform: 'none' }], { duration: 280, easing: 'cubic-bezier(.2,.8,.3,1)' });
       if (!bar.classList.contains('is-mini')) armHide();
       setTimeout(function () { dragMoved = false; }, 0);
     }

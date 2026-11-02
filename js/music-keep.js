@@ -159,217 +159,197 @@
     write(null);
     return;
   }
-  // The one music button, on every page: a floating button at the bottom of the screen (the same yellow note as on Side-Quests).
-  // It pops in with a small bounce shortly after the page loads and then stays put. Once music plays, the player bar takes its place.
-  var navBtn = document.getElementById('nav-music');
-  if (!navBtn) {
-    var fabCss = document.createElement('style');
-    fabCss.textContent =
-      '.mk-fab{position:fixed;left:14px;bottom:14px;z-index:9990;display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;padding:0;border:0;border-radius:50%;background:#fff;color:#0c0054;cursor:pointer;box-shadow:0 10px 30px rgba(7,0,46,.35);opacity:0;transform:scale(0);transition:opacity .3s ease,scale .25s ease}' +
-      '.mk-fab::before{content:"";position:absolute;inset:5px;border-radius:50%;background:#ffd23f}' +
-      '.mk-fab svg{position:relative;width:18px;height:18px}' +
-      '.mk-fab.is-in{opacity:1;transform:none;animation:mkFabPop .7s cubic-bezier(.3,1.6,.5,1) both}' +
-      '@keyframes mkFabPop{0%{transform:scale(0)}55%{transform:scale(1.22)}78%{transform:scale(.92)}100%{transform:scale(1)}}' +
-      '.mk-fab:hover{scale:1.06}.mk-fab:active{scale:.94}.mk-fab:focus-visible{outline:3px solid #0052ff;outline-offset:3px}' +
-      '.mk-fab.is-on,.mk-fab.is-carried{display:none}' +
-      '.mk-fab.is-away,.mk.is-away{opacity:0!important;pointer-events:none;transform:translateY(12px)}' +
-      '@media (prefers-reduced-motion:reduce){.mk-fab{transition:none}.mk-fab.is-in{animation:none}}';
-    document.head.appendChild(fabCss);
-    navBtn = document.createElement('button');
-    navBtn.type = 'button'; navBtn.id = 'nav-music'; navBtn.className = 'mk-fab';
-    navBtn.setAttribute('aria-label', 'Play music'); navBtn.setAttribute('aria-pressed', 'false');
-    navBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6.5l10-2V16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="16.5" cy="16" r="2.5" fill="currentColor"/></svg>';
-    document.body.appendChild(navBtn);
-    setTimeout(function () { navBtn.classList.add('is-in'); }, 700);
-    // it steps aside while the footer or the reaction game is at the bottom of the screen, so it never sits on them
-    if ('IntersectionObserver' in window) {
-      var strip = Math.max(1, window.innerHeight - 90);
-      var away = 0;
-      var io = new IntersectionObserver(function (es) {
-        es.forEach(function (e) { away += e.isIntersecting ? 1 : -1; });
-        away = Math.max(0, away);
-        navBtn.classList.toggle('is-away', away > 0);
-        var mk = document.querySelector('.mk'); if (mk) mk.classList.toggle('is-away', away > 0);
-      }, { rootMargin: '-' + strip + 'px 0px 0px 0px' });
-      ['site-footer', 'games'].forEach(function (id) { var t = document.getElementById(id); if (t) io.observe(t); });
-    }
-  }
-  var ctl = null;   // set once a player exists on this page
-
-  function init(saved, consented) {
-  var cur = saved.i, player = null, playing = false, tick = 0;
-  // Pick up where the song would be by now, allowing for the time the page took to load.
-  var startAt = Math.max(0, Math.floor((saved.t || 0) + (saved.paused ? 0 : Math.min(6, (Date.now() - (saved.at || Date.now())) / 1000))));
+  // ---------------------------------------------------------------------------------------------
+  // THE ONE MUSIC WIDGET (every page except Side-Quests, which has its own player)
+  // A single element that is both the icon and the player bar. Its states:
+  //   idle        no music yet: just the icon (press it to start a song)
+  //   open        the bar: song, play / pause, next, close
+  //   folded      the bar tucked back into the icon (music keeps playing or stays paused)
+  // Nothing else on the page is a music button, so two icons can never show. It is never hidden, it stays on the
+  // side the visitor dragged it to (remembered in localStorage) and it expands inward from that side.
+  // ---------------------------------------------------------------------------------------------
+  var SIDE_KEY = 'sqMusicSide', EDGE = 14;
+  function getSide() { try { return localStorage.getItem(SIDE_KEY) === 'R' ? 'R' : 'L'; } catch (e) { return 'L'; } }
+  function setSide(v) { try { localStorage.setItem(SIDE_KEY, v); } catch (e) {} }
 
   var css = document.createElement('style');
   css.textContent =
-    '.mk{position:fixed;left:14px;bottom:14px;z-index:9990;display:flex;align-items:center;gap:10px;max-width:calc(100vw - 28px);padding:6px 8px 6px 14px;border-radius:999px;background:#fff;color:#0c0054;font-family:Poppins,system-ui,sans-serif;box-shadow:0 8px 24px rgba(12,0,84,.28)}' +
+    '.mk{--mk-c:#0052ff;--mk-h:#0043cf;position:fixed;left:14px;right:auto;bottom:14px;z-index:9990;display:flex;align-items:center;gap:10px;box-sizing:border-box;max-width:calc(100vw - 28px);padding:5px;border-radius:999px;background:#fff;color:#0c0054;font-family:Poppins,system-ui,sans-serif;box-shadow:0 10px 30px rgba(7,0,46,.35);touch-action:none;user-select:none;-webkit-user-select:none;scale:0;opacity:0;transition:padding .3s ease,gap .3s ease}' +
+    '.mk.is-right{left:auto;right:14px}' +
+    '.mk.is-in{opacity:1;scale:1;animation:mkPop .7s cubic-bezier(.3,1.6,.5,1) both}' +
+    '@keyframes mkPop{0%{scale:0}55%{scale:1.22}78%{scale:.92}100%{scale:1}}' +
+    '.mk.is-dragging{cursor:grabbing;transition:none}' +
+    '.mk:not(.is-mini){padding:6px 8px 6px 14px}' +
     '.mk-text{min-width:0;line-height:1.15}.mk-text b{display:block;font-size:.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px}' +
     '.mk-text i{display:block;font-style:normal;font-size:.68rem;opacity:.65;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px}' +
-    '.mk button{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:0;border-radius:50%;cursor:pointer;background:#0052ff;color:#fff;transition:background-color .2s}' +
-    '.mk button:hover{background:#0a00cb}.mk button.mk-next{background:transparent;color:#0c0054}.mk button.mk-next:hover{background:#e9f1ff}.mk button.mk-x{background:transparent;color:#0c0054}.mk button.mk-x:hover{background:#e9f1ff}' +
-    '.mk button:focus-visible{outline:2px solid #0052ff;outline-offset:2px}.mk svg{width:14px;height:14px}.mk .i-pause{display:none}.mk.on .i-pause{display:block}.mk.on .i-play{display:none}' +
+    '.mk button{display:inline-flex;align-items:center;justify-content:center;flex:none;width:32px;height:32px;padding:0;border:0;border-radius:50%;cursor:pointer;background:var(--mk-c);color:#fff;transition:background-color .2s}' +
+    '.mk button:hover{background:var(--mk-h)}.mk button.mk-next,.mk button.mk-x{background:transparent;color:#0c0054}.mk button.mk-next:hover,.mk button.mk-x:hover{background:#e9f1ff}' +
+    '.mk button:focus-visible{outline:2px solid #0c0054;outline-offset:2px}.mk svg{width:14px;height:14px}.mk .i-pause{display:none}.mk.on .i-pause{display:block}.mk.on .i-play{display:none}' +
+    '.mk .mk-ico{display:none;width:32px;height:32px}.mk .mk-ico svg{width:17px;height:17px}' +
+    '.mk.is-mini{gap:0}.mk.is-mini .mk-text,.mk.is-mini .mk-play,.mk.is-mini .mk-next,.mk.is-mini .mk-x{display:none}.mk.is-mini .mk-ico{display:inline-flex}' +
+    '.mk.is-mini.on .mk-ico{animation:mkPulse 3.2s ease-in-out infinite}@keyframes mkPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,82,255,.35)}50%{box-shadow:0 0 0 7px rgba(0,82,255,0)}}' +
     '.mk-yt{position:fixed;left:-9999px;top:0;width:200px;height:200px;overflow:hidden;pointer-events:none}' +
-    '.mk{transition:padding .3s ease,gap .3s ease}' +
-    '.mk-mini-ico{display:none;width:32px;height:32px;border:0;border-radius:50%;background:#ffd23f;color:#0c0054;cursor:pointer;align-items:center;justify-content:center}.mk-mini-ico svg{width:17px;height:17px}' +
-    '.mk button.mk-mini-ico{background:#ffd23f;color:#0c0054}.mk button.mk-mini-ico:hover{background:#ffc400}' +
-    '.mk.is-mini{padding:5px;gap:0}.mk.is-mini .mk-text,.mk.is-mini .mk-play,.mk.is-mini .mk-next,.mk.is-mini .mk-x{display:none}.mk.is-mini .mk-mini-ico{display:inline-flex}' +
-    '.mk.is-mini.on .mk-mini-ico{animation:mkPulse 3.2s ease-in-out infinite}@keyframes mkPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,82,255,.3)}50%{box-shadow:0 0 0 7px rgba(0,82,255,0)}}' +
-    '@media (prefers-reduced-motion:reduce){.mk.is-mini.on .mk-mini-ico{animation:none}}';
+    'html.mk-right .fx-sound{bottom:68px}' +
+    '@media (prefers-reduced-motion:reduce){.mk{transition:none}.mk.is-in{animation:none}.mk.is-mini.on .mk-ico{animation:none}}';
   document.head.appendChild(css);
 
+  var NOTE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6.5l10-2V16"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="16.5" cy="16" r="2.5" fill="currentColor"/></svg>';
   var pill = document.createElement('div');
-  pill.className = 'mk';
+  pill.className = 'mk is-mini';
   pill.setAttribute('role', 'region');
   pill.setAttribute('aria-label', 'Music player');
   pill.innerHTML =
-    '<button type="button" class="mk-mini-ico" aria-label="Show the music player"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6.5l10-2V16"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="16.5" cy="16" r="2.5" fill="currentColor"/></svg></button>' +
-    '<span class="mk-text"><b></b><i></i></span>' +
+    '<button type="button" class="mk-ico" id="nav-music" aria-label="Play music">' + NOTE + '</button>' +
+    '<span class="mk-text" aria-live="polite"><b></b><i></i></span>' +
     '<button type="button" class="mk-play" aria-label="Play"><svg class="i-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg><svg class="i-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z"/></svg></button>' +
     '<button type="button" class="mk-next" aria-label="Next song"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.6 5H18v14h-2.4zM4 5.4v13.2a.8.8 0 0 0 1.25.66l9.15-6.6a.8.8 0 0 0 0-1.32L5.25 4.74A.8.8 0 0 0 4 5.4z"/></svg></button>' +
-    '<button type="button" class="mk-x" aria-label="Stop the music"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></button>';
+    '<button type="button" class="mk-x" aria-label="Close the music bar"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></button>';
   var holder = document.createElement('div');
   holder.className = 'mk-yt';
   holder.setAttribute('aria-hidden', 'true');
   holder.innerHTML = '<div id="mk-yt"></div>';
   document.body.appendChild(pill);
   document.body.appendChild(holder);
+  var ico = pill.querySelector('.mk-ico'), playBtn = pill.querySelector('.mk-play');
 
-  var playBtn = pill.querySelector('.mk-play');
+  // which side it lives on: the visitor's choice, and only ever changed by dragging it
+  function applySide(side) { pill.classList.toggle('is-right', side === 'R'); document.documentElement.classList.toggle('mk-right', side === 'R'); }
+  applySide(getSide());
+  setTimeout(function () { pill.classList.add('is-in'); }, 700);   // pops in shortly after the page loads
 
-  // The bar only stays for 3 seconds, then it hibernates into a single music icon; tapping the icon brings it back.
-  var hideTimer = 0, miniBtn = pill.querySelector('.mk-mini-ico');
-  function armHide() { clearTimeout(hideTimer); hideTimer = setTimeout(function () { pill.classList.add('is-mini'); }, 3000); }
+  var player = null, playing = false, tick = 0, cur = 0, consented = false, hasPlayer = false, ctl = null, hideTimer = 0;
+  function label() {
+    pill.querySelector('b').textContent = hasPlayer ? SONGS[cur][0] : '';
+    pill.querySelector('i').textContent = hasPlayer ? SONGS[cur][1] : '';
+  }
+  function sync() {
+    pill.classList.toggle('on', playing);
+    ico.setAttribute('aria-label', hasPlayer ? 'Show the music player' : 'Play music');
+    ico.setAttribute('data-cursor', hasPlayer ? 'open' : 'play');
+    playBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+  }
+  // the bar stays open for 3 seconds, then folds into the icon; touching it keeps it open a little longer
+  function fold() {
+    clearTimeout(hideTimer);
+    var hadFocus = pill.contains(document.activeElement) && document.activeElement !== ico;
+    pill.classList.add('is-mini');
+    if (hadFocus) ico.focus({ preventScroll: true });
+  }
+  function armHide() { clearTimeout(hideTimer); hideTimer = setTimeout(fold, 3000); }
   function wake() { pill.classList.remove('is-mini'); armHide(); }
-  miniBtn.addEventListener('click', wake);
-  var carriedOn = consented;   // came from another page where the music was already allowed to carry on
   pill.addEventListener('pointerdown', function () { if (!pill.classList.contains('is-mini')) armHide(); });
   pill.addEventListener('focusin', function () { if (!pill.classList.contains('is-mini')) armHide(); });
-  if (carriedOn) pill.classList.add('is-mini'); else armHide();   // already allowed: just the icon, no bar
-  function label() {
-    pill.querySelector('b').textContent = SONGS[cur][0];
-    pill.querySelector('i').textContent = SONGS[cur][1];
-  }
-  function setPlaying(on) { playing = on; pill.classList.toggle('on', on); if (navBtn) navBtn.classList.remove('is-carried'); if (navBtn) { navBtn.classList.toggle('is-on', on); navBtn.setAttribute('aria-pressed', on ? 'true' : 'false'); navBtn.setAttribute('aria-label', on ? 'Pause music' : 'Play music'); } playBtn.setAttribute('aria-label', on ? 'Pause' : 'Play'); }
+  pill.querySelector('.mk-x').addEventListener('click', fold);
+
+  function setPlaying(on) { playing = on; sync(); }
   function persist() {
     if (!player || !player.getCurrentTime) return;   // not loaded yet: keep what was saved
     var t = 0;
-    try { t = player && player.getCurrentTime ? player.getCurrentTime() : 0; } catch (e) {}
+    try { t = player.getCurrentTime(); } catch (e) {}
     if (consented) write({ i: cur, t: Math.floor(t), at: Date.now(), paused: !playing });   // only saved once they said yes
   }
   function stopAll() {
-    clearInterval(tick);
+    clearInterval(tick); clearTimeout(hideTimer);
     try { if (player && player.destroy) player.destroy(); } catch (e) {}
     write(null);
-    pill.remove(); holder.remove();
-    ctl = null; window.sqMusic = null;
-    if (navBtn) { navBtn.classList.remove('is-on'); navBtn.setAttribute('aria-pressed', 'false'); navBtn.setAttribute('aria-label', 'Play music'); navBtn.style.display = ''; }
+    player = null; playing = false; hasPlayer = false; consented = false; ctl = null; window.sqMusic = null;
+    // the player is gone; the widget goes back to being just the icon, and the player's holder is renewed for the next start
+    var fresh = document.createElement('div'); fresh.id = 'mk-yt'; holder.textContent = ''; holder.appendChild(fresh);
+    label(); sync(); fold();
   }
-  label();
 
-  function boot() {
-    player = new YT.Player('mk-yt', {
-      videoId: SONGS[cur][2], width: '200', height: '200',
-      playerVars: { autoplay: saved.paused ? 0 : 1, start: startAt, rel: 0, playsinline: 1, modestbranding: 1 },
-      events: {
-        onReady: function (e) { e.target.setVolume(window.SQ_VOLUME); if (!saved.paused) e.target.playVideo(); },
-        onStateChange: function (e) {
-          if (e.data === 0) { cur = shuffleNext(cur); label(); player.loadVideoById(SONGS[cur][2]); }
-          else if (e.data === 1 || e.data === 3) { try { player.setVolume(window.SQ_VOLUME); } catch (x) {} setPlaying(true); }
-          else if (e.data === 2) { setPlaying(false); persist(); }
-        },
-        onError: function () { cur = shuffleNext(cur); label(); player.loadVideoById(SONGS[cur][2]); }
-      }
-    });
-    tick = setInterval(function () { if (playing) persist(); }, 1000);
+  function init(saved, cons, openBar) {
+    consented = cons; cur = saved.i; hasPlayer = true;
+    // Pick up where the song would be by now, allowing for the time the page took to load.
+    var startAt = Math.max(0, Math.floor((saved.t || 0) + (saved.paused ? 0 : Math.min(6, (Date.now() - (saved.at || Date.now())) / 1000))));
+    label(); sync();
+    if (openBar) wake(); else fold();
+    function boot() {
+      player = new YT.Player('mk-yt', {
+        videoId: SONGS[cur][2], width: '200', height: '200',
+        playerVars: { autoplay: saved.paused ? 0 : 1, start: startAt, rel: 0, playsinline: 1, modestbranding: 1 },
+        events: {
+          onReady: function (e) { e.target.setVolume(window.SQ_VOLUME); if (!saved.paused) e.target.playVideo(); },
+          onStateChange: function (e) {
+            if (e.data === 0) { cur = shuffleNext(cur); label(); player.loadVideoById(SONGS[cur][2]); }
+            else if (e.data === 1 || e.data === 3) { try { player.setVolume(window.SQ_VOLUME); } catch (x) {} setPlaying(true); }
+            else if (e.data === 2) { setPlaying(false); persist(); }
+          },
+          onError: function () { cur = shuffleNext(cur); label(); player.loadVideoById(SONGS[cur][2]); }
+        }
+      });
+      tick = setInterval(function () { if (playing) persist(); }, 1000);
+    }
+    if (window.YT && window.YT.Player) boot();
+    else {
+      var prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = function () { if (prev) prev(); boot(); };
+      if (!document.getElementById('mk-yt-api')) { var sc = document.createElement('script'); sc.id = 'mk-yt-api'; sc.src = 'https://www.youtube.com/iframe_api'; document.head.appendChild(sc); }
+    }
+    ctl = { toggle: function () { if (!player || !player.playVideo) return; if (playing) player.pauseVideo(); else player.playVideo(); } };
+    window.sqMusic = {
+      consented: cons,
+      playing: function () { return playing; },
+      keep: function () { consented = true; window.sqMusic.consented = true; persist(); },
+      stop: stopAll,
+      showBar: wake
+    };
   }
-  if (window.YT && window.YT.Player) boot();
-  else {
-    window.onYouTubeIframeAPIReady = boot;
-    var s = document.createElement('script');
-    s.src = 'https://www.youtube.com/iframe_api';
-    document.head.appendChild(s);
-  }
-  playBtn.addEventListener('click', function () { if (!player || !player.playVideo) return; if (playing) player.pauseVideo(); else player.playVideo(); });
+
+  playBtn.addEventListener('click', function () { if (ctl) ctl.toggle(); armHide(); });
   pill.querySelector('.mk-next').addEventListener('click', function () {
     if (!player || !player.loadVideoById) return;
-    cur = shuffleNext(cur); label(); player.loadVideoById(SONGS[cur][2]); if (consented) write({ i: cur, t: 0, at: Date.now(), paused: false });
+    cur = shuffleNext(cur); label(); player.loadVideoById(SONGS[cur][2]);
+    if (consented) write({ i: cur, t: 0, at: Date.now(), paused: false });
+    armHide();
   });
-  // The cross only puts the bar away: the music keeps playing (the nav icon brings the bar back).
-  var HIDE_KEY = 'sqMusicBarHidden';
-  function barHidden(v) { try { if (v === undefined) return sessionStorage.getItem(HIDE_KEY) === '1'; if (v) sessionStorage.setItem(HIDE_KEY, '1'); else sessionStorage.removeItem(HIDE_KEY); } catch (e) {} return !!v; }
-  function applyHidden() { pill.style.display = barHidden() ? 'none' : ''; if (navBtn && navBtn.classList.contains('mk-fab')) navBtn.style.display = barHidden() ? '' : 'none'; }   // the floating button and the player bar never show together
-  pill.querySelector('.mk-x').setAttribute('aria-label', 'Close the music bar');
-
-  pill.querySelector('.mk-x').addEventListener('click', function () {
-    clearTimeout(hideTimer);
-    if (playing) { pill.classList.add('is-mini'); }           // music is playing: the bar folds into the icon, which stays
-    else { barHidden(true); applyHidden(); }                    // paused: the bar goes away completely
+  // the icon: the first press starts a song (carried to the next page without asking); after that it opens the bar
+  ico.addEventListener('click', function () {
+    if (!hasPlayer) init({ i: nextDefault(), t: 0, at: Date.now(), paused: false }, true, true);
+    else wake();
   });
-  applyHidden();
+  window.addEventListener('pagehide', persist);
 
-  // The bar / icon can be dragged left and right along the bottom of the screen; let go and it settles on the nearest edge.
-  var SIDE_KEY = 'sqMusicBarSide', EDGE = 14;
-  function sideNow() { try { return sessionStorage.getItem(SIDE_KEY) === 'R' ? 'R' : 'L'; } catch (e) { return 'L'; } }
-  function edgeLeft(side) { return side === 'R' ? Math.max(EDGE, window.innerWidth - pill.offsetWidth - EDGE) : EDGE; }
-  function applySide() { pill.style.left = edgeLeft(sideNow()) + 'px'; }
-  applySide();
-  window.addEventListener('resize', applySide);
-  new MutationObserver(applySide).observe(pill, { attributes: true, attributeFilter: ['class'] });   // folding / unfolding changes its width
+  // ---- dragging: the icon and the open bar both slide along the bottom; letting go settles on the nearest corner ----
   var dragSt = null, dragMoved = false;
+  function onMove(e) {
+    if (!dragSt || dragSt.id !== e.pointerId) return;
+    var dx = e.clientX - dragSt.x;
+    if (!dragMoved && Math.abs(dx) < 6) return;            // under 6px it is still a tap
+    if (!dragMoved) {
+      dragMoved = true;
+      pill.classList.add('is-dragging'); clearTimeout(hideTimer);
+      pill.style.right = 'auto';
+    }
+    pill.style.left = Math.max(EDGE, Math.min(window.innerWidth - pill.offsetWidth - EDGE, dragSt.left + dx)) + 'px';
+  }
+  function endDrag(e) {
+    if (!dragSt || dragSt.id !== e.pointerId) return;
+    window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', endDrag); window.removeEventListener('pointercancel', endDrag);
+    dragSt = null;
+    if (!dragMoved) return;
+    var r = pill.getBoundingClientRect();
+    var side = r.left + r.width / 2 > window.innerWidth / 2 ? 'R' : 'L';
+    pill.classList.remove('is-dragging');
+    pill.style.left = ''; pill.style.right = '';
+    applySide(side); setSide(side);                         // the only place the side ever changes
+    var nl = pill.getBoundingClientRect().left;
+    if (pill.animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      pill.animate([{ transform: 'translateX(' + (r.left - nl) + 'px)' }, { transform: 'none' }], { duration: 280, easing: 'cubic-bezier(.2,.8,.3,1)' });
+    }
+    if (!pill.classList.contains('is-mini')) armHide();
+    setTimeout(function () { dragMoved = false; }, 0);
+  }
   pill.addEventListener('pointerdown', function (e) {
     if (e.button !== 0) return;
     dragSt = { id: e.pointerId, x: e.clientX, left: pill.getBoundingClientRect().left };
     dragMoved = false;
+    window.addEventListener('pointermove', onMove); window.addEventListener('pointerup', endDrag); window.addEventListener('pointercancel', endDrag);
   });
-  pill.addEventListener('pointermove', function (e) {
-    if (!dragSt || dragSt.id !== e.pointerId) return;
-    var dx = e.clientX - dragSt.x;
-    if (!dragMoved && Math.abs(dx) < 6) return;
-    if (!dragMoved) { dragMoved = true; try { pill.setPointerCapture(e.pointerId); } catch (x) {} pill.style.transition = 'none'; pill.style.cursor = 'grabbing'; clearTimeout(hideTimer); }
-    pill.style.left = Math.max(EDGE, Math.min(window.innerWidth - pill.offsetWidth - EDGE, dragSt.left + dx)) + 'px';
-  });
-  function endDrag(e) {
-    if (!dragSt || dragSt.id !== e.pointerId) return;
-    dragSt = null;
-    pill.style.cursor = '';
-    if (dragMoved) {
-      var mid = pill.getBoundingClientRect().left + pill.offsetWidth / 2;
-      try { sessionStorage.setItem(SIDE_KEY, mid > window.innerWidth / 2 ? 'R' : 'L'); } catch (x) {}
-      pill.style.transition = 'left .28s cubic-bezier(.2,.8,.3,1)';
-      applySide();
-      setTimeout(function () { pill.style.transition = ''; }, 320);
-      if (!pill.classList.contains('is-mini')) armHide();
-    }
-  }
-  pill.addEventListener('pointerup', endDrag);
-  pill.addEventListener('pointercancel', endDrag);
-  pill.addEventListener('click', function (e) { if (dragMoved) { e.stopPropagation(); e.preventDefault(); dragMoved = false; } }, true);
-  pill.style.touchAction = 'none';
+  pill.addEventListener('click', function (e) { if (dragMoved) { e.stopPropagation(); e.preventDefault(); } }, true);   // a drag is never a click
 
-  window.addEventListener('pagehide', persist);
-  window.sqMusic = {
-    consented: consented,
-    playing: function () { return playing; },
-    keep: function () { consented = true; window.sqMusic.consented = true; persist(); },
-    stop: stopAll,
-    showBar: function () { barHidden(false); pill.style.display = ''; wake(); }
-  };
-  ctl = { toggle: function () { if (!player || !player.playVideo) return; if (playing) player.pauseVideo(); else player.playVideo(); } };
-  }
-
+  // music carried over from the last page: just the icon, the song carries on
   var saved = read();
-  if (saved && typeof saved.i === 'number' && SONGS[saved.i]) {
-    if (navBtn && !saved.paused) navBtn.classList.add('is-carried');   // music is carrying on from the last page: the top icon never appears
-    init(saved, true);
-  }
-
-  // The music icon in the nav bar: first press starts one of the three default songs, then it plays / pauses.
-  if (navBtn) {
-    navBtn.addEventListener('click', function () {
-      if (!ctl) { try { sessionStorage.removeItem('sqMusicBarHidden'); } catch (e) {} init({ i: nextDefault(), t: 0, at: Date.now(), paused: false }, true); }   // music started here carries on to the next page without asking
-      else if (window.sqMusic && window.sqMusic.showBar && (function () { try { return sessionStorage.getItem('sqMusicBarHidden') === '1'; } catch (e) { return false; } })()) window.sqMusic.showBar();   // bar was put away: bring it back
-      else ctl.toggle();
-    });
-  }
+  if (saved && typeof saved.i === 'number' && SONGS[saved.i]) init(saved, true, false);
+  else sync();
 })();

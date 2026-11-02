@@ -940,3 +940,6 @@ body > .sq2-music .sq2-music-icon .sq2-note { color: var(--navy); }
 
 /* Side Quests: the top music icon is hidden; the icon at the bottom is the one visitors use. */
 body[data-page="side-quests"] #nav-music { display: none !important; }
+
+/* the music bar expands inward from whichever side it sits on */
+body > .sq2-music.is-right { left: auto; right: 14px; }
