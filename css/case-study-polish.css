@@ -213,3 +213,6 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
 
 /* the wide card's picture sits in the middle of the section */
 .cs-page .cs-tabs-card--wide .cs-tabs-visual { justify-self: center; }
+
+/* Wins: the heading sits inside the same panel as the two screenshots */
+.cs-page .cs-wins-head { margin-bottom: clamp(24px, 3vw, 40px); }
