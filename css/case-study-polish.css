@@ -216,3 +216,147 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
 
 /* Wins: the heading sits inside the same panel as the two screenshots */
 .cs-page .cs-wins-head { margin-bottom: clamp(24px, 3vw, 40px); }
+
+/* ============================================
+   TRAYS: filled (pale blue), outlined (thin soft-blue line) and open (no tray at all)
+============================================ */
+.cs-page .cs-panel--outline {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--periwinkle);
+}
+.cs-page .cs-panel--outline .cs-stat { box-shadow: var(--card-ring); }
+
+/* ============================================
+   CAPTIONS: one muted line under a picture or gallery
+============================================ */
+.cs-page .cs-caption {
+  margin: 14px 0 0;
+  font-size: var(--cs-micro);
+  line-height: 1.4;
+  color: rgba(12, 0, 84, 0.62);
+}
+.cs-page .cs-caption--under { position: absolute; left: 0; right: 0; top: 100%; margin-top: 12px; }
+.cs-page .cs-pullquote-picture, .cs-page .cs-pullquote-slides { margin-bottom: 36px; }
+
+/* ============================================
+   CREDITS
+============================================ */
+.cs-page .cs-credits-section { padding: 0; }
+.cs-page .cs-credits { list-style: none; margin: clamp(20px, 3vh, 30px) 0 0; padding: 0; max-width: 760px; border-top: 1px solid var(--cs-line); }
+.cs-page .cs-credits li {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  padding: 14px 2px;
+  border-bottom: 1px solid var(--cs-line);
+}
+.cs-page .cs-credit-role { font-size: 1.05rem; font-weight: 600; color: var(--navy); }
+.cs-page .cs-credit-me .cs-credit-role { font-weight: 700; }
+.cs-page .cs-credit-name { margin-right: 10px; font-weight: 700; }
+.cs-page .cs-credit-note { font-size: var(--cs-micro); color: rgba(12, 0, 84, 0.58); letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600; }
+
+/* ============================================
+   ONE NEXT PROJECT
+============================================ */
+.cs-page .cs-next { margin-top: 4px; }
+.cs-page .cs-next .work-card { width: 100%; max-width: none; justify-self: stretch; }
+.cs-page .cs-next .work-card--landscape {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(20px, 3vw, 40px);
+  padding: clamp(16px, 2vw, 24px);
+  background: #fff;
+  border-radius: var(--card-radius, 20px);
+  box-shadow: var(--card-ring);
+}
+.cs-page .cs-next .work-card--landscape:hover { background: var(--periwinkle); }
+.cs-page .cs-next .work-card-body { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-width: 0; }
+.cs-page .cs-next-all { margin: 22px 0 0; font-weight: 600; }
+.cs-page .cs-next-all a { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+.cs-page .cs-next-all a:hover { color: var(--navy); }
+@media (max-width: 760px) { .cs-page .cs-next .work-card--landscape { grid-template-columns: minmax(0, 1fr); } }
+
+/* ============================================
+   MATCHING COVERS: one frame for every project's key visual (hero, Work page, next project)
+============================================ */
+.cs-cover {
+  position: relative; display: block; width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: var(--card-radius, 20px);
+  background: linear-gradient(150deg, color-mix(in srgb, var(--periwinkle) 70%, #fff), var(--pale));
+  box-shadow: inset 0 0 0 1.5px var(--periwinkle);
+}
+.cs-cover img, .cs-cover .img-placeholder {
+  position: absolute; inset: 0;
+  width: 100% !important; height: 100% !important;
+  margin: 0 !important;
+  aspect-ratio: auto !important;
+  object-fit: contain !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: none !important;
+}
+.cs-page .cs-hero-media img,
+.cs-page .cs-hero-media--landscape img {
+  width: min(100%, calc((100svh - 190px) * 1.6));
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: contain;
+  border-radius: var(--card-radius, 20px);
+  background: linear-gradient(150deg, color-mix(in srgb, var(--periwinkle) 70%, #fff), var(--pale));
+  animation: none;
+  box-shadow: inset 0 0 0 1.5px var(--periwinkle), 0 0 0 1px var(--edge), 0 0 0 2px var(--edge), 0 0 0 3px var(--edge-deep), 0 16px 26px -8px rgba(12, 0, 84, 0.3);
+}
+@media (max-width: 899px) {
+  .cs-page .cs-hero-media img, .cs-page .cs-hero-media--landscape img { width: 100%; max-width: 560px; aspect-ratio: 16 / 10; }
+}
+
+/* ============================================
+   CHAPTER RAIL (1280px and up) and the restyled "In this file" pill below it
+============================================ */
+.cs-rail { display: none; }
+@media (min-width: 1280px) {
+  .cs-toc, .cs-toc-toggle { display: none !important; }
+  .cs-rail {
+    display: block;
+    position: fixed; left: 10px; top: 50%; z-index: 90;
+    transform: translateY(-50%);
+    opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0s 0.3s;
+  }
+  .cs-toc-on .cs-rail { opacity: 1; visibility: visible; transition-delay: 0s; }
+  .cs-rail ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; position: relative; }
+  .cs-rail ol::before { content: ""; position: absolute; left: 50%; top: 14px; bottom: 14px; width: 1.5px; margin-left: -0.75px; background: rgba(12, 0, 84, 0.18); }
+  .cs-rail li { position: relative; }
+  .cs-rail-link {
+    position: relative; z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: #fff; color: var(--navy);
+    box-shadow: inset 0 0 0 1.5px rgba(12, 0, 84, 0.25);
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .cs-rail-link:hover, .cs-rail-link:focus-visible { box-shadow: inset 0 0 0 1.5px var(--blue); color: var(--blue); }
+  .cs-rail-link.is-active { background: var(--blue); color: #fff; box-shadow: none; }
+  .cs-rail-link::after {                      /* the chapter's name, beside its number */
+    content: attr(data-label);
+    position: absolute; left: 38px; top: 50%;
+    transform: translate(-6px, -50%);
+    padding: 6px 12px; border-radius: 999px;
+    background: #fff; color: var(--navy);
+    box-shadow: 0 0 0 1.5px var(--navy), 0 8px 18px -8px rgba(12, 0, 84, 0.4);
+    font-size: 0.8125rem; font-weight: 600; white-space: nowrap;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .cs-rail-link:hover::after, .cs-rail-link:focus-visible::after { opacity: 1; transform: translate(0, -50%); }
+}
+/* the active chapter's name always shows once the screen is wide enough to leave it clear of the content */
+@media (min-width: 1760px) {
+  .cs-rail-link.is-active::after { opacity: 1; transform: translate(0, -50%); }
+}
+@media (prefers-reduced-motion: reduce) { .cs-rail, .cs-rail-link, .cs-rail-link::after { transition: none; } }
+.cs-page .cs-next.work { padding: 0; margin: 0; background: none; border-radius: 0; }
+.cs-page .cs-next.work::before { content: none; }

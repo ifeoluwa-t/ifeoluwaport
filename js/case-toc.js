@@ -30,8 +30,10 @@
     const a = document.createElement('a');
     a.className = 'cs-toc-link';
     a.href = '#' + t.id;
-    a.textContent = t.dataset.toc;
-    a.dataset.label = t.dataset.toc;
+    const pill = t.querySelector('.cs-section-label, .cs-challenge-tag, .cs-carousel-label');
+    const text = (pill && /^\d\d/.test(pill.textContent.trim())) ? pill.textContent.trim() : t.dataset.toc;
+    a.textContent = text;
+    a.dataset.label = text;
     a.addEventListener('click', (e) => {
       e.preventDefault();
       if (t === targets[0]) window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
@@ -43,7 +45,28 @@
     return a;
   });
 
-  document.body.append(toggle, nav);
+  // Chapter rail (1280px and up): one numbered square per chapter, joined by a thin line; the current chapter is blue.
+  const rail = document.createElement('nav');
+  rail.className = 'cs-rail';
+  rail.setAttribute('aria-label', 'Chapters');
+  const railList = document.createElement('ol');
+  rail.appendChild(railList);
+  const railLinks = targets.slice(1).map((t, i) => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    const label = links[i + 1].dataset.label;
+    a.href = '#' + t.id;
+    a.className = 'cs-rail-link';
+    a.dataset.label = label;
+    a.setAttribute('aria-label', label);
+    a.innerHTML = '<span aria-hidden="true">' + (label.match(/^\d+/) ? label.match(/^\d+/)[0] : String(i + 1).padStart(2, '0')) + '</span>';
+    a.addEventListener('click', (e) => { e.preventDefault(); t.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); });
+    li.appendChild(a);
+    railList.appendChild(li);
+    return a;
+  });
+
+  document.body.append(toggle, nav, rail);
 
   function open() { nav.classList.add('is-open'); toggle.setAttribute('aria-expanded', 'true'); }
   function close() { nav.classList.remove('is-open'); toggle.setAttribute('aria-expanded', 'false'); }
@@ -76,6 +99,20 @@
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
+  if ('IntersectionObserver' in window) {
+    const visible = new Map();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => visible.set(en.target, en.isIntersecting ? en.intersectionRatio : 0));
+      let best = -1, bestV = 0;
+      targets.slice(1).forEach((t, i) => { const v = visible.get(t) || 0; if (v > bestV) { bestV = v; best = i; } });
+      railLinks.forEach((a, i) => {
+        const on = i === best;
+        a.classList.toggle('is-active', on);
+        if (on) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+      });
+    }, { rootMargin: '-35% 0px -45% 0px', threshold: [0, 0.01, 0.1, 0.3, 0.6, 1] });
+    targets.slice(1).forEach((t) => io.observe(t));
+  }
   syncMode();
   update();
 })();

@@ -13,3 +13,7 @@ body[data-page="work"] .work-page .work-grid {
 body[data-page="work"] .work-grid-row { padding: 0; }
 /* the category pill is as wide as its text on every card, including the wide ones */
 .work-card-pill { align-self: flex-start; width: fit-content; max-width: 100%; }
+
+/* the same cover frame on every Work card (the picture is fitted inside, never cropped) */
+.work-page .work-card .cs-cover { margin-bottom: 16px; }
+.work-page .work-card--landscape .cs-cover { margin-bottom: 0; align-self: center; }
