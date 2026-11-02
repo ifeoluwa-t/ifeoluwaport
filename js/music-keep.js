@@ -30,6 +30,7 @@
     ['Like a Prayer (Choir Version)', 'I\'ll Take You There Choir', 'pMPKTwESkxs', 'Choral'],
     ['Coping Mechanism', 'Omah Lay & Elmah', 'VWqdBp3OfVg', 'Afrobeats'],
     ['Cry (Just A Little) [General C\'mamane Remix]', 'Bingo Players', 'C9a86kKfUGk', 'Dance'],
+    ['Conflict of the Mind', 'AURORA', '7TF91Zk8L5w', 'Indie'],
     ['Rora', 'Asake', 'Mz1zjBwUzoc', 'Afrobeats'],
     ['Gone', 'NF & Julia Michaels', 'f5ZaOGLZHoU', 'Hip-Hop'],
     ['The Wonder Years', 'Jon Bellion', 'WVDtoaO5C70', 'Pop'],
