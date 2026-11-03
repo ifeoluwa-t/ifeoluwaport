@@ -527,3 +527,9 @@
 /* "Email me": its label is centred in the button, and the button has no shadow under it */
 .sp-btn { justify-content: center; }
 .sp-btn--solid { box-shadow: none; }
+
+/* ---------- phones and tablets: the floating music + "In this file" buttons never cover the copyright line ---------- */
+@media (max-width: 1279px) {
+  .signpost-footer,
+  body[data-page] .signpost-footer { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+}

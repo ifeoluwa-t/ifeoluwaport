@@ -306,10 +306,19 @@
 .cs-page .cs-pullquote {
   margin: 0;
   font-family: var(--font-body);
-  font-size: var(--cs-lead);
-  font-weight: 600;
-  line-height: 1.4;
+  font-size: clamp(1.15rem, 1.05rem + 0.25vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.6;
   color: var(--navy);
+}
+/* the one key phrase of the Challenge */
+.cs-page .cs-pullquote .cs-key {
+  font-weight: 600;
+  color: var(--navy);
+  background: linear-gradient(transparent 58%, var(--periwinkle) 58%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding: 0 2px;
 }
 .cs-page .cs-pullquote-slides,
 .cs-page .cs-pullquote-picture {

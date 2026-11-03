@@ -138,9 +138,9 @@ a.pl-card[target="_blank"] { display: flex; }
 }
 .pl-name {
   display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
-  min-height: 2.1em; align-self: stretch; text-align: left;
+  height: 2.12em; min-height: 2.12em; align-self: stretch; text-align: left;
   font-family: var(--font-display); font-weight: 400;
-  font-size: clamp(1.35rem, 2vw, 1.8rem); line-height: 1.04;
+  font-size: clamp(1.15rem, 1.55vw, 1.5rem); line-height: 1.06;
   overflow-wrap: anywhere;
 }
 .pl-pill {
@@ -170,7 +170,7 @@ a.pl-card[target="_blank"] { display: flex; }
 
 /* while the names and covers load */
 .pl-card.is-loading .pl-cover { background: linear-gradient(100deg, rgba(255, 255, 255, 0.35) 30%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.35) 70%) 0 0 / 300% 100%; animation: pl-shimmer 1.3s linear infinite; }
-.pl-card.is-loading .pl-name { color: transparent; border-radius: 8px; background: linear-gradient(100deg, rgba(255, 255, 255, 0.3) 30%, rgba(255, 255, 255, 0.65) 50%, rgba(255, 255, 255, 0.3) 70%) 0 0 / 300% 100%; animation: pl-shimmer 1.3s linear infinite; min-height: 2.1em; }
+.pl-card.is-loading .pl-name { color: transparent; border-radius: 8px; background: linear-gradient(100deg, rgba(255, 255, 255, 0.3) 30%, rgba(255, 255, 255, 0.65) 50%, rgba(255, 255, 255, 0.3) 70%) 0 0 / 300% 100%; animation: pl-shimmer 1.3s linear infinite; }
 @keyframes pl-shimmer { to { background-position: -150% 0; } }
 @media (prefers-reduced-motion: reduce) { .pl-card.is-loading .pl-cover, .pl-card.is-loading .pl-name { animation: none; } }
 
@@ -178,3 +178,6 @@ a.pl-card[target="_blank"] { display: flex; }
 @keyframes sqFabPop { 0% { scale: 0; opacity: 0; } 55% { scale: 1.22; opacity: 1; } 78% { scale: 0.92; } 100% { scale: 1; opacity: 1; } }
 body > .sq2-music { animation: sqFabPop 0.7s 0.7s cubic-bezier(0.3, 1.6, 0.5, 1) both; }
 @media (prefers-reduced-motion: reduce) { body > .sq2-music { animation: none; } }
+
+/* ---------- phones: more air between the wheel and the picture card ---------- */
+@media (max-width: 899px) { .sqw-grid { row-gap: 34px; } }

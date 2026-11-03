@@ -387,3 +387,24 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
 .cs-page .cs-pullquote-picture > .cs-pullquote-slides { justify-self: start; margin: 0; }
 /* ...and the box is exactly as wide as the picture, so the picture, pill and caption share both edges */
 .cs-page .cs-pullquote-picture:has(> .cs-pullquote-slides--portrait) { width: min(100%, calc(var(--cs-fit) * 0.8)); }
+
+/* ---------- credits: two equal columns on wide screens, a short list is one centred block ---------- */
+@media (min-width: 1024px) {
+  .cs-page .cs-credits:not(.cs-credits--few) {
+    max-width: none; width: 100%;
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: column; grid-template-rows: repeat(var(--cs-rows, 4), auto);
+    column-gap: clamp(40px, 5vw, 72px);
+    border-top: 0;
+  }
+  .cs-page .cs-credits:not(.cs-credits--few) li { border-top: 1px solid var(--cs-line); margin-bottom: -1px; }
+  .cs-page .cs-credits:not(.cs-credits--few) li:nth-child(1),
+  .cs-page .cs-credits:not(.cs-credits--few) li:nth-child(n) { border-bottom: 1px solid var(--cs-line); }
+}
+.cs-page .cs-credits.cs-credits--few { max-width: 720px; margin-left: auto; margin-right: auto; }
+
+/* ---------- phones: the floating "In this file" pill steps up when the music bar is open ---------- */
+@media (max-width: 560px) {
+  html:has(.mk:not(.is-mini)) .cs-toc-toggle { bottom: 66px; }
+  html:has(.mk:not(.is-mini)) .cs-toc { bottom: 116px; }
+}
