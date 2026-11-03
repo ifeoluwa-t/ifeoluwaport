@@ -1023,3 +1023,7 @@ body.cs-page { background: #fff; }
 
 /* Results headings: Poppins SemiBold (600), like the result numbers */
 .cs-page .cs-results-section .cs-section-heading { font-weight: 600; }
+
+/* On the project pages the "Another project?" card follows the page: SemiBold (600), where the landing and Work pages keep Bold (700) */
+.cs-page .work-card h3,
+.cs-page .work-card-stat strong { font-weight: 600; }
