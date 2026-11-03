@@ -147,7 +147,7 @@
   margin: 12px 0 0;
   max-width: 52ch;
   font-size: clamp(0.95rem, 0.4vw + 0.8rem, 1.1rem);
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1.5;
   color: var(--cs-ink-soft);
 }
