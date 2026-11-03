@@ -90,6 +90,11 @@
   .og-feature-card { width: min(100%, calc(min(26svh, 280px) * var(--ar))); }
   .og-layout .og { max-width: min(760px, 100%, 46svh); }
 }
+/* tablets and short landscape screens have the width for a bigger picture: it never goes below 350px */
+@media (min-width: 600px) and (max-width: 1099px) {
+  .og-feature-card { width: min(100%, calc(max(350px, min(34svh, 420px)) * var(--ar))); }
+  .og-layout .og { max-width: min(760px, 100%, max(46svh, 440px)); }
+}
 .og-feature-card:focus-visible { outline: 3px solid var(--blue); outline-offset: 6px; }
 .og-feature-card:not([href]) { cursor: default; }
 .og-feature-a, .og-feature-b { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; }
