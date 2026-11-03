@@ -18,6 +18,27 @@
   var fTitle = fName.querySelector('strong'), fSub = fName.querySelector('span');
   var n = cards.length;
   if (!n) return;
+
+  // Keep the space under the picture as tall as the tallest caption, so the picture and the page never jump when the caption changes.
+  function reserveCaption() {
+    var w = fName.offsetWidth; if (!w) return;
+    var ghost = fName.cloneNode(true);
+    ghost.removeAttribute('id');
+    ghost.style.cssText = 'position:absolute;left:0;top:0;visibility:hidden;pointer-events:none;min-height:0;width:' + w + 'px';
+    feat.appendChild(ghost);
+    var gt = ghost.querySelector('strong'), gs = ghost.querySelector('span'), max = 0;
+    cards.forEach(function (k) {
+      gt.textContent = k.getAttribute('data-title') || ''; gs.textContent = k.getAttribute('data-sub') || '';
+      max = Math.max(max, ghost.getBoundingClientRect().height);
+    });
+    feat.removeChild(ghost);
+    if (max) fName.style.minHeight = Math.ceil(max) + 'px';
+  }
+  var capTimer = 0;
+  function reserveSoon() { clearTimeout(capTimer); capTimer = setTimeout(reserveCaption, 120); }
+  window.addEventListener('resize', reserveSoon);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(reserveCaption);
+  reserveCaption();
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var wideMQ = window.matchMedia('(min-width: 1100px)');
 
@@ -96,16 +117,6 @@
     var prev = cur, t = ++token;
     cur = i;
     cards.forEach(function (k, j) { k.classList.toggle('is-featured', j === i); if (j === i) k.setAttribute('aria-current', 'true'); else k.removeAttribute('aria-current'); });
-    var title = c.getAttribute('data-title') || '', sub = c.getAttribute('data-sub') || '';
-    fTitle.textContent = title; fSub.textContent = sub;
-    var ev = c.getAttribute('data-event');
-    if (ev) {                                          // a picture of an event: the card opens that event on the events page
-      fCard.href = 'events.html#' + ev;
-      fCard.setAttribute('aria-label', 'Open ' + title + ' on the events page');
-    } else {                                           // a picture with no event page behind it: the card is just a picture, not a link
-      fCard.removeAttribute('href');
-      fCard.removeAttribute('aria-label');
-    }
     var ar = ((+img.getAttribute('width') || 1) / (+img.getAttribute('height') || 1)).toFixed(4);
     preload(i);
     function apply() {                                  // swap once the picture is decoded, so nothing flashes
@@ -116,6 +127,16 @@
       imgB.src = imgA.src || src; imgB.alt = '';
       imgA.src = src; imgA.alt = img.alt;
       feat.style.setProperty('--ar', ar);
+      var title = c.getAttribute('data-title') || '', sub = c.getAttribute('data-sub') || '';
+      fTitle.textContent = title; fSub.textContent = sub;
+      var ev = c.getAttribute('data-event');
+      if (ev) {                                          // a picture of an event: the card opens that event on the events page
+        fCard.href = 'events.html#' + ev;
+        fCard.setAttribute('aria-label', 'Open ' + title + ' on the events page');
+      } else {                                           // a picture with no event page behind it: the card is just a picture, not a link
+        fCard.removeAttribute('href');
+        fCard.removeAttribute('aria-label');
+      }
       if (prev >= 0 && !reduce && spanB.animate) {
         spanB.animate([{ opacity: from }, { opacity: 0 }], { duration: 480, easing: 'ease-in-out' });
         if (fCard.animate) fCard.animate([{ transform: 'scale(0.955)' }, { transform: 'scale(1)' }], { duration: 560, easing: 'cubic-bezier(0.2, 1.25, 0.4, 1)' });
