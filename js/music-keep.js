@@ -36,7 +36,6 @@
     ['The Wonder Years', 'Jon Bellion', 'WVDtoaO5C70', 'Pop'],
     ['Propeller', 'JAE5, BNXN & Dave', 'yEiGnvgL4fA', 'Afrobeats'],
     ['In a Lake', 'Mitski', 'pUERvd0D_XI', 'Indie'],
-    ['Bandana', 'Fireboy DML & Asake', 'gCLUIzOsgGg', 'Afrobeats'],
     ['HEATED', 'Beyoncé', 'YgKr4mzPBCM', 'Dance'],
     ['Shinunoga E-Wa', 'Fujii Kaze', '3zh9Wb1KuW8', 'J-Pop'],
     ['É Hlu', 'Outgun Onkar & Sinmidele', '5hLrpc12o4A', 'Worship'],
