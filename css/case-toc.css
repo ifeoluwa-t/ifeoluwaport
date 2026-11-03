@@ -29,7 +29,7 @@
   box-shadow: 0 0 0 2px var(--navy), 0 10px 24px rgba(10, 0, 84, 0.18);
   color: var(--navy);
   font-family: var(--font-mono);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.74rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -71,7 +71,7 @@
   background: #fff;
   color: var(--navy);
   font-family: var(--font-mono);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.14em;

@@ -86,7 +86,7 @@
   color: var(--navy);
   font-family: var(--font-body);
   font-size: var(--cs-micro);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -95,7 +95,7 @@
   margin: 0 0 14px;
   font-family: var(--font-body);
   font-size: var(--cs-h2);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.12;
   letter-spacing: -0.01em;
   color: var(--navy);
@@ -138,7 +138,7 @@
   margin: 0;
   font-family: var(--font-body);
   font-size: clamp(1.85rem, min(3.4vw, 5.2vh), 3rem);
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.08;
   letter-spacing: -0.01em;
   color: var(--navy);
@@ -147,7 +147,7 @@
   margin: 12px 0 0;
   max-width: 52ch;
   font-size: clamp(0.95rem, 0.4vw + 0.8rem, 1.1rem);
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.5;
   color: var(--cs-ink-soft);
 }
@@ -160,7 +160,7 @@
 .cs-page .cs-hero-stat { display: flex; flex-direction: column; gap: 4px; }
 .cs-page .cs-hero-stat-value {
   font-size: clamp(1.75rem, 1.4vw + 1.1rem, 2.5rem);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
   color: var(--navy);
 }
@@ -184,7 +184,7 @@
 .cs-page .cs-meta-line { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .cs-page .cs-meta-item-label {
   font-size: var(--cs-micro);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(12, 0, 84, 0.55);
@@ -364,7 +364,7 @@
   background: #fff;
   color: var(--navy);
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: 600;
   box-shadow: 0 10px 20px -12px rgba(12, 0, 84, 0.6);
 }
 .cs-page .cs-rescue-pill--fbi { background: #ffd23f; }
@@ -375,7 +375,7 @@
   margin: 0 0 14px;
   font-family: var(--font-body);
   font-size: var(--cs-micro);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--blue);
@@ -412,7 +412,7 @@
   border-radius: 50%;
   background: var(--blue);
   color: #fff;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 0.9375rem;
 }
 
@@ -514,7 +514,7 @@
   background: var(--blue);
   color: #fff;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   opacity: 0;
@@ -589,7 +589,7 @@
 .cs-page .cs-tab-item:hover { background: rgba(255, 255, 255, 0.6); }
 .cs-page .cs-tab-item.is-active { background: #fff; box-shadow: var(--cs-shadow); }
 .cs-page .cs-tab-item:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
-.cs-page .cs-tab-title { margin: 0; font-family: var(--font-body); font-size: 1.05rem; font-weight: 700; color: var(--navy); }
+.cs-page .cs-tab-title { margin: 0; font-family: var(--font-body); font-size: 1.05rem; font-weight: 600; color: var(--navy); }
 .cs-page .cs-tab-desc { display: none; margin: 0; font-size: 0.9rem; line-height: 1.5; color: var(--cs-ink-soft); }
 .cs-page .cs-tab-item.is-active .cs-tab-desc { display: block; }
 .cs-page .cs-tabs-visual {
@@ -707,7 +707,7 @@
   margin: 0 0 clamp(24px, 3vh, 36px);
   font-family: var(--font-body);
   font-size: var(--cs-h2);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.12;
   letter-spacing: -0.01em;
   color: var(--navy);
@@ -901,7 +901,7 @@ body.cs-page { background: #fff; }
 }
 .cs-page .cs-stat-value {
   font-size: clamp(2rem, 3.5vw, 3rem);
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1;
   letter-spacing: -0.01em;
   color: var(--navy);
@@ -1021,5 +1021,5 @@ body.cs-page { background: #fff; }
   .cs-page .cs-screens-hint { margin-bottom: 14px; }
 }
 
-/* Results headings: Poppins Medium (500), like the result numbers */
-.cs-page .cs-results-section .cs-section-heading { font-weight: 500; }
+/* Results headings: Poppins SemiBold (600), like the result numbers */
+.cs-page .cs-results-section .cs-section-heading { font-weight: 600; }
