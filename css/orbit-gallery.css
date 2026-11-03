@@ -84,6 +84,12 @@
   transition: width 0.45s cubic-bezier(0.3, 0.7, 0.2, 1), aspect-ratio 0.45s cubic-bezier(0.3, 0.7, 0.2, 1);
   cursor: pointer;
 }
+/* stacked layout (tablets and phones): the featured picture is kept smaller so the wheel and the picture fit on one screen */
+@media (max-width: 1099px) {
+  .og-feature { margin-top: 8px; gap: 12px; }
+  .og-feature-card { width: min(100%, calc(min(26svh, 280px) * var(--ar))); }
+  .og-layout .og { max-width: min(760px, 100%, 46svh); }
+}
 .og-feature-card:focus-visible { outline: 3px solid var(--blue); outline-offset: 6px; }
 .og-feature-card:not([href]) { cursor: default; }
 .og-feature-a, .og-feature-b { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; }
