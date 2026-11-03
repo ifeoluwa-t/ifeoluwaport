@@ -58,7 +58,7 @@
   }
   var spinner = box.querySelector('.og-spinner');
   var hint = document.getElementById('og-hint'), HINT = hint ? hint.textContent : '', spinMs = 0, idleMs = 0, teased = false, lineAt = -1;
-  var TEASES = ['You play a lot \u{1F602}', 'That tickles \u{1F92D}', 'Stoppppp \u{1F629}', 'Want a toy? \u{1F9F8}', 'I\u2019m dizzy \u{1F635}\u200D\u{1F4AB}', 'Enough!', 'Your fingers \u{1F440}'];   // one new line for every 3 seconds of spinning
+  var TEASES = ['You play a lot \u{1F602}', 'That tickles', 'Stoppppp \u{1F629}', 'Want a toy?', 'I\u2019m dizzy \u{1F635}\u200D\u{1F4AB}', 'Enough!', 'Your fingers \u{1F440}'];   // one new line for every 3 seconds of spinning
   function paint() {
     if (spinner) spinner.style.transform = 'rotate(' + (rot * 4) + 'deg)';   // the fidget spinner turns with the ring, four times as fast
     for (var i = 0; i < n; i++) {
