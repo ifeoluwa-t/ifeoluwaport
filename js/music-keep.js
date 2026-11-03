@@ -183,10 +183,10 @@
     '.mk-text{min-width:0;line-height:1.15}.mk-text b{display:block;font-size:.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px}' +
     '.mk-text i{display:block;font-style:normal;font-size:.68rem;opacity:.65;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px}' +
     '.mk button{display:inline-flex;align-items:center;justify-content:center;flex:none;width:32px;height:32px;padding:0;border:0;border-radius:50%;cursor:pointer;background:var(--mk-c);color:#fff;transition:background-color .2s}' +
-    '.mk button:hover{background:var(--mk-h)}.mk button.mk-next,.mk button.mk-x{background:transparent;color:#0c0054}.mk button.mk-next:hover,.mk button.mk-x:hover{background:#e9f1ff}' +
+    '.mk button:hover{background:var(--mk-h)}.mk button.mk-prev,.mk button.mk-next,.mk button.mk-x{background:transparent;color:#0c0054}.mk button.mk-prev:hover,.mk button.mk-next:hover,.mk button.mk-x:hover{background:#e9f1ff}' +
     '.mk button:focus-visible{outline:2px solid #0c0054;outline-offset:2px}.mk svg{width:14px;height:14px}.mk .i-pause{display:none}.mk.on .i-pause{display:block}.mk.on .i-play{display:none}' +
     '.mk .mk-ico{display:none;width:32px;height:32px}.mk .mk-ico svg{width:17px;height:17px}' +
-    '.mk.is-mini{gap:0}.mk.is-mini .mk-text,.mk.is-mini .mk-play,.mk.is-mini .mk-next,.mk.is-mini .mk-x{display:none}.mk.is-mini .mk-ico{display:inline-flex}' +
+    '.mk.is-mini{gap:0}.mk.is-mini .mk-text,.mk.is-mini .mk-prev,.mk.is-mini .mk-play,.mk.is-mini .mk-next,.mk.is-mini .mk-x{display:none}.mk.is-mini .mk-ico{display:inline-flex}' +
     '.mk.is-mini.on .mk-ico{animation:mkPulse 3.2s ease-in-out infinite}@keyframes mkPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,82,255,.35)}50%{box-shadow:0 0 0 7px rgba(0,82,255,0)}}' +
     '.mk-yt{position:fixed;left:-9999px;top:0;width:200px;height:200px;overflow:hidden;pointer-events:none}' +
     'html.mk-right .fx-sound{bottom:68px}' +
@@ -201,6 +201,7 @@
   pill.innerHTML =
     '<button type="button" class="mk-ico" id="nav-music" aria-label="Play music">' + NOTE + '</button>' +
     '<span class="mk-text" aria-live="polite"><b></b><i></i></span>' +
+    '<button type="button" class="mk-prev" aria-label="Previous song"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h2.4v14H6zM20 5.4v13.2a.8.8 0 0 1-1.25.66L9.6 12.66a.8.8 0 0 1 0-1.32l9.15-6.6A.8.8 0 0 1 20 5.4z"/></svg></button>' +
     '<button type="button" class="mk-play" aria-label="Play"><svg class="i-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg><svg class="i-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z"/></svg></button>' +
     '<button type="button" class="mk-next" aria-label="Next song"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.6 5H18v14h-2.4zM4 5.4v13.2a.8.8 0 0 0 1.25.66l9.15-6.6a.8.8 0 0 0 0-1.32L5.25 4.74A.8.8 0 0 0 4 5.4z"/></svg></button>' +
     '<button type="button" class="mk-x" aria-label="Close the music bar"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></button>';
@@ -218,6 +219,12 @@
   setTimeout(function () { pill.classList.add('is-in'); }, 700);   // pops in shortly after the page loads
 
   var player = null, playing = false, tick = 0, cur = 0, consented = false, hasPlayer = false, ctl = null, hideTimer = 0;
+  // intent: the visitor wants music playing (so a browser that blocks autoplay on a new page does not turn that into a pause)
+  var intent = false, userPaused = false, resumeArmed = false;
+  // the songs played before this one, newest last, kept for the whole visit so the previous button works across pages
+  var HIST_KEY = 'sqMusicHist', hist = [];
+  try { hist = JSON.parse(sessionStorage.getItem(HIST_KEY) || '[]').filter(function (i) { return typeof i === 'number' && SONGS[i]; }); } catch (e) { hist = []; }
+  function saveHist() { try { sessionStorage.setItem(HIST_KEY, JSON.stringify(hist.slice(-30))); } catch (e) {} }
   function label() {
     pill.querySelector('b').textContent = hasPlayer ? SONGS[cur][0] : '';
     pill.querySelector('i').textContent = hasPlayer ? SONGS[cur][1] : '';
@@ -246,22 +253,46 @@
     if (!player || !player.getCurrentTime) return;   // not loaded yet: keep what was saved
     var t = 0;
     try { t = player.getCurrentTime(); } catch (e) {}
-    if (consented) write({ i: cur, t: Math.floor(t), at: Date.now(), paused: !playing });   // only saved once they said yes
+    if (consented) write({ i: cur, t: Math.floor(t), at: Date.now(), paused: !(playing || intent) });   // only saved once they said yes
   }
   function stopAll() {
     clearInterval(tick); clearTimeout(hideTimer);
     try { if (player && player.destroy) player.destroy(); } catch (e) {}
-    write(null);
+    write(null); hist = []; saveHist(); intent = false; userPaused = false;
     player = null; playing = false; hasPlayer = false; consented = false; ctl = null; window.sqMusic = null;
     // the player is gone; the widget goes back to being just the icon, and the player's holder is renewed for the next start
     var fresh = document.createElement('div'); fresh.id = 'mk-yt'; holder.textContent = ''; holder.appendChild(fresh);
     label(); sync(); fold();
   }
 
+  // pick another song (next, previous or the end of a song), remembering where we came from
+  function goTo(i, fromHistory) {
+    if (!player || !player.loadVideoById) return;
+    if (!fromHistory && i !== cur) { hist.push(cur); saveHist(); }
+    cur = i; intent = true; userPaused = false;
+    label(); player.loadVideoById(SONGS[cur][2]);
+    if (consented) write({ i: cur, t: 0, at: Date.now(), paused: false });
+  }
+  // Browsers (Safari, Firefox, and Chrome for new visitors) will not start sound on a new page by themselves.
+  // If music was playing on the last page, the first tap, click or key press on this one starts it again.
+  function armResume() {
+    if (resumeArmed) return;
+    resumeArmed = true;
+    var evs = ['pointerdown', 'keydown', 'touchend', 'click'];
+    function done() { evs.forEach(function (t) { window.removeEventListener(t, go, true); }); }
+    function go() {
+      if (intent && !playing && player && player.playVideo) { try { player.playVideo(); } catch (e) {} }
+      if (playing) done();
+    }
+    evs.forEach(function (t) { window.addEventListener(t, go, true); });
+    var chk = setInterval(function () { if (playing) { done(); clearInterval(chk); } }, 2000);
+  }
+
   function init(saved, cons, openBar) {
     consented = cons; cur = saved.i; hasPlayer = true;
     // Pick up where the song would be by now, allowing for the time the page took to load.
     var startAt = Math.max(0, Math.floor((saved.t || 0) + (saved.paused ? 0 : Math.min(6, (Date.now() - (saved.at || Date.now())) / 1000))));
+    intent = !saved.paused; userPaused = false;
     label(); sync();
     if (openBar) wake(); else fold();
     function boot() {
@@ -269,13 +300,17 @@
         videoId: SONGS[cur][2], width: '200', height: '200',
         playerVars: { autoplay: saved.paused ? 0 : 1, start: startAt, rel: 0, playsinline: 1, modestbranding: 1 },
         events: {
-          onReady: function (e) { e.target.setVolume(window.SQ_VOLUME); if (!saved.paused) e.target.playVideo(); },
+          onReady: function (e) { e.target.setVolume(window.SQ_VOLUME); if (intent) { e.target.playVideo(); armResume(); } },
+          onAutoplayBlocked: function () { armResume(); },
           onStateChange: function (e) {
-            if (e.data === 0) { cur = shuffleNext(cur); label(); player.loadVideoById(SONGS[cur][2]); }
+            if (e.data === 0) { goTo(shuffleNext(cur)); }
             else if (e.data === 1 || e.data === 3) { try { player.setVolume(window.SQ_VOLUME); } catch (x) {} setPlaying(true); }
-            else if (e.data === 2) { setPlaying(false); persist(); }
+            else if (e.data === 2) {
+              // a real pause (the visitor's, or while playing) is remembered; a browser holding back autoplay is not
+              if (userPaused || playing) { setPlaying(false); intent = false; persist(); }
+            }
           },
-          onError: function () { cur = shuffleNext(cur); label(); player.loadVideoById(SONGS[cur][2]); }
+          onError: function () { goTo(shuffleNext(cur)); }
         }
       });
       tick = setInterval(function () { if (playing) persist(); }, 1000);
@@ -286,7 +321,11 @@
       window.onYouTubeIframeAPIReady = function () { if (prev) prev(); boot(); };
       if (!document.getElementById('mk-yt-api')) { var sc = document.createElement('script'); sc.id = 'mk-yt-api'; sc.src = 'https://www.youtube.com/iframe_api'; document.head.appendChild(sc); }
     }
-    ctl = { toggle: function () { if (!player || !player.playVideo) return; if (playing) player.pauseVideo(); else player.playVideo(); } };
+    ctl = { toggle: function () {
+      if (!player || !player.playVideo) return;
+      if (playing) { userPaused = true; intent = false; player.pauseVideo(); }
+      else { userPaused = false; intent = true; player.playVideo(); }
+    } };
     window.sqMusic = {
       consented: cons,
       playing: function () { return playing; },
@@ -297,10 +336,13 @@
   }
 
   playBtn.addEventListener('click', function () { if (ctl) ctl.toggle(); armHide(); });
-  pill.querySelector('.mk-next').addEventListener('click', function () {
+  pill.querySelector('.mk-next').addEventListener('click', function () { goTo(shuffleNext(cur)); armHide(); });
+  // previous: back to the song before this one; with nothing before it (or a few seconds in) it restarts this song
+  pill.querySelector('.mk-prev').addEventListener('click', function () {
     if (!player || !player.loadVideoById) return;
-    cur = shuffleNext(cur); label(); player.loadVideoById(SONGS[cur][2]);
-    if (consented) write({ i: cur, t: 0, at: Date.now(), paused: false });
+    var t = 0; try { t = player.getCurrentTime(); } catch (e) {}
+    if (hist.length && t < 4) { var back = hist.pop(); saveHist(); goTo(back, true); }
+    else { try { player.seekTo(0, true); if (!playing) { userPaused = false; intent = true; player.playVideo(); } } catch (e) {} }
     armHide();
   });
   // the icon: the first press starts a song (carried to the next page without asking); after that it opens the bar
