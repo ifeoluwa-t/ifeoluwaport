@@ -4,7 +4,7 @@
        url('../assets/fonts/SpriteGraffiti-Shadow.woff') format('woff');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 /* ============================================
    SIGNPOST FOOTER (homepage, very bottom)
