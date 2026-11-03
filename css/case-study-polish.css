@@ -386,3 +386,8 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
 .cs-page .cs-n { white-space: nowrap; }          /* a name never breaks in the middle; lines break between names */
 /* a slideshow inside the Challenge picture box takes no extra space of its own (the pill sits right above the picture, the caption right below) */
 .cs-page .cs-pullquote-picture > .cs-pullquote-slides { margin: 0; }
+
+/* the slideshow inside the Challenge picture box starts at the box's left edge, in line with the pill above and the caption below */
+.cs-page .cs-pullquote-picture > .cs-pullquote-slides { justify-self: start; margin: 0; }
+/* ...and the box is exactly as wide as the picture, so the picture, pill and caption share both edges */
+.cs-page .cs-pullquote-picture:has(> .cs-pullquote-slides--portrait) { width: min(100%, calc(var(--cs-fit) * 0.8)); }
