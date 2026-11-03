@@ -315,7 +315,7 @@
 .cs-page .cs-pullquote .cs-key {
   font-weight: 600;
   color: var(--navy);
-  background: linear-gradient(transparent 58%, var(--periwinkle) 58%);
+  background: linear-gradient(transparent 72%, var(--periwinkle) 72%);
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
   padding: 0 2px;
