@@ -35,7 +35,7 @@
 
 /* ---------- A. phones and stacked layouts: the picture's name sits under the picture ---------- */
 @media (max-width: 899px) {
-  .sqw-name { order: 0; }
+  .sqw-name { order: -1; }   /* the picture's name sits between the wheel and the picture */
 }
 
 /* ---------- B. the lore highlight wraps cleanly ---------- */
@@ -181,3 +181,7 @@ body > .sq2-music { animation: sqFabPop 0.7s 0.7s cubic-bezier(0.3, 1.6, 0.5, 1)
 
 /* ---------- phones: more air between the wheel and the picture card ---------- */
 @media (max-width: 899px) { .sqw-grid { row-gap: 34px; } }
+
+/* a short extra line in the story, on phones only */
+.sq2-mo { display: none; }
+@media (max-width: 899px) { .sq2-mo { display: inline; } }

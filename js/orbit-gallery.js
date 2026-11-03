@@ -57,7 +57,8 @@
     paint();
   }
   var spinner = box.querySelector('.og-spinner');
-  var hint = document.getElementById('og-hint'), HINT = hint ? hint.textContent : '', spinMs = 0, idleMs = 0, teased = false;
+  var hint = document.getElementById('og-hint'), HINT = hint ? hint.textContent : '', spinMs = 0, idleMs = 0, teased = false, lineAt = -1;
+  var TEASES = ['You play a lot \u{1F602}', 'Okay, that tickles \u{1F92D}', 'Stoppppp \u{1F629}', 'Want a toy? \u{1F9F8}', 'I\'m getting dizzy \u{1F635}\u200D\u{1F4AB}', 'Is this your cardio? \u{1F3C3}', 'Nobody is judging. Much. \u{1F440}', 'Okay okay, I see you \u{1F605}'];   // one new line for every 3 seconds of spinning
   function paint() {
     if (spinner) spinner.style.transform = 'rotate(' + (rot * 4) + 'deg)';   // the fidget spinner turns with the ring, four times as fast
     for (var i = 0; i < n; i++) {
@@ -80,8 +81,9 @@
     // only a hold that stays on the spinner for 3 straight seconds counts: letting go resets it, and the hint goes back after a short rest
     if (hint) {
       if (dragging) { spinMs += dt * 1000; idleMs = 0; }
-      else { spinMs = 0; idleMs += dt * 1000; if (idleMs > 3000 && teased) { hint.textContent = HINT; teased = false; } }
-      if (!teased && spinMs > 3000) { hint.textContent = 'You play a lot \u{1F602}'; teased = true; }
+      else { spinMs = 0; idleMs += dt * 1000; if (idleMs > 3000 && teased) { hint.textContent = HINT; teased = false; lineAt = -1; } }
+      var li = Math.floor(spinMs / 3000) - 1;
+      if (li >= 0) { li = Math.min(li, TEASES.length - 1); if (li !== lineAt) { hint.textContent = TEASES[li]; lineAt = li; teased = true; } }
     }
     paint();
     if (visible && !document.hidden) raf = requestAnimationFrame(frame);

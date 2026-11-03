@@ -265,9 +265,18 @@
     var tAngle = 0, vel = 0, lastY = window.scrollY, idleAt = 0, visible = false, hover = false;
     var PX_PER_PICTURE = 320, DRIFT = 7;                      // scroll distance per picture; idle drift in degrees per second
     var lastT = performance.now();
+    // the hub says SPIN ME until the wheel has been turned for 3 seconds; then a new short word every 3 seconds
+    var hub = mount.querySelector('.sqw-hub i'), HUB = hub ? hub.innerHTML : '', spinMs = 0, idleMs = 0, hubAt = -1;
+    var WORDS = ['WHEEE', 'DIZZY?', 'AGAIN!', 'FASTER', 'WHOA', 'OOF', 'ZOOM', 'STOP?'];
 
     function frame(now) {
       var dt = Math.min(0.05, (now - lastT) / 1000); lastT = now;
+      if (hub) {
+        if (dragging || Math.abs(vel) > 0.5) { spinMs += dt * 1000; idleMs = 0; }
+        else { idleMs += dt * 1000; if (idleMs > 2500) { spinMs = 0; if (hubAt >= 0) { hub.innerHTML = HUB; hubAt = -1; } } }
+        var wi = Math.floor(spinMs / 3000) - 1;
+        if (wi >= 0) { wi = Math.min(wi, WORDS.length - 1); if (wi !== hubAt) { hub.textContent = WORDS[wi]; hubAt = wi; } }
+      }
       if (!dragging) {
         if (Math.abs(vel) > 0.02) { tAngle += vel; vel *= 0.94; idleAt = now; }          // fling coasting to a stop
         else if (!reduce.matches && !hover && now - idleAt > 1200) tAngle += DRIFT * dt;  // never fully stops
