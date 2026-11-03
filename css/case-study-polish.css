@@ -378,3 +378,9 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
 .cs-page .cs-results-pill--pale:hover, .cs-page .cs-results-pill--pale:focus-visible { background: var(--pale); color: var(--navy); }
 .cs-page .cs-results-pill:focus-visible { outline: 2px solid var(--navy); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .cs-page .cs-results-pill:hover, .cs-page .cs-results-pill:focus-visible { transform: none; } }
+
+/* long lists of names wrap into even lines on every screen (the first line never runs long) */
+.cs-page .cs-credit-name { max-width: min(60%, 36ch); text-wrap: balance; }
+.cs-page .cs-credits li { align-items: flex-start; }
+.cs-page .cs-credit-role { padding-right: 16px; }
+.cs-page .cs-n { white-space: nowrap; }          /* a name never breaks in the middle; lines break between names */
