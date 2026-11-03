@@ -351,3 +351,9 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
   justify-self: center;
   border-radius: 14px;
 }
+
+/* where the Challenge stacks (text on top, picture below), the picture, its pill and its caption sit on the left */
+@media (max-width: 899px) {
+  .cs-page .cs-pullquote-picture,
+  .cs-page .cs-pullquote-slides { justify-self: start; margin-left: 0; margin-right: auto; }
+}
