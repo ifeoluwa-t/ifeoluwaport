@@ -900,7 +900,7 @@ body.cs-page { background: #fff; }
 }
 .cs-page .cs-stat-value {
   font-size: clamp(2rem, 3.5vw, 3rem);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1;
   letter-spacing: -0.01em;
   color: var(--navy);
@@ -1020,5 +1020,5 @@ body.cs-page { background: #fff; }
   .cs-page .cs-screens-hint { margin-bottom: 14px; }
 }
 
-/* Results headings: Poppins SemiBold (600), like the result numbers */
-.cs-page .cs-results-section .cs-section-heading { font-weight: 600; }
+/* Results headings: Poppins Medium (500), like the result numbers */
+.cs-page .cs-results-section .cs-section-heading { font-weight: 500; }
