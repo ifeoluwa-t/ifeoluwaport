@@ -214,7 +214,9 @@
 
   // which side it lives on: the visitor's choice, and only ever changed by dragging it
   function applySide(side) { pill.classList.toggle('is-right', side === 'R'); document.documentElement.classList.toggle('mk-right', side === 'R'); }
-  applySide(getSide());
+  // On the project pages the widget is pinned to the right and cannot be moved, so the "In this file" button keeps the left to itself
+  var pinned = document.body.classList.contains('cs-page');
+  applySide(pinned ? 'R' : getSide());
   setTimeout(function () { pill.classList.add('is-in'); }, 700);   // pops in shortly after the page loads
 
   var player = null, playing = false, tick = 0, cur = 0, consented = false, hasPlayer = false, ctl = null, hideTimer = 0;
@@ -341,7 +343,7 @@
     setTimeout(function () { dragMoved = false; }, 0);
   }
   pill.addEventListener('pointerdown', function (e) {
-    if (e.button !== 0) return;
+    if (e.button !== 0 || pinned) return;
     dragSt = { id: e.pointerId, x: e.clientX, left: pill.getBoundingClientRect().left };
     dragMoved = false;
     window.addEventListener('pointermove', onMove); window.addEventListener('pointerup', endDrag); window.addEventListener('pointercancel', endDrag);

@@ -203,10 +203,6 @@
   .cs-page .cs-sw .cs-tab-num, .cs-page .cs-sw .cs-tabs-image { transition: none; }
 }
 
-/* ---------- the floating music button sits at the bottom left of every page, so the contents button moves beside it ---------- */
-@media (max-width: 1279px) {
-  .cs-toc-toggle { left: 68px; }
-}
 
 /* ---------- edges: the logo, the hero copy and every panel share the container's left and right edges ---------- */
 body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
