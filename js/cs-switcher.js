@@ -148,7 +148,17 @@
     engine(card, tabs, {
       pill: pill, vertical: vertical,
       onChange: function (i) {
-        panels.forEach(function (p, k) { p.classList.toggle('is-active', k === i); p.setAttribute('aria-hidden', k === i ? 'false' : 'true'); });
+        panels.forEach(function (p, k) {
+          var was = p.classList.contains('is-active');
+          p.classList.toggle('is-active', k === i);
+          p.setAttribute('aria-hidden', k === i ? 'false' : 'true');
+          p.classList.remove('is-leaving');
+          if (was && k !== i && !reduce.matches) {     // the old picture fades out on top of the new one (no blank frame between them)
+            void p.offsetWidth;
+            p.classList.add('is-leaving');
+            clearTimeout(p._leave); p._leave = setTimeout(function () { p.classList.remove('is-leaving'); }, 320);
+          }
+        });
       }
     });
   }

@@ -6,9 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script>
 /* Landing hero scale (desktop, 1024px and up). One shared scale from the viewport's width and height; see css/hero-fit.css.
-   The reference is a 1512x860 viewport. Growth stops at the size reached at 1920x950. */
+   The reference is a 1512x860 viewport. Growth stops at 1.75 times the reference (about 2650x1500). */
 (function () {
-  var d = document.documentElement, REF_W = 1512, REF_H = 860, CAP = 1.1047;
+  var d = document.documentElement, REF_W = 1512, REF_H = 860, CAP = 1.75;
   function fit() {
     var w = window.innerWidth, h = window.innerHeight;
     if (w < 1024) { ['--hn', '--hp', '--hc', '--hh'].forEach(function (k) { d.style.removeProperty(k); }); return; }
@@ -60,8 +60,8 @@
 <link rel="stylesheet" href="css/orbit-gallery.css?v=25">
 <link rel="stylesheet" href="css/reaction.css?v=5">
 <link rel="stylesheet" href="css/games.css?v=8">
-<link rel="stylesheet" href="css/layout-tokens.css?v=4">
-<link rel="stylesheet" href="css/hero-fit.css?v=3">
+<link rel="stylesheet" href="css/layout-tokens.css?v=5">
+<link rel="stylesheet" href="css/hero-fit.css?v=4">
 <link rel="stylesheet" href="css/landing-polish.css?v=5">
 </head>
 <body data-page="home">

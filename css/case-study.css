@@ -1006,13 +1006,13 @@ body.cs-page { background: #fff; }
 .cs-page .cs-pullquote-picture > img.cs-pullquote-media { width: 100%; height: 100%; aspect-ratio: auto; object-fit: contain; }
 
 /* Tab pictures: width follows the tab's own shape, height capped. */
-.cs-page .cs-tabs-visual { --r: 1; width: min(560px, calc(var(--cs-fit) * var(--r))); aspect-ratio: var(--r); justify-self: start; }
+.cs-page .cs-tabs-visual { --r: 1; width: min(40rem, calc(var(--cs-fit) * var(--r))); aspect-ratio: var(--r); justify-self: start; }
 .cs-page .cs-tabs-visual--poster,
 .cs-page .cs-tabs-visual--portrait { --r: calc(4 / 5); }
 .cs-page .cs-tabs-visual--landscape { --r: calc(16 / 10); }
 .cs-page .cs-tabs-visual--square { --r: 1; }
 .cs-page .cs-tabs-card--wide .cs-tabs-visual { --r: calc(16 / 10); width: min(100%, calc(var(--cs-fit) * var(--r))); aspect-ratio: var(--r); }
-.cs-page .cs-tabs-visual--duo .cs-duo-img { width: min(560px, var(--cs-fit)); max-width: 100%; }
+.cs-page .cs-tabs-visual--duo .cs-duo-img { width: min(40rem, var(--cs-fit)); max-width: 100%; }
 
 /* Before/after: the phone screens and the flip picture are sized by height too. */
 .cs-page .cs-screen { flex-basis: min(clamp(170px, 17vw, 220px), calc((var(--cs-fit) - 90px) * 0.4621)); }

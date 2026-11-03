@@ -47,7 +47,7 @@
   .cs-page .cs-hero > .section-inner { align-self: center; }
 }
 @media (min-width: 1920px) {
-  .cs-page { --cs-nav-h: 96px; --cs-fit: clamp(260px, calc(100svh - 420px), 560px); }
+  .cs-page { --cs-nav-h: 96px; --cs-fit: clamp(260px, calc(100svh - 22rem), 40rem); }   /* grows with the screen's type (rem) and is held back by its height */
 }
 @media (min-width: 2400px) {
   .cs-page { --cs-nav-h: 104px; }
@@ -128,8 +128,10 @@
   transform: none;
   transition: none;
 }
-.cs-page .cs-sw .cs-tabs-image.is-active { opacity: 1; visibility: visible; animation: cs-sw-in 0.22s ease-out both; }
-@keyframes cs-sw-in { from { opacity: 0; } to { opacity: 1; } }
+/* the new picture is in place at full strength straight away, and the old one fades away on top of it: the card never shows a blank or half-faded frame between the two */
+.cs-page .cs-sw .cs-tabs-image.is-active { opacity: 1; visibility: visible; z-index: 1; }
+.cs-page .cs-sw .cs-tabs-image.is-leaving { visibility: visible; z-index: 2; animation: cs-sw-out 0.28s ease-out both; pointer-events: none; }
+@keyframes cs-sw-out { from { opacity: 1; } to { opacity: 0; } }
 
 /* the before / after control */
 .cs-page .cs-seg { position: relative; display: inline-flex; gap: 4px; margin: 0 0 8px; padding: 5px; border-radius: 999px; background: color-mix(in srgb, var(--periwinkle) 45%, #fff); }
@@ -198,7 +200,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cs-page .cs-sw .cs-tabs-image.is-active { animation: none; }
+  .cs-page .cs-sw .cs-tabs-image.is-leaving { display: none; }
   .cs-page .cs-sw-pill, .cs-page .cs-sw .cs-tab-body, .cs-page .cs-sw .cs-tab-chev,
   .cs-page .cs-sw .cs-tab-num, .cs-page .cs-sw .cs-tabs-image { transition: none; }
 }
