@@ -138,7 +138,7 @@
   margin: 0;
   font-family: var(--font-body);
   font-size: clamp(1.85rem, min(3.4vw, 5.2vh), 3rem);
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1.08;
   letter-spacing: -0.01em;
   color: var(--navy);
@@ -147,6 +147,7 @@
   margin: 12px 0 0;
   max-width: 52ch;
   font-size: clamp(0.95rem, 0.4vw + 0.8rem, 1.1rem);
+  font-weight: 500;
   line-height: 1.5;
   color: var(--cs-ink-soft);
 }
