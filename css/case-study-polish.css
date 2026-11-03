@@ -384,3 +384,5 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
 .cs-page .cs-credits li { align-items: flex-start; }
 .cs-page .cs-credit-role { padding-right: 16px; }
 .cs-page .cs-n { white-space: nowrap; }          /* a name never breaks in the middle; lines break between names */
+/* a slideshow inside the Challenge picture box takes no extra space of its own (the pill sits right above the picture, the caption right below) */
+.cs-page .cs-pullquote-picture > .cs-pullquote-slides { margin: 0; }
