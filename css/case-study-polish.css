@@ -378,3 +378,6 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
 .cs-page .cs-results-pill--pale:hover, .cs-page .cs-results-pill--pale:focus-visible { background: var(--pale); color: var(--navy); }
 .cs-page .cs-results-pill:focus-visible { outline: 2px solid var(--navy); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .cs-page .cs-results-pill:hover, .cs-page .cs-results-pill:focus-visible { transform: none; } }
+
+/* a slideshow inside the Challenge picture box takes no extra space of its own (the pill sits right above the picture, the caption right below) */
+.cs-page .cs-pullquote-picture > .cs-pullquote-slides { margin: 0; }
