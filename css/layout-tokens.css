@@ -14,14 +14,12 @@ body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [da
 body:is([data-page="home"], [data-page="storytelling"], [data-page="work"]) { background: #fff; }   /* no pale hairline between white sections, and pale panels sit on white */
 @media (max-width: 1023px) { body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"]) { --section-gap: 80px; } }
 @media (max-width: 640px)  { body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"]) { --section-gap: 56px; } }
-/* wide screens: a modestly larger container, and the type (rem) grows with it */
-@media (min-width: 1920px) {
-  html:has(body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"])) { font-size: 112%; }
-  body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"]) { --container: 1320px; --section-gap: 134px; }
-}
-@media (min-width: 2400px) {
-  html:has(body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"])) { font-size: 122%; }
-  body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"]) { --container: 1440px; --section-gap: 146px; }
+/* wide screens: the type (rem), the container and the section spacing grow continuously with the screen (no steps).
+   The reference is a 1512x860 viewport, where 1rem = 16px. The type follows the width, but is held back by the height so a
+   wide, short window does not get oversized type; the container then takes 78% of the width, never more than 76rem. */
+@media (min-width: 1440px) {
+  html:has(body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"])) { font-size: max(16px, min(1.0582vw, 2.05vh)); }
+  body:is([data-page="home"], [data-page="events"], [data-page="side-quests"], [data-page="storytelling"], [data-page="work"]) { --container: max(1180px, min(78vw, 76rem)); --section-gap: 7.5rem; }
 }
 
 /* ---------- the container's edges ---------- */
