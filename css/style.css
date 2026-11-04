@@ -1749,6 +1749,8 @@ body.modal-open { overflow: hidden; }
   min-width: 0;
 }
 .work-card--landscape .work-card-body p { -webkit-line-clamp: 3; }
+/* the category pill is as wide as its text on the wide cards too (the body is a column, which would stretch it) */
+.work-card--landscape .work-card-body .work-card-pill { align-self: flex-start; width: fit-content; }
 /* Coverflow tilt (rotateY/scale/translateY) is written to each card's
    inline transform every frame by JS, so it owns that property —
    only box-shadow gets a CSS transition here. Still used by the
