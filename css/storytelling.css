@@ -52,7 +52,7 @@
 .st-gallery li[hidden], .st-story[hidden] { display: none; }
 
 /* The pale panel (the same one the project pages use) holds the cards. Cards are a fixed share of the container's width, laid out
-   in centred rows: a last row that is not full sits in the middle, and a filter that shows only a few cards gets a narrower box. */
+   in rows that start on the left: a last row that is not full starts at the left edge, and a filter that shows only a few cards gets a narrower box. */
 .st-gallery {
   --cols: 1;                                   /* 1 phone, 2 tablet, 3 laptop and desktop, 4 on very wide screens */
   --gap: clamp(16px, 2vw, 24px);
@@ -62,7 +62,7 @@
   padding: var(--pad);
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: stretch;
   gap: var(--gap);
   width: fit-content;

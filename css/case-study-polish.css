@@ -403,10 +403,13 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
   .cs-page .cs-credits:not(.cs-credits--few) li:nth-child(1),
   .cs-page .cs-credits:not(.cs-credits--few) li:nth-child(n) { border-bottom: 1px solid var(--cs-line); }
 }
-.cs-page .cs-credits.cs-credits--few { max-width: 720px; margin-left: auto; margin-right: auto; }
+.cs-page .cs-credits.cs-credits--few { max-width: 720px; margin-left: 0; margin-right: auto; }
 
 /* ---------- phones: the floating "In this file" pill steps up when the music bar is open ---------- */
 @media (max-width: 560px) {
   html:has(.mk:not(.is-mini)) .cs-toc-toggle { bottom: 66px; }
   html:has(.mk:not(.is-mini)) .cs-toc { bottom: 116px; }
 }
+
+/* "Another Project I Worked On" starts on the container's left edge like every other heading */
+.cs-page .cs-more-projects .section-heading { text-align: left !important; margin-left: 0; margin-right: 0; }   /* beats the small-screen "centre every topic" rule */
