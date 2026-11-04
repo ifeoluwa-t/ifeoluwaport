@@ -410,3 +410,6 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
   html:has(.mk:not(.is-mini)) .cs-toc-toggle { bottom: 66px; }
   html:has(.mk:not(.is-mini)) .cs-toc { bottom: 116px; }
 }
+
+/* "Another Project I Worked On" starts on the container's left edge like every other heading */
+.cs-page .cs-more-projects .section-heading { text-align: left !important; margin-left: 0; margin-right: 0; }   /* beats the small-screen "centre every topic" rule */
