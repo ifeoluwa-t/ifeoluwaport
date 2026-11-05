@@ -1,8 +1,8 @@
 /* The reaction speed test on the landing page: the curtain reveal.
- * On larger screens the game sits behind the page, pinned to the bottom of the screen, and the raised page layer (hero
+ * Where it fits (phones and tablets included) the game sits behind the page, pinned to the bottom of the screen, and the raised page layer (hero
  * through footer) carries a bottom margin as tall as the game, so at the very end of the page the footer slides up like
  * a curtain and uncovers it. Until then it is hidden (visibility) so it can't be clicked or tabbed to behind the page.
- * Fallback: with reduced motion, on iOS, on small or very short screens, or if the game would be taller than the screen,
+ * Fallback: with reduced motion, on iOS, on very short screens, or if the game would be taller than the screen,
  * the game just follows the footer in normal flow (css/fx.css), always visible and playable. */
 (function () {
   var game = document.getElementById('games');
@@ -14,7 +14,7 @@
   var on = false, shown = false, ticking = false;
 
   function curtainOK() {
-    return !reduce.matches && !iOS && window.innerWidth >= 900 && window.innerHeight >= 560 && game.offsetHeight <= window.innerHeight * 0.85;
+    return !reduce.matches && !iOS && window.innerHeight >= 560 && game.offsetHeight <= window.innerHeight * 0.85;
   }
   function measure() { root.style.setProperty('--game-h', game.offsetHeight + 'px'); }
   function check() {
