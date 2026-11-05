@@ -1,0 +1,7 @@
+{
+  "name": "responsive-simulator",
+  "private": true,
+  "type": "module",
+  "scripts": { "screens": "node screens.mjs" },
+  "dependencies": { "playwright-core": "1.49.1" }
+}

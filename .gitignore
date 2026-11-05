@@ -8,3 +8,7 @@ node_modules/
 
 # local Claude Code settings (machine-specific)
 .claude/settings.local.json
+
+# responsive simulator output and tooling
+screenshots/
+tools/responsive/node_modules/
