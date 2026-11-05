@@ -223,9 +223,20 @@
     setState('idle', { title: 'Test your reaction speed.', sub: 'Tap to start.', label: 'Reaction speed test. Press to start.', live: '' });
   }
 
+  /* The server hands out a one-use token when a round starts, and only accepts a score that comes back with it. */
+  let roundTok = null;
+  function askRound() {
+    roundTok = null;
+    fetch('/api/reaction', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ round: true }) })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (j && typeof j.round === 'string') roundTok = j.round; })
+      .catch(() => { /* offline or rate-limited: the game still plays, the score just isn't shared */ });
+  }
+
   function start() {
     compareEl.textContent = '';
     hideClaim();
+    askRound();
     setState('waiting', { title: 'Wait for blue...', label: 'Waiting on yellow. Press as soon as the panel turns blue.', live: 'Wait for blue.' });
     timer = setTimeout(go, 1500 + Math.random() * 3500);
   }
@@ -302,10 +313,13 @@
   }
 
   function submit(ms) {
+    const round = roundTok;
+    roundTok = null;
+    if (!round) return;   // no round token (the request failed): the score stays on this device only
     fetch('/api/reaction', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ms: ms }),
+      body: JSON.stringify({ ms: ms, round: round }),
     })
       .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
       .then((j) => {

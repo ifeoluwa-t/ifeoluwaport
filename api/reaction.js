@@ -2,8 +2,10 @@
  *
  * GET  /api/reaction
  *        -> { average, fastest, count, players, board: [{ name, ms }] }
- * POST /api/reaction  { ms }
- *        -> same shape, plus { qualifies, rank, claim } when the time makes the top 10
+ * POST /api/reaction  { round: true }
+ *        -> { round }   a one-use token, issued when a round starts (see "round tokens" below)
+ * POST /api/reaction  { ms, round }
+ *        -> same shape as GET, plus { qualifies, rank, claim } when the time makes the top 10
  * POST /api/reaction  { claim, name }
  *        -> same shape, plus { saved: true }  (puts the name on the leaderboard)
  *
@@ -22,52 +24,24 @@
  * To remove an entry by hand (Upstash console): HGETALL rx:names to find the id, then
  *   ZREM rx:board <id>   and   HDEL rx:names <id>
  */
-const crypto = require('crypto');
+const { crypto, creds, pipeline, clientId, readBody, sameOrigin, responder } = require('./_lib');
 
 const MIN_MS = 100;
 const MAX_MS = 2000;
-const RATE_LIMIT = 30; // requests per IP per minute
+const RATE_LIMIT = 60; // requests per IP per minute (a round is two requests; the game cannot be played faster than about 27 rounds a minute)
+const SCORES_PER_10_MIN = 150; // scores one IP can add to the shared stats in 10 minutes; more are ignored
 const BOARD_SIZE = 10;
 const CLAIM_TTL_MS = 15 * 60 * 1000;
 const NAME_MIN = 2;
 const NAME_MAX = 16;
+const ROUND_TTL_S = 90;
+const ROUND_MAX_MS = 60 * 1000;
+const ROUND_JITTER_MS = 800; // the game always waits at least 1500 ms before "go"; this allows for network delay either way
 
 const FASTEST_LUA =
   "local f = redis.call('GET', KEYS[1]) " +
   "if (not f) or (tonumber(ARGV[1]) < tonumber(f)) then redis.call('SET', KEYS[1], ARGV[1]) redis.call('SET', KEYS[2], ARGV[2]) end " +
   "return 1";
-
-function creds() {
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-  return url && token ? { url: url.replace(/\/$/, ''), token } : null;
-}
-
-async function pipeline(c, commands) {
-  const r = await fetch(c.url + '/pipeline', {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + c.token, 'Content-Type': 'application/json' },
-    body: JSON.stringify(commands),
-  });
-  if (!r.ok) throw new Error('redis ' + r.status);
-  const out = await r.json();
-  if (!Array.isArray(out) || out.some((x) => x && x.error)) throw new Error('redis error');
-  return out.map((x) => x.result);
-}
-
-function clientId(req) {
-  const fwd = req.headers['x-forwarded-for'];
-  const ip = (Array.isArray(fwd) ? fwd[0] : fwd || '').split(',')[0].trim() || req.headers['x-real-ip'] || 'unknown';
-  return crypto.createHash('sha256').update(String(ip)).digest('hex').slice(0, 16);
-}
-
-function readBody(req) {
-  let b = req.body;
-  if (typeof b === 'string') {
-    try { b = JSON.parse(b); } catch (e) { return null; }
-  }
-  return b && typeof b === 'object' ? b : null;
-}
 
 /* ---------- claim tokens: proof that this player really posted this time ---------- */
 function sign(c, id, ms, ts) {
@@ -88,6 +62,32 @@ function checkClaim(c, id, claim) {
   const got = Buffer.from(sig);
   if (want.length !== got.length || !crypto.timingSafeEqual(want, got)) return null;
   return ms;
+}
+
+/* ---------- round tokens: proof that a round really was running ----------
+   The browser asks for a token when a round starts. The result must come back with that token, no sooner than the reaction
+   time plus the game's fixed 1.5 s wait (less a little for network delay), and each token works once. So a script cannot
+   post scores faster than real rounds could be played, and cannot post a score without starting a round. */
+function roundSig(c, id, nonce, ts) {
+  return crypto.createHmac('sha256', c.token).update('round|' + id + '|' + nonce + '|' + ts).digest('hex').slice(0, 32);
+}
+function makeRound(c, id) {
+  const nonce = crypto.randomBytes(9).toString('hex');
+  const ts = Date.now();
+  return { nonce, token: nonce + '.' + ts + '.' + roundSig(c, id, nonce, ts) };
+}
+/* returns the nonce if the token is genuine for this player and its timing fits the reaction time, else null */
+function checkRound(c, id, token, ms) {
+  if (typeof token !== 'string' || token.length > 100) return null;
+  const [nonce, tsS, sig] = token.split('.');
+  const ts = Number(tsS);
+  if (!/^[0-9a-f]{18}$/.test(nonce || '') || !Number.isFinite(ts) || !sig) return null;
+  const want = Buffer.from(roundSig(c, id, nonce, ts));
+  const got = Buffer.from(sig);
+  if (want.length !== got.length || !crypto.timingSafeEqual(want, got)) return null;
+  const elapsed = Date.now() - ts;
+  if (elapsed < ms + ROUND_JITTER_MS || elapsed > ROUND_MAX_MS) return null;
+  return nonce;
 }
 
 /* ---------- names ---------- */
@@ -147,38 +147,46 @@ function rankFor(snap, ms) {
 }
 
 module.exports = async function handler(req, res) {
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  const send = responder(res);
   const c = creds();
-  if (!c) return res.status(503).end(JSON.stringify({ error: 'Stats store not configured' }));
-  const send = (code, body) => res.status(code).end(JSON.stringify(body));
+  if (!c) return send(503, { error: 'Stats store not configured' });
 
   try {
-    const id = clientId(req);
-
     if (req.method === 'GET') {
+      // Nothing takes a parameter. A query string would give each request its own edge-cache entry (and a Redis read),
+      // so it is refused: every real request is the same URL and is answered from the cache.
+      if ((req.url || '').indexOf('?') !== -1) { res.setHeader('Cache-Control', 'public, s-maxage=3600'); return send(400, { error: 'Bad request' }); }
       res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=30');
-      return send(200, (await snapshot(c, id)).stats);
+      return send(200, (await snapshot(c, clientId(req))).stats);
     }
 
     if (req.method === 'POST') {
       res.setHeader('Cache-Control', 'no-store');
+      if (!sameOrigin(req)) return send(403, { error: 'Not allowed' });
       const body = readBody(req);
       if (!body) return send(400, { error: 'Bad request' });
+      const id = clientId(req);
 
+      const isRound = body.round === true;
       const isName = body.claim !== undefined || body.name !== undefined;
       let ms;
       let name;
-      if (isName) {
+      let roundNonce = null;
+      if (isRound) {
+        // handled below, once the rate limit has been checked
+      } else if (isName) {
         ms = checkClaim(c, id, body.claim);
         if (ms == null) return send(400, { error: 'That claim has expired. Play another round!' });
         name = cleanName(body.name);
-        if (!name) return send(400, { error: 'Pick a name of ' + NAME_MIN + '–' + NAME_MAX + ' letters or numbers.' });
+        if (!name) return send(400, { error: 'Pick a name of ' + NAME_MIN + '\u2013' + NAME_MAX + ' letters or numbers.' });
         if (blocked(name)) return send(400, { error: "That name isn't allowed. Try another." });
       } else {
         ms = body.ms;
         if (typeof ms !== 'number' || !Number.isInteger(ms) || ms < MIN_MS || ms > MAX_MS) {
           return send(400, { error: 'ms must be a whole number between ' + MIN_MS + ' and ' + MAX_MS });
         }
+        roundNonce = checkRound(c, id, body.round, ms);
+        if (!roundNonce) return send(400, { error: 'That round was not valid' });
       }
 
       const bucket = Math.floor(Date.now() / 60000);
@@ -187,6 +195,12 @@ module.exports = async function handler(req, res) {
       if (Number(hits) > RATE_LIMIT) {
         res.setHeader('Retry-After', '60');
         return send(429, { error: 'Too many requests, slow down' });
+      }
+
+      if (isRound) {
+        const r = makeRound(c, id);
+        await pipeline(c, [['SET', 'rx:rd:' + r.nonce, '1', 'EX', String(ROUND_TTL_S)]]);
+        return send(200, { round: r.token });
       }
 
       if (isName) {
@@ -199,6 +213,14 @@ module.exports = async function handler(req, res) {
         ]);
         return send(200, Object.assign({ saved: true }, (await snapshot(c, id)).stats));
       }
+
+      // a score: its round token is used up (a second try with the same token finds nothing to delete)
+      const [used] = await pipeline(c, [['DEL', 'rx:rd:' + roundNonce]]);
+      if (Number(used) !== 1) return send(400, { error: 'That round was not valid' });
+      // one IP can only add so many scores to the shared stats in 10 minutes; past that the score is simply not counted
+      const sKey = 'rx:sc:' + id + ':' + Math.floor(Date.now() / 600000);
+      const [scored] = await pipeline(c, [['INCR', sKey], ['EXPIRE', sKey, '700']]);
+      if (Number(scored) > SCORES_PER_10_MIN) return send(200, (await snapshot(c, id)).stats);
 
       await pipeline(c, [
         ['INCRBY', 'rx:sum', String(ms)],
