@@ -56,3 +56,6 @@ section.block > h2 { margin: 0 0 14px; font-size: 1.15rem; font-weight: 600; }
 }
 [hidden] { display: none !important; }
 .sr { position: absolute; left: -9999px; }
+
+/* phones and tablets: buttons are at least 44px tall to tap */
+@media (max-width: 1023px) { .btn, .btn--small { min-height: 44px; } }

@@ -16,9 +16,9 @@
 /* ---------- touch targets: at least 44x44 where a finger taps ----------
    The look does not change: each control gets an invisible hit area (a transparent ::before) that reaches 44px. */
 @media (max-width: 1023px), (pointer: coarse) {
-  .brand, .nav-toggle, .sp-btn, .skill-modal-close, .mk .mk-ico { position: relative; }
-  .skill-modal-close { position: absolute; }
-  .brand::before, .nav-toggle::before, .sp-btn::before, .skill-modal-close::before, .mk .mk-ico::before {
+  .brand, .nav-toggle, .sp-btn, .skill-modal-close, .video-modal-close, .hero-cta-btn, .st-filter, .mk .mk-ico { position: relative; }
+  .skill-modal-close, .video-modal-close { position: absolute; }
+  .brand::before, .nav-toggle::before, .sp-btn::before, .skill-modal-close::before, .video-modal-close::before, .hero-cta-btn::before, .st-filter::before, .mk .mk-ico::before {
     content: "";
     position: absolute;
     left: 50%; top: 50%;
