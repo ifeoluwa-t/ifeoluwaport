@@ -2,75 +2,45 @@
  *
  * GET  /api/admin                         -> { suggestions: [{ id, text, name, at }], reaction: { plays, average, fastest, fastestAt } }
  * POST /api/admin { action: 'login', password }   -> sets the session cookie
- * POST /api/admin { action: 'logout' }            -> clears it
+ * POST /api/admin { action: 'logout' }            -> ends the session on the server and clears the cookie
  * POST /api/admin { action: 'delete', id }        -> removes one suggestion
- * Everything except 'login' and 'logout' needs the session cookie, otherwise 401.
+ * Everything except 'login' and 'logout' needs a live session, otherwise 401.
  *
  * Env vars:
  *   ADMIN_PASSWORD                         the dashboard password (checked here, on the server, and nowhere else)
  *   KV_REST_API_URL + KV_REST_API_TOKEN    (or UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN) the Upstash store
  *
- * The session cookie is "<expiry>.<signature>": an HMAC of the expiry made with a key derived from ADMIN_PASSWORD, so it is
- * httpOnly, Secure, SameSite=Strict, lasts 7 days, and every session ends the moment the password is changed.
- * Wrong passwords are rate limited (10 tries per IP per 15 minutes).
+ * Sessions live in Redis ("dash:s:<id>", 7 days), so logging out or expiring really ends them. The cookie holds
+ * "<id>.<signature>" (an HMAC made with a key derived from ADMIN_PASSWORD, so changing the password also ends every session);
+ * it is __Host- prefixed, httpOnly, Secure, SameSite=Strict. POSTs must be JSON and come from this same site.
+ * Wrong passwords are throttled per IP (10 failures per 15 minutes) and across all visitors (60 failures per 15 minutes).
  */
-const crypto = require('crypto');
+const { crypto, creds, pipeline, clientId, readBody, sameOrigin, same, responder } = require('./_lib');
 
 const DAYS = 7;
 const SUGGESTIONS = 'sq:suggestions';
 const KEEP = 500;
-const LOGIN_TRIES = 10;
+const IP_FAILS = 10;
+const ALL_FAILS = 60;
+const COOKIE = '__Host-dash';
 
-function creds() {
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-  return url && token ? { url: url.replace(/\/$/, ''), token } : null;
-}
-async function pipeline(c, commands) {
-  const r = await fetch(c.url + '/pipeline', {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + c.token, 'Content-Type': 'application/json' },
-    body: JSON.stringify(commands),
-  });
-  if (!r.ok) throw new Error('redis ' + r.status);
-  const out = await r.json();
-  if (!Array.isArray(out) || out.some((x) => x && x.error)) throw new Error('redis error');
-  return out.map((x) => x.result);
-}
-function clientId(req) {
-  const fwd = req.headers['x-forwarded-for'];
-  const ip = (Array.isArray(fwd) ? fwd[0] : fwd || '').split(',')[0].trim() || req.headers['x-real-ip'] || 'unknown';
-  return crypto.createHash('sha256').update(String(ip)).digest('hex').slice(0, 16);
-}
-function readBody(req) {
-  let b = req.body;
-  if (typeof b === 'string') { try { b = JSON.parse(b); } catch (e) { return null; } }
-  return b && typeof b === 'object' ? b : null;
-}
-function same(a, b) {   // constant-time comparison of two strings of any length
-  const ha = crypto.createHash('sha256').update(String(a)).digest();
-  const hb = crypto.createHash('sha256').update(String(b)).digest();
-  return crypto.timingSafeEqual(ha, hb);
-}
-
-/* ---------- the session cookie ---------- */
 function sessionKey() { return crypto.createHash('sha256').update('dashboard-session|' + process.env.ADMIN_PASSWORD).digest(); }
-function makeSession() {
-  const exp = Date.now() + DAYS * 86400000;
-  return exp + '.' + crypto.createHmac('sha256', sessionKey()).update(String(exp)).digest('hex');
-}
-function validSession(req) {
-  const m = /(?:^|;\s*)dash=([^;]+)/.exec(req.headers.cookie || '');
-  if (!m) return false;
-  const [exp, sig] = decodeURIComponent(m[1]).split('.');
-  if (!exp || !sig || !(Number(exp) > Date.now())) return false;
-  return same(sig, crypto.createHmac('sha256', sessionKey()).update(exp).digest('hex'));
-}
+function sign(id) { return crypto.createHmac('sha256', sessionKey()).update(id).digest('hex'); }
 function cookie(value, maxAge) {
-  return 'dash=' + encodeURIComponent(value) + '; Max-Age=' + maxAge + '; Path=/; HttpOnly; Secure; SameSite=Strict';
+  return COOKIE + '=' + value + '; Max-Age=' + maxAge + '; Path=/; HttpOnly; Secure; SameSite=Strict';
+}
+/* the session id from the cookie, if its signature is right (it still has to exist in Redis) */
+function sessionId(req) {
+  const m = new RegExp('(?:^|;\\s*)' + COOKIE + '=([0-9a-f]{48})\\.([0-9a-f]{64})').exec(req.headers.cookie || '');
+  return m && same(m[2], sign(m[1])) ? m[1] : null;
+}
+async function validSession(c, req) {
+  const id = sessionId(req);
+  if (!id) return false;
+  const [v] = await pipeline(c, [['GET', 'dash:s:' + id]]);
+  return v === '1';
 }
 
-/* ---------- reading ---------- */
 function parseRow(raw) {
   try {
     const o = JSON.parse(raw);
@@ -80,39 +50,47 @@ function parseRow(raw) {
     return { id, text: o.text, name: typeof o.name === 'string' ? o.name : '', at: typeof o.at === 'string' ? o.at : '', raw };
   } catch (e) { return null; }
 }
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
 module.exports = async function handler(req, res) {
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('X-Robots-Tag', 'noindex, nofollow');
-  const send = (code, body) => res.status(code).end(JSON.stringify(body));
+  const send = responder(res);
 
-  if (!process.env.ADMIN_PASSWORD) return send(503, { error: 'ADMIN_PASSWORD is not set in Vercel yet.' });
   const c = creds();
-  if (!c) return send(503, { error: 'The Redis store is not connected.' });
+  if (!process.env.ADMIN_PASSWORD || !c) return send(503, { error: 'Not available.' });
 
   try {
     if (req.method === 'POST') {
+      if (!sameOrigin(req)) return send(403, { error: 'Not allowed.' });
       const body = readBody(req);
       if (!body) return send(400, { error: 'Bad request' });
-      if (!String(req.headers['content-type'] || '').includes('application/json')) return send(400, { error: 'Bad request' });
 
       if (body.action === 'login') {
-        const key = 'dash:rl:' + clientId(req) + ':' + Math.floor(Date.now() / 900000);
-        const [tries] = await pipeline(c, [['INCR', key], ['EXPIRE', key, '1000']]);
-        if (Number(tries) > LOGIN_TRIES) { res.setHeader('Retry-After', '900'); return send(429, { error: 'Too many tries. Wait a few minutes and try again.' }); }
-        if (typeof body.password !== 'string' || !same(body.password, process.env.ADMIN_PASSWORD)) return send(401, { error: 'That password is not right.' });
-        res.setHeader('Set-Cookie', cookie(makeSession(), DAYS * 86400));
+        const win = Math.floor(Date.now() / 900000);
+        const ipKey = 'dash:fail:' + clientId(req) + ':' + win, allKey = 'dash:fail:all:' + win;
+        const [ipN, allN] = await pipeline(c, [['GET', ipKey], ['GET', allKey]]);
+        if (Number(ipN) >= IP_FAILS || Number(allN) >= ALL_FAILS) { res.setHeader('Retry-After', '900'); return send(429, { error: 'Too many tries. Wait a few minutes and try again.' }); }
+        if (typeof body.password !== 'string' || body.password.length > 200 || !same(body.password, process.env.ADMIN_PASSWORD)) {
+          await pipeline(c, [['INCR', ipKey], ['EXPIRE', ipKey, '1000'], ['INCR', allKey], ['EXPIRE', allKey, '1000']]);
+          await wait(400);   // wrong guesses are slowed down
+          return send(401, { error: 'That password is not right.' });
+        }
+        const id = crypto.randomBytes(24).toString('hex');
+        await pipeline(c, [['SET', 'dash:s:' + id, '1', 'EX', String(DAYS * 86400)]]);
+        res.setHeader('Set-Cookie', cookie(id + '.' + sign(id), DAYS * 86400));
         return send(200, { ok: true });
       }
       if (body.action === 'logout') {
+        const id = sessionId(req);
+        if (id) await pipeline(c, [['DEL', 'dash:s:' + id]]);
         res.setHeader('Set-Cookie', cookie('', 0));
         return send(200, { ok: true });
       }
 
-      if (!validSession(req)) return send(401, { error: 'Please log in.' });
+      if (!(await validSession(c, req))) return send(401, { error: 'Please log in.' });
       if (body.action === 'delete') {
-        if (typeof body.id !== 'string' || !body.id) return send(400, { error: 'Bad request' });
+        if (typeof body.id !== 'string' || !/^[0-9a-z-]{1,40}$/.test(body.id)) return send(400, { error: 'Bad request' });
         const [rows] = await pipeline(c, [['LRANGE', SUGGESTIONS, '0', String(KEEP - 1)]]);
         const hit = (rows || []).map(parseRow).find((r) => r && r.id === body.id);
         if (!hit) return send(404, { error: 'Already gone.' });
@@ -123,7 +101,7 @@ module.exports = async function handler(req, res) {
     }
 
     if (req.method === 'GET') {
-      if (!validSession(req)) return send(401, { error: 'Please log in.' });
+      if (!(await validSession(c, req))) return send(401, { error: 'Please log in.' });
       const [rows, sum, count, fastest, fastestAt] = await pipeline(c, [
         ['LRANGE', SUGGESTIONS, '0', String(KEEP - 1)],
         ['GET', 'rx:sum'], ['GET', 'rx:count'], ['GET', 'rx:fastest'], ['GET', 'rx:fastest_at'],
