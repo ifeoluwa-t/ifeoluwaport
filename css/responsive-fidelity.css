@@ -1,0 +1,36 @@
+/* ============================================
+   RESPONSIVE FIDELITY: the last shared layer, loaded after every other stylesheet on every public page.
+   The two reference designs (a 1512x860 desktop viewport and a 390x844 / 375x812 phone) are not touched: every rule
+   here either only applies outside them or changes nothing you can see there (invisible touch areas).
+   Check it with the screen simulator: tools/responsive (npm run screens).
+============================================ */
+
+/* ---------- phones and tablets: a grid column may never be wider than the screen ----------
+   A plain 1fr column grows to fit its widest unbreakable content; at 320px that pushed "I've Done This At" 23px past the edge. */
+@media (max-width: 900px) {
+  .experience-grid { grid-template-columns: minmax(0, 1fr); }
+  .exp-card { min-width: 0; }
+  .exp-card h3, .exp-role, .exp-date { overflow-wrap: anywhere; }
+}
+
+/* ---------- touch targets: at least 44x44 where a finger taps ----------
+   The look does not change: each control gets an invisible hit area (a transparent ::before) that reaches 44px. */
+@media (max-width: 1023px), (pointer: coarse) {
+  .brand, .nav-toggle, .sp-btn, .skill-modal-close, .mk .mk-ico { position: relative; }
+  .skill-modal-close { position: absolute; }
+  .brand::before, .nav-toggle::before, .sp-btn::before, .skill-modal-close::before, .mk .mk-ico::before {
+    content: "";
+    position: absolute;
+    left: 50%; top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* ---------- phone landscape (short and wide): the heading stays in view with the card under it ---------- */
+@media (max-width: 1023px) and (max-height: 520px) and (orientation: landscape) {
+  .hero { padding-top: 88px; }
+  .hero-name { font-size: clamp(3.4rem, 34vh, 9rem); }
+  .hero-kicker { margin-bottom: 0; }
+}
