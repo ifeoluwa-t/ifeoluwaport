@@ -943,3 +943,6 @@ body[data-page="side-quests"] #nav-music { display: none !important; }
 
 /* the music bar expands inward from whichever side it sits on */
 body > .sq2-music.is-right { left: auto; right: 14px; }
+
+/* the bottom icon waits in the top bar until the first tap (js/music-keep.js); this hides it before the script runs */
+html.mk-nav-pending body > .sq2-music { visibility: hidden; }

@@ -680,14 +680,28 @@
     if (on) navBtn.classList.remove('is-carried');
     navBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
     navBtn.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
+    if (on && navDrop) navDrop.drop();   // music started some other way (the On Repeat controls): the icon still drops
     if (on && !started) {
       started = true;
       bar.classList.remove('is-gone');
-      if (window.SQ_RESUME) bar.classList.add('is-mini'); else wake();   // carried on from another page: just the icon
+      if (window.SQ_RESUME) bar.classList.add('is-mini'); else if (landed) wake();   // carried on from another page: just the icon (during the drop, onLand opens it)
     }
   }
-  bar.classList.remove('is-gone');              // the bottom icon is there from the start, folded
+  bar.classList.remove('is-gone');
   bar.classList.add('is-mini');
+  // The icon starts in the top bar (yellow, see js/music-keep.js mkNav) and drops to the bottom on the first tap.
+  // Carried-over music, or a visitor who already tapped it this visit, has it at the bottom from the start.
+  var fromNav = false;                                                            // the tap on the top icon starts the music without opening the bar
+  var navDrop = window.mkNav ? window.mkNav.mount({
+    target: bar, color: 'yellow', carried: !!window.SQ_RESUME,
+    onStart: function () { fromNav = true; play.click(); fromNav = false; },
+    onLand: function (byKeyboard) {
+      landed = true;
+      if (started && !window.SQ_RESUME) wake();                                  // the song bar opens once the icon has landed
+      if (byKeyboard) { bar.tabIndex = -1; bar.focus({ preventScroll: true }); }
+    }
+  }) : null;
+  var landed = !navDrop;                                                          // while the icon is still falling it stays a round icon
   if (window.SQ_RESUME && !window.SQ_RESUME.paused) navBtn.classList.add('is-carried');   // carried on from another page: the top icon never appears
   if (window.MutationObserver) {
     new MutationObserver(function () { sync(); place(); }).observe(bar, { attributes: true, attributeFilter: ['class'] });
@@ -701,7 +715,7 @@
     clearTimeout(hideTimer);
     bar.classList.add('is-mini');   // folds to the icon, which stays put
   });
-  bar.addEventListener('click', function (e) { if (bar.classList.contains('is-mini') && !dragMoved && mq.matches) { e.preventDefault(); wake(); } }, true);
+  bar.addEventListener('click', function (e) { if (fromNav) return; if (bar.classList.contains('is-mini') && !dragMoved && mq.matches) { e.preventDefault(); wake(); } }, true);
   bar.addEventListener('pointerdown', function (e) { if (!bar.classList.contains('is-mini')) armHide(); });
   // drag along the bottom edge, then settle on the nearest side
   bar.addEventListener('pointerdown', function (e) {

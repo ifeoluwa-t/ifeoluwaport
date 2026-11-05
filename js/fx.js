@@ -92,7 +92,7 @@
   });
   if (SOUND_PAGE) document.body.appendChild(sw);
 
-  var CLICKY = '.hero-cta-btn, .sp-btn, .btn-pill, .btn-pill-light, .sq2-cta, .game-btn, .nav-music, .bk-link, .bk-btn, .gw-item';
+  var CLICKY = '.hero-cta-btn, .sp-btn, .btn-pill, .btn-pill-light, .sq2-cta, .game-btn, .nav-music, .nav-drop, .bk-link, .bk-btn, .gw-item';
   document.addEventListener('click', function (e) {
     var t = e.target.closest ? e.target.closest(CLICKY) : null;
     if (t) sound('click');
@@ -127,6 +127,7 @@
     document.body.appendChild(cur);
     var MAP = [
       ['#nav-music', function () { var b = document.getElementById('nav-music'); return (b && b.getAttribute('data-cursor')) || 'play'; }],   // no hover tag on Side Quests
+      ['.nav-drop', 'play'],
       ['.sq2-cta', 'play'],
       ['.rx-panel', 'tap'],
       ['.gw-item', 'view'], ['.gw', 'drag'],
