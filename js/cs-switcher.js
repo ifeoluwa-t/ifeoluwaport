@@ -29,13 +29,28 @@
     var timer = 0, started = 0, left = STEP, paused = false, visible = false;
     var autoplay = !reduce.matches && tabs.length > 1 && o.autoplay !== false;
 
+    /* Where the active tab ends up once its description has finished opening (and the old one has finished closing).
+       Measured on a hidden copy of the list with no transitions, so the pill can slide straight to its final spot and size
+       instead of aiming at a tab that is still half open. */
+    function finalBox() {
+      var list = tabs[cur].parentNode, host = list.parentNode;
+      var copy = list.cloneNode(true);
+      copy.classList.add('cs-measuring');
+      copy.style.cssText = 'position:absolute;left:' + list.offsetLeft + 'px;top:' + list.offsetTop + 'px;width:' + list.offsetWidth + 'px;visibility:hidden;pointer-events:none';
+      var items = copy.querySelectorAll('.cs-tab-item');
+      Array.prototype.forEach.call(items, function (it, k) { it.classList.toggle('is-active', k === cur); });
+      host.appendChild(copy);
+      var t = items[cur], box = { x: t.offsetLeft, y: t.offsetTop, w: t.offsetWidth, h: t.offsetHeight };
+      host.removeChild(copy);
+      return box;
+    }
     function place() {
       if (!pill) return;
-      var t = tabs[cur];
-      pill.style.setProperty('--px', t.offsetLeft + 'px');
-      pill.style.setProperty('--py', t.offsetTop + 'px');
-      pill.style.setProperty('--pw', t.offsetWidth + 'px');
-      pill.style.setProperty('--ph', t.offsetHeight + 'px');
+      var b = finalBox();
+      pill.style.setProperty('--px', b.x + 'px');
+      pill.style.setProperty('--py', b.y + 'px');
+      pill.style.setProperty('--pw', b.w + 'px');
+      pill.style.setProperty('--ph', b.h + 'px');
     }
     function bar(i) { return tabs[i].querySelector('.cs-tab-bar i'); }
     function runBar(ms, from) {
