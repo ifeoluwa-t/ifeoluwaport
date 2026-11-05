@@ -63,8 +63,9 @@
   background: #fff;
   box-shadow: var(--card-ring);
   pointer-events: none;
-  transition: transform 0.3s cubic-bezier(0.3, 0.8, 0.2, 1), width 0.3s cubic-bezier(0.3, 0.8, 0.2, 1), height 0.3s cubic-bezier(0.3, 0.8, 0.2, 1);
+  transition: transform 0.45s cubic-bezier(0.3, 0.8, 0.2, 1), width 0.45s cubic-bezier(0.3, 0.8, 0.2, 1), height 0.45s cubic-bezier(0.3, 0.8, 0.2, 1);   /* the same time and curve as the description opening */
 }
+.cs-page .cs-measuring, .cs-page .cs-measuring * { transition: none !important; animation: none !important; }   /* the hidden copy the switcher measures */
 .cs-page .cs-sw-pill::before {                    /* the brand-blue accent bar */
   content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 4px;
   border-radius: 0 4px 4px 0; background: var(--blue);
