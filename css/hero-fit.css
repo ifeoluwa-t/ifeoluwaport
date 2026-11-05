@@ -9,7 +9,7 @@
      --hh  the hero's height in px (the photo always ends on the hero's bottom edge)
 
    On a wide, short screen the name and the spacing shrink a little more than the photo, so the photo keeps
-   close to its reference size. Growth stops at 1.75 times the reference (about 2650x1500); beyond that the hero keeps that
+   close to its reference size. Growth stops at 2.6 times the reference (about 3930x2240); beyond that the hero keeps that
    size and sits centred. Below 1024px nothing here applies (phone and tablet heroes are untouched).
 ============================================ */
 @media (min-width: 1024px) {
