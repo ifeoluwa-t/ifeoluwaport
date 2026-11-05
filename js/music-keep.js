@@ -28,6 +28,7 @@
     ['Little Freak', 'Harry Styles', '4UAZkexQ7Cg', 'Pop'],
     ['Into The Unknown (Instrumental)', 'Kristen Anderson-Lopez & Robert Lopez', 'mBrAj8ukGDE', 'Soundtrack'],
     ['Like a Prayer (Choir Version)', 'I\'ll Take You There Choir', 'pMPKTwESkxs', 'Choral'],
+    ['Baba Yetu', 'Christopher Tin & Soweto Gospel Choir', 'IJiHDmyhE1A', 'Choral'],
     ['Coping Mechanism', 'Omah Lay & Elmah', 'VWqdBp3OfVg', 'Afrobeats'],
     ['Cry (Just A Little) [General C\'mamane Remix]', 'Bingo Players', 'C9a86kKfUGk', 'Dance'],
     ['Conflict of the Mind', 'AURORA', '7TF91Zk8L5w', 'Indie'],
