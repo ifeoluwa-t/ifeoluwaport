@@ -44,6 +44,7 @@
   overflow: hidden;
   border-radius: 9px;
   background: var(--periwinkle);
+  margin-inline: auto;   /* a card wider than its picture (long title) keeps the picture centred */
 }
 .gw-media img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
 .gw-meta {

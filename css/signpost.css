@@ -533,3 +533,8 @@
   .signpost-footer,
   body[data-page] .signpost-footer { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
 }
+/* tablets and small laptops: the music button is 56px tall from the edge, so 64px keeps the copyright line clear of it without a big empty band */
+@media (min-width: 641px) and (max-width: 1279px) {
+  .signpost-footer,
+  body[data-page] .signpost-footer { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+}
