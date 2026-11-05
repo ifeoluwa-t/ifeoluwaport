@@ -971,8 +971,8 @@ html.js-reveal .reveal-heading.is-visible .reveal-word {
   justify-content: center;
   /* Sized as a share of the orbit (≈10.5%) so chips on neighbouring rings
      (13–14% apart) can never overlap at any orbit size. */
-  width: 10.5cqw;
-  height: 10.5cqw;
+  width: 42px;
+  height: 42px;   /* fallback for browsers without container units (older iPhones): without it the chip collapses to nothing */
   border-radius: 50%;
   font-family: var(--font-body);
   font-weight: 700;
@@ -982,6 +982,8 @@ html.js-reveal .reveal-heading.is-visible .reveal-word {
   text-transform: uppercase;
   box-shadow: 0 6px 16px rgba(10, 0, 84, 0.35);
 }
+@supports (width: 1cqw) { .tools-orbit-chip { width: 10.5cqw; height: 10.5cqw; } }
+@media (max-width: 900px) { .tools-orbit-chip { width: 34px; height: 34px; } @supports (width: 1cqw) { .tools-orbit-chip { width: 10.5cqw; height: 10.5cqw; } } }
 /* A real tool logo: white disc with the logo centred inside. */
 .tools-orbit-chip.tools-orbit-chip--logo { background: #fff; border: 1px solid rgba(12, 0, 84, 0.08); box-sizing: border-box; }
 .tools-orbit-chip--logo img {
