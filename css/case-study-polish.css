@@ -414,3 +414,13 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
 
 /* "Another Project I Worked On" starts on the container's left edge like every other heading */
 .cs-page .cs-more-projects .section-heading { text-align: left !important; margin-left: 0; margin-right: 0; }   /* beats the small-screen "centre every topic" rule */
+
+/* the deck covers open their decks in a new tab: the picture lifts a little and the name turns blue on hover */
+.cs-page .cs-deck-link { display: flex; flex-direction: column; align-items: stretch; gap: 0; color: inherit; text-decoration: none; border-radius: 22px; }
+.cs-page .cs-deck-link::after { content: none; }   /* no automatic new-tab arrow: the whole cover is the link */
+.cs-page .cs-deck-link img { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.cs-page .cs-deck-link .cs-deck-name { transition: color 0.25s ease; }
+.cs-page .cs-deck-link:hover img, .cs-page .cs-deck-link:focus-visible img { transform: translateY(-4px); }
+.cs-page .cs-deck-link:hover .cs-deck-name, .cs-page .cs-deck-link:focus-visible .cs-deck-name { color: var(--blue); }
+.cs-page .cs-deck-link:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { .cs-page .cs-deck-link img, .cs-page .cs-deck-link .cs-deck-name { transition: none; } .cs-page .cs-deck-link:hover img { transform: none; } }
