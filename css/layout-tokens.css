@@ -48,8 +48,9 @@ html.has-curtain .games.games--landing {
   transform: translateY(100%);                             /* and it sits off screen, so its line animation is paused until it is revealed */
 }
 html.has-curtain .games.games--landing.is-revealed { visibility: visible; transform: none; }
-/* the footer's bottom edge: a thin tilted band of the skills strip's blue, so the curtain edge looks meant */
-html.has-curtain .signpost-footer::after {
+/* the footer's bottom edge: a thin tilted band of the skills strip's blue, so the cut between the footer and the game looks meant.
+   It is there on every screen: over the curtain on large screens, and between the footer and the game below it on small ones. */
+.page-layer:has(+ .games--landing) .signpost-footer::after {
   content: "";
   position: absolute;
   left: -4vw; right: -4vw;
