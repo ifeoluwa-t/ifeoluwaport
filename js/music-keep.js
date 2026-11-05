@@ -8,7 +8,7 @@
   var SONGS = window.SQ_SONGS = [
     ['Remember Me', 'Fireboy DML', '7nhFhG0IuaE', 'Afrobeats'],
     ['august', 'Taylor Swift', 'nn_0zPAfyo8', 'Pop'],
-    ['l\'abe igi', 'Tega Ethan', 'NUangWG1IYE', 'Alté'],
+    ['Doors', 'Noah Kahan', 'IAYJ4iTDkQ0', 'Folk'],
     ['Slick (Remix)', 'Victony, Summer Walker & Don Toliver', 'ksnN8PMf30I', 'R&B'],
     ['October Passed Me By', 'girl in red', 'c8W4WRNz3gM', 'Indie'],
     ['U.F.O', 'June Sometimes', 'vNC3lCFdAzg', 'Alté'],
@@ -17,7 +17,7 @@
     ['Sunshine', 'Baaba J', 't_SNGKA8o8k', 'Afrobeats'],
     ['The Louvre', 'Lorde', 'fN6KvLfd9sE', 'Pop'],
     ['Pluto (Remember You)', 'DJ Clock ft. Beatenberg', 'kF-f2nIVDn4', 'Dance'],
-    ['Doors', 'Noah Kahan', 'IAYJ4iTDkQ0', 'Folk'],
+    ['l\'abe igi', 'Tega Ethan', 'NUangWG1IYE', 'Alté'],
     ['Adaugo', 'The Cavemen', 'YctG0C4fce0', 'Highlife'],
     ['Ok Love You Bye', 'Olivia Dean', 'rtS9c4PdEVs', 'Soul'],
     ['Bridgertn', 'Ayra Starr', 'waJE7BGVn-k', 'Afrobeats'],
@@ -28,7 +28,7 @@
     ['Little Freak', 'Harry Styles', '4UAZkexQ7Cg', 'Pop'],
     ['Into The Unknown (Instrumental)', 'Kristen Anderson-Lopez & Robert Lopez', 'mBrAj8ukGDE', 'Soundtrack'],
     ['Like a Prayer (Choir Version)', 'I\'ll Take You There Choir', 'pMPKTwESkxs', 'Choral'],
-    ['Baba Yetu', 'Christopher Tin & Soweto Gospel Choir', 'IJiHDmyhE1A', 'Choral'],
+    ['Anifowose', 'Olamide', 'E2S_NQAt0bM', 'Hip-Hop'],
     ['Coping Mechanism', 'Omah Lay & Elmah', 'VWqdBp3OfVg', 'Afrobeats'],
     ['Cry (Just A Little) [General C\'mamane Remix]', 'Bingo Players', 'C9a86kKfUGk', 'Dance'],
     ['Conflict of the Mind', 'AURORA', '7TF91Zk8L5w', 'Indie'],
@@ -54,7 +54,7 @@
     ['War In Ba Sing Se', 'J0vanny', 'GfKmLnQhqBU', 'Electronic'],
     ['Everywhere, Everything', 'Noah Kahan & Gracie Abrams', 'dJPdkhsr0gU', 'Folk'],
     ['Come and Get Your Love', 'Redbone', 'BA4rSO-h9Io', 'Rock'],
-    ['Anifowose', 'Olamide', 'E2S_NQAt0bM', 'Hip-Hop'],
+    ['Baba Yetu', 'Christopher Tin & Soweto Gospel Choir', 'IJiHDmyhE1A', 'Choral'],
     ['FUN', 'Rema', 'sObg5b2nx44', 'Afrobeats']
   ];
   // The nav-bar music icon starts one of these three, alternating between them. After that the
