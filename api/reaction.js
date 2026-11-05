@@ -8,7 +8,7 @@
  *        -> same shape, plus { saved: true }  (puts the name on the leaderboard)
  *
  * Stored in Upstash Redis through its REST API (no npm dependency):
- *   rx:sum, rx:count, rx:fastest   running totals
+ *   rx:sum, rx:count, rx:fastest   running totals (rx:fastest_at: when the fastest time was set, for the dashboard)
  *   rx:players                     HyperLogLog of hashed IPs (people who have tried)
  *   rx:board                       sorted set: member = hashed IP, score = best ms (top 10 kept)
  *   rx:names                       hash: hashed IP -> display name
@@ -34,7 +34,7 @@ const NAME_MAX = 16;
 
 const FASTEST_LUA =
   "local f = redis.call('GET', KEYS[1]) " +
-  "if (not f) or (tonumber(ARGV[1]) < tonumber(f)) then redis.call('SET', KEYS[1], ARGV[1]) end " +
+  "if (not f) or (tonumber(ARGV[1]) < tonumber(f)) then redis.call('SET', KEYS[1], ARGV[1]) redis.call('SET', KEYS[2], ARGV[2]) end " +
   "return 1";
 
 function creds() {
@@ -203,7 +203,7 @@ module.exports = async function handler(req, res) {
       await pipeline(c, [
         ['INCRBY', 'rx:sum', String(ms)],
         ['INCR', 'rx:count'],
-        ['EVAL', FASTEST_LUA, '1', 'rx:fastest', String(ms)],
+        ['EVAL', FASTEST_LUA, '2', 'rx:fastest', 'rx:fastest_at', String(ms), new Date().toISOString()],
         ['PFADD', 'rx:players', id],
       ]);
       const snap = await snapshot(c, id);

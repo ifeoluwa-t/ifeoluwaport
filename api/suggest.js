@@ -1,20 +1,21 @@
 /* "What should I read, listen to or watch next?": visitors' suggestions.
  *
  * POST /api/suggest  { text, name?, website? }   -> { ok: true }
- *   - text: 3-400 characters. name: optional, up to 40. `website` is a hidden trap field: real
+ *   - text: 3-300 characters. name: optional, up to 40. `website` is a hidden trap field: real
  *     people leave it empty, so anything filled in is quietly dropped.
- * GET  /api/suggest?key=<SUGGEST_ADMIN_KEY>      -> { items: [{ text, name, at }] } (newest first)
+ *   - at most 5 suggestions per IP per hour.
  *
  * Stored in Upstash Redis (the same store the reaction game uses) in the list "sq:suggestions"
- * (newest first, capped at 500). To read them without the GET route, open the Upstash console and run
- *   LRANGE sq:suggestions 0 -1
+ * (newest first, capped at 500), each entry as JSON: { id, text, name, at }.
+ * They are read, searched, exported and deleted on the private dashboard (see api/admin.js and dashboard.html).
+ * The text is stored as typed (control characters removed) and HTML-escaped wherever it is shown.
  *
  * Env vars: KV_REST_API_URL + KV_REST_API_TOKEN (or UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN).
- * Optional: SUGGEST_ADMIN_KEY, to switch on the GET route.
  */
 const crypto = require('crypto');
 
-const RATE_LIMIT = 5;          // suggestions per IP per 10 minutes
+const RATE_LIMIT = 5;          // suggestions per IP per hour
+const TEXT_MAX = 300;
 const KEEP = 500;
 
 function creds() {
@@ -56,33 +57,25 @@ module.exports = async function handler(req, res) {
   if (!c) return send(503, { error: 'Suggestions are not switched on yet' });
 
   try {
-    if (req.method === 'GET') {
-      const key = process.env.SUGGEST_ADMIN_KEY;
-      const given = (req.query && req.query.key) || '';
-      if (!key || given.length !== key.length || !crypto.timingSafeEqual(Buffer.from(given), Buffer.from(key))) return send(401, { error: 'Not allowed' });
-      const [rows] = await pipeline(c, [['LRANGE', 'sq:suggestions', '0', String(KEEP - 1)]]);
-      return send(200, { items: (rows || []).map((r) => { try { return JSON.parse(r); } catch (e) { return null; } }).filter(Boolean) });
-    }
-
     if (req.method === 'POST') {
       const body = readBody(req);
       if (!body) return send(400, { error: 'Bad request' });
       if (typeof body.website === 'string' && body.website.trim()) return send(200, { ok: true });   // a bot: pretend it worked
-      const text = clean(body.text, 400);
+      const text = clean(body.text, TEXT_MAX);
       const name = clean(body.name, 40);
       if (text.length < 3) return send(400, { error: 'Tell me a little more (at least a few letters).' });
 
-      const bucket = Math.floor(Date.now() / 600000);
+      const bucket = Math.floor(Date.now() / 3600000);
       const key = 'sq:rl:' + clientId(req) + ':' + bucket;
-      const [hits] = await pipeline(c, [['INCR', key], ['EXPIRE', key, '700']]);
-      if (Number(hits) > RATE_LIMIT) { res.setHeader('Retry-After', '600'); return send(429, { error: 'That is plenty for now, thank you! Try again in a bit.' }); }
+      const [hits] = await pipeline(c, [['INCR', key], ['EXPIRE', key, '3700']]);
+      if (Number(hits) > RATE_LIMIT) { res.setHeader('Retry-After', '3600'); return send(429, { error: 'That is plenty for now, thank you! Try again in a bit.' }); }
 
-      const item = JSON.stringify({ text, name, at: new Date().toISOString() });
+      const item = JSON.stringify({ id: crypto.randomBytes(8).toString('hex'), text, name, at: new Date().toISOString() });
       await pipeline(c, [['LPUSH', 'sq:suggestions', item], ['LTRIM', 'sq:suggestions', '0', String(KEEP - 1)]]);
       return send(200, { ok: true });
     }
 
-    res.setHeader('Allow', 'GET, POST');
+    res.setHeader('Allow', 'POST');
     return send(405, { error: 'Method not allowed' });
   } catch (e) {
     return send(502, { error: 'Could not save that just now' });

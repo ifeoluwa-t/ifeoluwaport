@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Dashboard</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<style>
+@font-face { font-family: 'Poppins'; src: url('/assets/fonts/Poppins-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Poppins'; src: url('/assets/fonts/Poppins-Medium.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Poppins'; src: url('/assets/fonts/Poppins-SemiBold.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Sprite Graffiti'; src: url('/assets/fonts/SpriteGraffiti-Regular.woff2') format('woff2'); font-display: swap; }
+:root { --pale: #e9f1ff; --periwinkle: #bfd4ff; --blue: #0052ff; --indigo: #0a00cb; --navy: #0c0054; --line: rgba(12, 0, 84, 0.12); --soft: #4a4478; }
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: #fff; color: var(--navy); font-family: 'Poppins', system-ui, sans-serif; font-size: 16px; line-height: 1.5; }
+.wrap { width: min(1080px, 100% - 32px); margin: 0 auto; padding: 28px 0 80px; }
+button, input { font: inherit; color: inherit; }
+.btn { display: inline-flex; align-items: center; justify-content: center; height: 42px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--blue); color: #fff; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: background-color 0.2s ease; white-space: nowrap; }
+.btn:hover, .btn:focus-visible { background: var(--navy); }
+.btn:disabled { opacity: 0.55; cursor: default; }
+.btn--ghost { background: var(--pale); color: var(--navy); }
+.btn--ghost:hover, .btn--ghost:focus-visible { background: var(--periwinkle); }
+.btn--small { height: 34px; padding: 0 14px; font-size: 0.8rem; }
+.btn--danger { background: #fff; color: #b00020; box-shadow: inset 0 0 0 1.5px #b00020; }
+.btn--danger:hover, .btn--danger:focus-visible { background: #b00020; color: #fff; }
+.btn--danger.is-sure { background: #b00020; color: #fff; }
+
+/* login */
+.login { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; }
+.login-card { width: min(380px, 100%); padding: 32px 28px; border-radius: 24px; background: var(--pale); }
+.login-card h1 { margin: 0 0 6px; font-family: 'Sprite Graffiti', 'Poppins', sans-serif; font-weight: 400; font-size: 2rem; color: var(--blue); }
+.login-card p { margin: 0 0 18px; font-size: 0.9rem; color: var(--soft); }
+.field { width: 100%; height: 46px; padding: 0 16px; border: 1.5px solid var(--periwinkle); border-radius: 14px; background: #fff; font-size: 1rem; outline: none; }
+.field:focus { border-color: var(--blue); }
+.login-card .btn { width: 100%; margin-top: 12px; }
+.msg { min-height: 1.4em; margin: 10px 0 0; font-size: 0.85rem; color: #b00020; }
+
+/* dashboard */
+header.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 28px; }
+header.top h1 { margin: 0; font-family: 'Sprite Graffiti', 'Poppins', sans-serif; font-weight: 400; font-size: clamp(1.8rem, 5vw, 2.4rem); color: var(--blue); line-height: 1.1; }
+section.block { margin-top: 34px; }
+section.block > h2 { margin: 0 0 14px; font-size: 1.15rem; font-weight: 600; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+.stat { padding: 18px 20px; border-radius: 20px; background: var(--pale); }
+.stat b { display: block; font-size: 1.9rem; font-weight: 600; line-height: 1.2; color: var(--navy); }
+.stat span { display: block; font-size: 0.82rem; color: var(--soft); }
+.stat small { display: block; margin-top: 2px; font-size: 0.78rem; color: var(--soft); }
+.tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
+.tools .count { font-weight: 600; font-size: 0.95rem; margin-right: auto; }
+.tools .field { width: min(300px, 100%); height: 42px; }
+.list { display: grid; gap: 10px; padding: 0; margin: 0; list-style: none; }
+.item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; align-items: start; padding: 16px 18px; border-radius: 18px; background: #fff; box-shadow: inset 0 0 0 1.5px var(--periwinkle); }
+.item .text { margin: 0; font-size: 1rem; overflow-wrap: anywhere; white-space: pre-wrap; }
+.item .meta { margin: 4px 0 0; font-size: 0.8rem; color: var(--soft); }
+.item .acts { display: flex; gap: 6px; align-items: center; }
+.empty { padding: 26px; border-radius: 18px; background: var(--pale); color: var(--soft); text-align: center; font-size: 0.95rem; }
+.note { margin: 10px 0 0; font-size: 0.8rem; color: var(--soft); }
+@media (max-width: 560px) {
+  .item { grid-template-columns: 1fr; }
+  .item .acts { justify-content: flex-start; }
+  .tools .count { flex-basis: 100%; }
+  .tools .btn { flex: 1 1 auto; }
+}
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<main class="login" id="login">
+  <form class="login-card" id="login-form">
+    <h1>Dashboard</h1>
+    <p>Private. Enter the password to continue.</p>
+    <label class="sr" for="pw" style="position:absolute;left:-9999px">Password</label>
+    <input class="field" id="pw" type="password" autocomplete="current-password" placeholder="Password" required>
+    <button class="btn" id="login-btn" type="submit">Log in</button>
+    <p class="msg" id="login-msg" role="status" aria-live="polite"></p>
+  </form>
+</main>
+
+<div class="wrap" id="app" hidden>
+  <header class="top">
+    <h1>Dashboard</h1>
+    <button class="btn btn--ghost" id="logout" type="button">Log out</button>
+  </header>
+
+  <section class="block" aria-labelledby="h-sug">
+    <h2 id="h-sug">Suggestions</h2>
+    <div class="tools">
+      <span class="count" id="count"></span>
+      <input class="field" id="search" type="search" placeholder="Search suggestions or names" aria-label="Search suggestions or names">
+      <button class="btn btn--ghost" id="export" type="button">Export CSV</button>
+    </div>
+    <ul class="list" id="list"></ul>
+    <p class="note">Newest first. The most recent 500 are kept.</p>
+  </section>
+
+  <section class="block" aria-labelledby="h-rx">
+    <h2 id="h-rx">Reaction game stats</h2>
+    <div class="stats">
+      <div class="stat"><b id="rx-plays">–</b><span>Total plays</span></div>
+      <div class="stat"><b id="rx-avg">–</b><span>Everyone's average time</span></div>
+      <div class="stat"><b id="rx-fast">–</b><span>Fastest time ever</span><small id="rx-fast-at"></small></div>
+    </div>
+  </section>
+  <p class="msg" id="app-msg" role="status" aria-live="polite"></p>
+</div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var items = [];
+
+  function api(method, body) {
+    var opt = { method: method, credentials: 'same-origin', cache: 'no-store' };
+    if (body) { opt.headers = { 'Content-Type': 'application/json' }; opt.body = JSON.stringify(body); }
+    return fetch('/api/admin', opt).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, status: r.status, d: d }; });
+    });
+  }
+  function fmt(iso) {
+    var d = new Date(iso);
+    return isNaN(d) ? '' : d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  }
+  function show(authed) { $('login').hidden = authed; $('app').hidden = !authed; if (!authed) $('pw').focus(); }
+
+  /* everything from the server is put on the page with textContent, never as HTML */
+  function render() {
+    var q = $('search').value.trim().toLowerCase();
+    var shown = items.filter(function (s) { return !q || s.text.toLowerCase().indexOf(q) > -1 || (s.name || '').toLowerCase().indexOf(q) > -1; });
+    $('count').textContent = q ? shown.length + ' of ' + items.length + ' suggestions' : items.length + (items.length === 1 ? ' suggestion' : ' suggestions') + ' in total';
+    var ul = $('list'); ul.textContent = '';
+    if (!shown.length) {
+      var e = document.createElement('li'); e.className = 'empty';
+      e.textContent = items.length ? 'Nothing matches that search.' : 'No suggestions yet.';
+      ul.appendChild(e); return;
+    }
+    shown.forEach(function (s) {
+      var li = document.createElement('li'); li.className = 'item';
+      var main = document.createElement('div');
+      var t = document.createElement('p'); t.className = 'text'; t.textContent = s.text;
+      var m = document.createElement('p'); m.className = 'meta'; m.textContent = (s.name || 'Anonymous') + ' · ' + fmt(s.at);
+      main.appendChild(t); main.appendChild(m);
+      var acts = document.createElement('div'); acts.className = 'acts';
+      var del = document.createElement('button'); del.type = 'button'; del.className = 'btn btn--small btn--danger'; del.textContent = 'Delete';
+      del.addEventListener('click', function () { confirmDelete(acts, del, s); });
+      acts.appendChild(del);
+      li.appendChild(main); li.appendChild(acts); ul.appendChild(li);
+    });
+  }
+  function confirmDelete(acts, del, s) {
+    del.hidden = true;
+    var yes = document.createElement('button'); yes.type = 'button'; yes.className = 'btn btn--small btn--danger is-sure'; yes.textContent = 'Yes, delete';
+    var no = document.createElement('button'); no.type = 'button'; no.className = 'btn btn--small btn--ghost'; no.textContent = 'Cancel';
+    function undo() { yes.remove(); no.remove(); del.hidden = false; }
+    no.addEventListener('click', undo);
+    yes.addEventListener('click', function () {
+      yes.disabled = true; no.disabled = true; yes.textContent = 'Deleting…';
+      api('POST', { action: 'delete', id: s.id }).then(function (r) {
+        if (r.ok || r.status === 404) { items = items.filter(function (x) { return x.id !== s.id; }); render(); }
+        else if (r.status === 401) show(false);
+        else { undo(); $('app-msg').textContent = r.d.error || 'Could not delete that.'; }
+      });
+    });
+    acts.appendChild(yes); acts.appendChild(no); no.focus();
+  }
+
+  function load() {
+    return api('GET').then(function (r) {
+      if (r.status === 401) { show(false); return; }
+      if (!r.ok) { show(true); $('app-msg').textContent = r.d.error || 'Could not load the data.'; return; }
+      $('app-msg').textContent = '';
+      show(true);
+      items = r.d.suggestions || [];
+      render();
+      var x = r.d.reaction || {};
+      $('rx-plays').textContent = x.plays == null ? '–' : x.plays.toLocaleString();
+      $('rx-avg').textContent = x.average == null ? '–' : x.average + ' ms';
+      $('rx-fast').textContent = x.fastest == null ? '–' : x.fastest + ' ms';
+      $('rx-fast-at').textContent = x.fastest == null ? '' : x.fastestAt ? 'Set ' + fmt(x.fastestAt) : 'Date not recorded (it will be from the next record)';
+    }).catch(function () { show(true); $('app-msg').textContent = 'Could not load the data.'; });
+  }
+
+  $('login-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var b = $('login-btn'); b.disabled = true; $('login-msg').textContent = '';
+    api('POST', { action: 'login', password: $('pw').value }).then(function (r) {
+      if (r.ok) { $('pw').value = ''; return load(); }
+      $('login-msg').textContent = r.d.error || 'Could not log in.';
+    }).catch(function () { $('login-msg').textContent = 'Could not reach the server.'; })
+      .then(function () { b.disabled = false; });
+  });
+  $('logout').addEventListener('click', function () { api('POST', { action: 'logout' }).then(function () { items = []; show(false); }); });
+  $('search').addEventListener('input', render);
+
+  /* CSV: quotes doubled; a cell that starts with = + - @ gets a leading ' so a spreadsheet never runs it as a formula */
+  function cell(v) {
+    v = String(v == null ? '' : v);
+    if (/^[=+\-@\t\r]/.test(v)) v = "'" + v;
+    return '"' + v.replace(/"/g, '""') + '"';
+  }
+  $('export').addEventListener('click', function () {
+    var rows = [['Date', 'Name', 'Suggestion', 'ID']].concat(items.map(function (s) { return [s.at, s.name || 'Anonymous', s.text, s.id]; }));
+    var csv = '﻿' + rows.map(function (r) { return r.map(cell).join(','); }).join('\r\n');
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    a.download = 'suggestions-' + new Date().toISOString().slice(0, 10) + '.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>
