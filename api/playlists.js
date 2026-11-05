@@ -27,19 +27,34 @@ async function one(id) {
     clearTimeout(timer);
     if (!r.ok) return out;
     const j = await r.json();
-    out.title = typeof j.title === 'string' && j.title.trim() ? j.title.trim() : null;
+    out.title = typeof j.title === 'string' && j.title.trim() ? j.title.trim().slice(0, 200) : null;
     out.image = typeof j.thumbnail_url === 'string' && /^https:\/\//.test(j.thumbnail_url) ? j.thumbnail_url : null;
   } catch (e) { /* keep the fallback entry */ }
   return out;
 }
 
+/* Each warm server instance remembers the answer for 10 minutes, so even requests that get past the edge cache cost Spotify nothing. */
+let memo = null, memoAt = 0;
+const MEMO_MS = 10 * 60 * 1000;
+
 module.exports = async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     res.setHeader('Allow', 'GET, HEAD');
     return res.status(405).end(JSON.stringify({ error: 'Method not allowed' }));
   }
-  const list = await Promise.all(IDS.map(one));
+  // Nothing here takes a parameter. A query string (?x=1, ?x=2 ...) would give every request its own edge-cache entry,
+  // so it is refused: every real request is the same URL and is answered from the cache.
+  if ((req.url || '').indexOf('?') !== -1) {
+    res.setHeader('Cache-Control', 'public, s-maxage=3600');
+    return res.status(400).end(JSON.stringify({ error: 'Bad request' }));
+  }
+  let list = memo && Date.now() - memoAt < MEMO_MS ? memo : null;
+  if (!list) {
+    list = await Promise.all(IDS.map(one));
+    if (list.some((p) => p.title)) { memo = list; memoAt = Date.now(); }
+  }
   // Only cache a good answer for a day; if Spotify failed for everything, try again soon.
   const good = list.some((p) => p.title);
   res.setHeader('Cache-Control', good ? 'public, s-maxage=86400, stale-while-revalidate=604800' : 'public, s-maxage=60');
