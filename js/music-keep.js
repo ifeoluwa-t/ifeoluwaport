@@ -79,6 +79,100 @@
   window.sqMusicStore = { read: read, write: write };
   window.SQ_VOLUME = 30;   // 0-100: songs start soft
 
+  // ---------- the nav slot: the music icon starts in the top bar and falls to the bottom on the first tap ----------
+  // Shared by every page (Side-Quests uses it for its own bar, see js/side-quests.js). The icon sits in the nav (left of the email
+  // on desktop, left of "/menu" on phones) until the first tap, which starts the music and drops the real floating widget from the
+  // nav icon's exact spot to its place at the bottom. Once dropped it never goes back for the rest of the visit (sessionStorage).
+  var DROP_KEY = 'musicDropped', NAV_NOTE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V6.5l10-2V16"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="16.5" cy="16" r="2.5" fill="currentColor"/></svg>';
+  function isDropped() { try { return sessionStorage.getItem(DROP_KEY) === '1'; } catch (e) { return false; } }
+  function markDropped() { try { sessionStorage.setItem(DROP_KEY, '1'); } catch (e) {} }
+  var navCss = null;
+  function navStyle() {
+    if (navCss) return;
+    navCss = document.createElement('style');
+    navCss.textContent =
+      '.nav-drop{--nd-c:#0052ff;--nd-h:#0043cf;position:relative;display:inline-flex;align-items:center;justify-content:center;flex:none;box-sizing:border-box;width:42px;height:42px;padding:0;border:0;border-radius:50%;background:var(--nd-c);color:#fff;cursor:pointer;box-shadow:0 0 0 2px #0c0054,0 10px 24px rgba(10,0,84,.12),inset 0 1px 1.5px rgba(255,255,255,.35);transition:background-color .2s ease,opacity .25s ease,width .3s ease,margin .3s ease}' +
+      '.nav-drop svg{width:20px;height:20px}.nav-drop:hover{background:var(--nd-h)}.nav-drop:focus-visible{outline:2px solid #0c0054;outline-offset:3px}' +
+      '.nav-drop::before{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}' +   // a 44px touch area
+      '@media (max-width:960px){.nav-drop{width:36px;height:36px}.nav-drop svg{width:17px;height:17px}}' +                                       // as tall as the /menu button
+      'body[data-page="side-quests"] .nav-drop{--nd-c:#ffd23f;--nd-h:#f5c400;color:#0c0054}' +
+      '.is-parked{visibility:hidden!important;pointer-events:none!important}' +
+      '.mk.mk-dropping{opacity:1;scale:1;animation:none;visibility:visible;transition:none}.mk.is-landed{animation:none}' +
+      '.mk-dropping{z-index:10000}' +
+      '@media (prefers-reduced-motion:reduce){.nav-drop{transition:none}}';
+    document.head.appendChild(navCss);
+  }
+  window.mkNav = {
+    dropped: isDropped,
+    // o: { target: the floating widget, color: 'blue' | 'yellow', carried: music came from another page, onStart(), onLand(byKeyboard) }
+    // Returns null when the icon should simply be at the bottom (already dropped, music carried over, or no nav to put it in).
+    mount: function (o) {
+      document.documentElement.classList.remove('mk-nav-pending');
+      var actions = document.querySelector('.nav-actions');
+      if (o.carried) markDropped();
+      if (isDropped() || !actions) return null;
+      document.documentElement.classList.add('mk-nav-pending');
+      navStyle();
+      var t = o.target, busy = false;
+      var slot = document.createElement('button');
+      slot.type = 'button'; slot.className = 'nav-drop'; slot.id = 'nav-music-slot';
+      slot.setAttribute('aria-label', 'Play music'); slot.setAttribute('data-cursor', 'play');
+      slot.innerHTML = NAV_NOTE;
+      actions.insertBefore(slot, actions.firstChild);
+      t.classList.add('is-parked');
+      var reduce = function () { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; };
+
+      function fall(byKeyboard) {
+        var s = slot.getBoundingClientRect();
+        t.classList.remove('is-parked'); t.classList.add('mk-dropping');
+        document.documentElement.classList.remove('mk-nav-pending');
+        var f = t.getBoundingClientRect(), landed = false;
+        function land() {
+          if (landed) return; landed = true;
+          t.classList.remove('mk-dropping'); t.classList.add('is-landed');
+          if (o.onLand) o.onLand(byKeyboard);
+        }
+        // the nav slot goes away: the icon has become the floating widget, and the space it took closes up smoothly
+        var gap = parseFloat(getComputedStyle(actions).columnGap) || 0;
+        slot.style.width = s.width + 'px';
+        if (reduce()) slot.style.opacity = '0'; else slot.style.visibility = 'hidden';
+        requestAnimationFrame(function () { slot.style.width = '0px'; slot.style.marginRight = (-gap) + 'px'; slot.style.padding = '0'; });
+        setTimeout(function () { if (slot.parentNode) slot.parentNode.removeChild(slot); }, 450);
+        if (!t.animate) { land(); return; }
+        if (reduce()) { t.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: 'ease-out' }).finished.then(land, land); return; }
+        var sx = (s.left + s.width / 2) - (f.left + f.width / 2), sy = (s.top + s.height / 2) - (f.top + f.height / 2), r = s.width / f.width;
+        var from = o.color === 'yellow' ? '#ffd23f' : '#0052ff', ring = '0 0 0 2px #0c0054,0 10px 24px rgba(10,0,84,.12)', end = getComputedStyle(t).boxShadow, D = 780;
+        // across: glides in quickly and settles; down: a fall that speeds up, then two bounces
+        t.animate([{ translate: sx + 'px 0' }, { translate: '0 0' }], { duration: D * 0.66, easing: 'cubic-bezier(.25,.6,.35,1)' });
+        t.animate([
+          { backgroundColor: from, boxShadow: ring },
+          { backgroundColor: from, boxShadow: ring, offset: 0.5 },
+          { backgroundColor: '#ffffff', boxShadow: end }
+        ], { duration: D, easing: 'ease-out' });
+        t.animate([
+          { transform: 'translateY(' + sy + 'px) rotate(-32deg) scale(' + r + ')', offset: 0, easing: 'cubic-bezier(.55,0,.95,.6)' },
+          { transform: 'translateY(0) rotate(16deg) scale(1.1,.9)', offset: 0.66, easing: 'cubic-bezier(.2,.75,.35,1)' },
+          { transform: 'translateY(-26px) rotate(-8deg) scale(.97,1.03)', offset: 0.78, easing: 'cubic-bezier(.6,0,.9,.5)' },
+          { transform: 'translateY(0) rotate(3deg) scale(1.04,.96)', offset: 0.88, easing: 'cubic-bezier(.2,.75,.35,1)' },
+          { transform: 'translateY(-6px) rotate(-1deg)', offset: 0.94, easing: 'cubic-bezier(.6,0,.9,.5)' },
+          { transform: 'translateY(0) rotate(0) scale(1)', offset: 1 }
+        ], { duration: D }).finished.then(land, land);
+      }
+      var api = {
+        slot: slot,
+        // start the drop without a tap on the icon (music was started some other way)
+        drop: function () { if (busy) return; busy = true; markDropped(); fall(false); }
+      };
+      slot.addEventListener('click', function (e) {
+        if (busy) return;
+        busy = true; markDropped();
+        if (o.onStart) o.onStart();
+        fall(e.detail === 0);
+      });
+      return api;
+    }
+  };
+
   // ---------- "Still want to listen?" when a visitor leaves for another page while music plays ----------
   // Asked once, on the page where they started the music. Saying yes carries it to every page after that.
   (function () {
@@ -218,7 +312,17 @@
   // On the project pages the widget is pinned to the right and cannot be moved, so the "In this file" button keeps the left to itself
   var pinned = document.body.classList.contains('cs-page');
   applySide(pinned ? 'R' : getSide());
-  setTimeout(function () { pill.classList.add('is-in'); }, 700);   // pops in shortly after the page loads
+  // Music carried over from the last page: the icon is at the bottom from the start. Otherwise it waits in the nav bar
+  // (see window.mkNav above) and drops to the bottom on the first tap.
+  var carriedSaved = read();
+  var navDrop = window.mkNav.mount({
+    target: pill, color: 'blue',
+    carried: !!(carriedSaved && typeof carriedSaved.i === 'number' && SONGS[carriedSaved.i]),
+    onStart: function () { if (!hasPlayer) init({ i: nextDefault(), t: 0, at: Date.now(), paused: false }, true, false); },
+    onLand: function (byKeyboard) { wake(); if (byKeyboard) playBtn.focus({ preventScroll: true }); }   // the bar is open now: focus its play button (it folds into the icon after 3 seconds)
+  });
+  if (!navDrop) setTimeout(function () { pill.classList.add('is-in'); }, 700);   // pops in shortly after the page loads
+  else pill.classList.add('is-in');                                                 // (it is parked until the drop)
 
   var player = null, playing = false, tick = 0, cur = 0, consented = false, hasPlayer = false, ctl = null, hideTimer = 0;
   // intent: the visitor wants music playing (so a browser that blocks autoplay on a new page does not turn that into a pause)
