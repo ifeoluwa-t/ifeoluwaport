@@ -13,7 +13,8 @@
   }
 
   function go(hash, push) {
-    var id = decodeURIComponent(hash.slice(1));
+    var id;
+    try { id = decodeURIComponent(hash.slice(1)); } catch (e) { return false; }   // a malformed link ending (%E0%A4%A) must not stop the page's script
     var el = id && document.getElementById(id);
     if (!el) return false;
     if (el.hidden) setFilter(el.getAttribute('data-cat') || 'all', true); // open the story's own tab first

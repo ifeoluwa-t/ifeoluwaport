@@ -153,8 +153,8 @@
     // Arriving from another page with music playing: the Side Quests player picks it up and carries on.
     var carried = read();
     if (carried && typeof carried.i === 'number' && SONGS[carried.i]) {
-      var gone = carried.paused ? 0 : Math.min(6, (Date.now() - (carried.at || Date.now())) / 1000);
-      window.SQ_RESUME = { i: carried.i, t: Math.max(0, Math.floor((carried.t || 0) + gone)), paused: !!carried.paused };
+      var gone = carried.paused ? 0 : Math.max(0, Math.min(6, (Date.now() - (Number(carried.at) || Date.now())) / 1000));
+      window.SQ_RESUME = { i: carried.i, t: Math.max(0, Math.floor((Number(carried.t) || 0) + gone)), paused: !!carried.paused };
     }
     write(null);
     return;
@@ -293,7 +293,7 @@
   function init(saved, cons, openBar) {
     consented = cons; cur = saved.i; hasPlayer = true;
     // Pick up where the song would be by now, allowing for the time the page took to load.
-    var startAt = Math.max(0, Math.floor((saved.t || 0) + (saved.paused ? 0 : Math.min(6, (Date.now() - (saved.at || Date.now())) / 1000))));
+    var startAt = Math.max(0, Math.floor((Number(saved.t) || 0) + (saved.paused ? 0 : Math.max(0, Math.min(6, (Date.now() - (Number(saved.at) || Date.now())) / 1000)))));
     intent = !saved.paused; userPaused = false;
     label(); sync();
     if (openBar) wake(); else fold();

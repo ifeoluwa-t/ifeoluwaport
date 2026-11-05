@@ -14,7 +14,7 @@
     card.setAttribute('aria-label', 'Open ' + name + ' on Spotify');
     var cover = card.querySelector('.pl-cover'), img = cover.querySelector('img');
     function placeholder() { cover.classList.add('no-art'); img.hidden = true; card.classList.remove('is-loading'); }
-    if (p && p.image) {
+    if (p && typeof p.image === 'string' && /^https:\/\//.test(p.image)) {
       img.alt = name + ' playlist cover';
       img.onload = function () { cover.classList.remove('no-art'); img.hidden = false; card.classList.remove('is-loading'); };
       img.onerror = placeholder;
