@@ -189,8 +189,8 @@
   text-transform: uppercase;
   color: rgba(12, 0, 84, 0.55);
 }
-.cs-page .cs-meta-year { font-size: 1rem; font-weight: 600; color: var(--navy); }
 .cs-page .cs-meta-item .work-card-pill { margin: 0; align-self: flex-start; }
+.cs-page .cs-meta-year,
 .cs-page .cs-meta-line-value { font-size: 0.95rem; font-weight: 500; line-height: 1.4; color: var(--navy); }
 .cs-page .cs-meta-item:has(.cs-skills) { grid-column: 1 / -1; }
 .cs-page .cs-skills { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -265,7 +265,7 @@
   .cs-page .cs-hero-stat-label { font-size: 0.8125rem; line-height: 1.35; }
   .cs-page .cs-meta-row { margin-top: 10px; padding-top: 10px; gap: 8px 18px; }
   .cs-page .cs-meta-item, .cs-page .cs-meta-line { gap: 2px; }
-  .cs-page .cs-meta-line-value { font-size: 0.875rem; line-height: 1.35; }
+  .cs-page .cs-meta-year, .cs-page .cs-meta-line-value { font-size: 0.875rem; line-height: 1.35; }
   .cs-page .cs-skills { gap: 6px; }
   .cs-page .cs-skill-tag { padding: 3px 10px; font-size: 0.78rem; }
   .cs-page .cs-partners { margin-top: 8px; }
@@ -275,7 +275,7 @@
 @media (min-width: 900px) and (max-height: 640px) {
   .cs-page .cs-headline { font-size: clamp(1.6rem, 4.6vh, 2.2rem); }
   .cs-page .cs-subdesc { font-size: 0.9rem; line-height: 1.4; }
-  .cs-page .cs-meta-line-value { font-size: 0.875rem; }
+  .cs-page .cs-meta-year, .cs-page .cs-meta-line-value { font-size: 0.875rem; }
 }
 
 /* Phones and tablets: one column, the copy first and the picture after it. */
