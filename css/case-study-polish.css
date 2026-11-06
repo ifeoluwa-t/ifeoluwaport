@@ -362,6 +362,11 @@ body.cs-page { --cs-max: var(--container, 1180px); --cs-gutter: 24px; }
 /* ---------- Results link pills: multicoloured again, with room between the rows ---------- */
 .cs-page .cs-results-links { display: flex; flex-wrap: wrap; gap: 14px 12px; }
 .cs-page .cs-results-pill { margin: 0; border: 0; }
+/* phones: a little less side padding and gap, so neighbouring pills can share a row */
+@media (max-width: 560px) {
+  .cs-page .cs-results-links { gap: 12px 8px; }
+  .cs-page .cs-results-pill { padding: 0 12px; font-size: 0.875rem; }
+}
 .cs-page .cs-results-pill--navy { background: var(--navy); color: #fff; }
 .cs-page .cs-results-pill--indigo { background: var(--indigo); color: #fff; }
 .cs-page .cs-results-pill--blue,
