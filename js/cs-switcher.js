@@ -160,6 +160,27 @@
     // every picture is fetched up front, so a change never shows a blank frame
     Array.prototype.forEach.call(card.querySelectorAll('img'), function (im) { im.loading = 'eager'; im.decoding = 'async'; if (im.decode) im.decode().catch(function () {}); });
 
+    /* A tab with two pictures (the Design Sprint "Team": FBI Africa and Dacoits) shows one at a time on phones, where the two
+       would otherwise stack: the first picture, then the second once half of the tab's time has run. The switch follows the
+       tab's own progress bar, so hovering, focusing or leaving the card pauses it too. Reduced motion keeps both pictures. */
+    var narrow = window.matchMedia('(max-width: 760px)');
+    var stepTimer = 0;
+    function stepPanel() {
+      var tab = tabs.filter(function (t) { return t.classList.contains('is-active'); })[0];
+      var panel = panels.filter(function (p) { return p.classList.contains('is-active'); })[0];
+      if (!tab || !panel) return;
+      var multi = panel.querySelectorAll('img').length > 1 && narrow.matches && !reduce.matches;
+      if (!multi) { panel.removeAttribute('data-step'); return; }
+      var i = tab.querySelector('.cs-tab-bar i');
+      var m = i && new DOMMatrixReadOnly(getComputedStyle(i).transform);
+      var step = m && m.a >= 0.5 ? '1' : '0';
+      if (panel.getAttribute('data-step') !== step) panel.setAttribute('data-step', step);
+    }
+    if (panels.some(function (p) { return p.querySelectorAll('img').length > 1; })) {
+      stepTimer = setInterval(stepPanel, 100);
+      if (narrow.addEventListener) narrow.addEventListener('change', stepPanel);
+    }
+
     engine(card, tabs, {
       pill: pill, vertical: vertical,
       onChange: function (i) {
@@ -173,7 +194,9 @@
             p.classList.add('is-leaving');
             clearTimeout(p._leave); p._leave = setTimeout(function () { p.classList.remove('is-leaving'); }, 320);
           }
+          if (k !== i) p.removeAttribute('data-step');
         });
+        stepPanel();
       }
     });
   }

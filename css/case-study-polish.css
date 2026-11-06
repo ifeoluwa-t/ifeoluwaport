@@ -162,6 +162,10 @@
 @media (max-width: 760px) {
   .cs-page .cs-tabs-visual--duo .cs-duo.is-active { flex-direction: column; }
   .cs-page .cs-tabs-visual--duo .cs-duo-img { width: 100%; max-width: 420px; flex: none; }
+  /* a tab with two pictures shows one at a time (cs-switcher.js flips data-step halfway through the tab's time) */
+  .cs-page .cs-tabs-visual--duo .cs-duo[data-step] .cs-duo-img { display: none; }
+  .cs-page .cs-tabs-visual--duo .cs-duo[data-step="0"] .cs-duo-img:nth-child(1),
+  .cs-page .cs-tabs-visual--duo .cs-duo[data-step="1"] .cs-duo-img:nth-child(2) { display: block; animation: cs-duo-in 0.35s ease; }
 }
 
 /* ---------- Products (list beside a picture): both columns fill the width evenly ---------- */
