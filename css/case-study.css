@@ -696,9 +696,9 @@
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--cs-gutter);
-    margin-inline: calc(var(--cs-gutter) * -1);
-    padding-inline: var(--cs-gutter);
+    scroll-padding-inline: 0;
+    margin-inline: 0;          /* the swipe strip stays inside its card; it used to bleed out past the card edges */
+    padding-inline: 0;
     padding-bottom: 8px;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
