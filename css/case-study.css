@@ -845,7 +845,7 @@ body.cs-page { background: #fff; }
 @media (max-width: 899px) {
   .cs-page .cs-approach-section .section-inner { grid-template-columns: minmax(0, 1fr); }
   .cs-page .cs-approach-intro,
-  .cs-page .cs-approach-section .cs-approach-did { grid-column: 1; grid-row: auto; }
+  .cs-page .cs-approach-section .cs-approach-did { grid-column: 1; grid-row: auto; margin-top: 28px; }   /* stacked: room between the intro text and "What I Did" */
   .cs-page .cs-approach-list { grid-template-columns: minmax(0, 1fr); }
 }
 
