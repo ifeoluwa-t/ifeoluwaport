@@ -412,9 +412,9 @@ html.js-reveal .reveal-heading.is-visible .reveal-word {
    texture without an actual texture asset. */
 .hero {
   position: relative;
-  background-color: var(--navy);
+  background-color: #04051c;   /* the near-black blue the moving gradient has at its edges, so no purple shows before it starts */
   background-image:
-    radial-gradient(ellipse 900px 560px at 50% -8%, rgba(130, 150, 255, 0.22), transparent 70%),
+    radial-gradient(ellipse 62% 78% at 52% 38%, #0a2fe0 0%, #0624b0 30%, #070c55 62%, rgba(4, 5, 28, 0) 100%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
   background-repeat: no-repeat, repeat;
   padding: 110px 24px 0;
@@ -424,7 +424,9 @@ html.js-reveal .reveal-heading.is-visible .reveal-word {
    sits above the section's own static background/noise (kept as the
    no-JS/no-WebGL/reduced-motion fallback) and below .hero-inner
    (z-index:1) so the nav-adjacent content stays on top. */
+@keyframes heroGradientIn { from { opacity: 0; } to { opacity: 1; } }
 .hero-gradient-canvas {
+  animation: heroGradientIn 0.9s ease both;
   position: absolute;
   inset: 0;
   width: 100%;
@@ -442,6 +444,13 @@ html.js-reveal .reveal-heading.is-visible .reveal-word {
    own bottom edge on its own, however tall it renders. */
 @media (min-width: 901px) {
   .hero { min-height: 100vh; }
+}
+@media (max-width: 900px) {
+  .hero {
+    background-image:
+      radial-gradient(ellipse 130% 95% at 50% 40%, #1c35c4 0%, #0b22a2 50%, #08124f 100%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+  }
 }
 .hero-inner {
   position: relative;
