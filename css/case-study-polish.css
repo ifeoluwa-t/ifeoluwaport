@@ -181,13 +181,11 @@
   margin-left: auto; margin-right: auto;
 }
 
-/* ---------- strips: soft fades at both edges ---------- */
+/* ---------- strips: the moving pictures run to the edges of their box, no faded edges ---------- */
 .cs-page .cs-screens-viewport,
 .cs-page .cs-articles-viewport,
 .cs-page .cs-sessions-viewport,
 .cs-page .cs-posters-viewport {
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 56px, #000 calc(100% - 56px), transparent 100%);
-  mask-image: linear-gradient(90deg, transparent 0, #000 56px, #000 calc(100% - 56px), transparent 100%);
   padding-left: 56px; padding-right: 56px;
 }
 
