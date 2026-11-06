@@ -290,6 +290,8 @@ a.st-cta[target="_blank"]::after { content: none; }
   .st-story-media { max-width: 100%; }
 }
 @media (max-width: 639px) {
+  .st-gallery { --gap: 21px; }   /* was 16px: a little more air between the tiles on phones */
+  .st-story:not([hidden]) ~ .st-story:not([hidden]) { margin-top: 72px; }   /* was 56px: each story reads as separate from the next */
   .st-tile { gap: 12px; padding: 14px 14px 18px; }
   .st-tile-title { font-size: 1.15rem; }
   .st-gallery-section[data-filter="all"] .st-tile-desc,

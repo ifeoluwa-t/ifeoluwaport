@@ -3168,8 +3168,8 @@ img.img-placeholder {
   .work-card { width: 250px; }
   /* Back to two plain stacked rows below the tablet breakpoint — the
        flattened 2-column grid above is undone here. */
-  .work-grid { display: flex; flex-direction: column; gap: 24px; }
-  .work-grid-row { display: grid; grid-template-columns: 1fr; }
+  .work-grid { display: flex; flex-direction: column; gap: 32px; }   /* was 24px: a little more air between cards on phones */
+  .work-grid-row { display: grid; grid-template-columns: 1fr; gap: 36px; }   /* was 28px */
   /* Landscape cards drop back to a plain stacked layout (image over
        copy) at phone widths — side-by-side has no room left here. */
   .work-card.work-card--landscape { grid-template-columns: 1fr; }
