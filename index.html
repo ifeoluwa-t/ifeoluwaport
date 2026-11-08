@@ -55,6 +55,88 @@
 <link rel="preload" href="assets/fonts/Poppins-Bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/SpriteGraffiti-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/SpriteGraffiti-Shadow.woff2" as="font" type="font/woff2" crossorigin fetchpriority="low">
+<style id="intro-css">
+/* Intro loader (homepage only). All timings are here: change these to speed it up or slow it down. */
+:root {
+  --intro-start: 0.15s;    /* plain navy before the first word */
+  --intro-you: 0.25s;
+  --intro-could: 0.25s;
+  --intro-img1: 0.2s;      /* photo cut after "could" */
+  --intro-rattle: 0.45s;
+  --intro-img2: 0.2s;      /* photo cut after "rattle" */
+  --intro-the: 0.2s;
+  --intro-stars: 0.5s;
+  --intro-slice: 0.22s;    /* "stars" slices into strips and collapses */
+  --intro-lift: 0.18s;     /* the navy layer lifts away (slice + lift = the 0.4s exit) */
+  --intro-cap: 4s;         /* the loader is always gone by this time, whatever happens */
+}
+#intro { display: none; }
+html.intro-on #intro {
+  display: block; position: fixed; inset: 0; z-index: 2147483000; overflow: hidden;
+  background: #0c0054; color: #e9f1ff; touch-action: none; overscroll-behavior: none; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  animation: introCap 0s linear var(--intro-cap) forwards;
+}
+html.intro-on, html.intro-on body { overflow: hidden; }
+html.intro-on { background: #0c0054; scrollbar-gutter: stable; animation: introUnlock 0s linear var(--intro-cap) forwards; }
+@keyframes introCap { to { visibility: hidden; pointer-events: none; } }
+@keyframes introUnlock { to { overflow: visible; } }
+/* the hero's own entrance animations wait behind the loader and start when it is gone */
+html.intro-on .hero-kicker, html.intro-on .hero-name, html.intro-on .hero-photo-img,
+html.intro-on .hero-left-stack, html.intro-on .hero-cta-btn, html.intro-on .hero-gradient-canvas { animation-play-state: paused; }
+.intro-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.intro-word, .intro-img, .intro-strips { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; }
+.intro-img { background-size: cover; background-position: center 30%; filter: grayscale(1); }
+.intro-text, .intro-strip {
+  font-family: 'Sprite Graffiti', Impact, 'Arial Black', sans-serif; font-weight: normal; text-transform: uppercase;
+  font-size: clamp(2.75rem, min(calc(var(--k) * 1vw), 60vh), var(--cap, 16rem)); line-height: 0.9; letter-spacing: 0.01em; white-space: nowrap;
+  color: #e9f1ff; display: block; margin: 0;
+}
+.intro-word--stars .intro-text, .intro-strip { color: #bfd4ff; }
+.intro-stars { position: relative; display: block; }
+#intro[data-step="you"] .intro-word--you, #intro[data-step="could"] .intro-word--could, #intro[data-step="rattle"] .intro-word--rattle,
+#intro[data-step="the"] .intro-word--the, #intro[data-step="stars"] .intro-word--stars { display: flex; }
+#intro[data-step="img1"] .intro-img--1, #intro[data-step="img2"] .intro-img--2 { display: block; }
+#intro[data-step="slice"] .intro-strips, #intro[data-step="lift"] .intro-strips { display: flex; }
+#intro[data-step="rattle"] .intro-word--rattle .intro-text { animation: introRattle calc(var(--intro-rattle) - 0.1s) steps(1, end) both; }
+@keyframes introRattle {
+  0% { transform: translate(-3px, 1px) rotate(-2deg); } 10% { transform: translate(3px, -2px) rotate(2deg); }
+  20% { transform: translate(-2px, -3px) rotate(1deg); } 30% { transform: translate(4px, 2px) rotate(-2deg); }
+  40% { transform: translate(-4px, 0) rotate(2deg); } 50% { transform: translate(2px, 3px) rotate(-1deg); }
+  60% { transform: translate(-3px, -2px) rotate(2deg); } 70% { transform: translate(3px, 1px) rotate(-2deg); }
+  80% { transform: translate(-2px, 2px) rotate(1deg); } 90% { transform: translate(2px, -1px) rotate(-1deg); }
+  100% { transform: none; }
+}
+.intro-spark { position: absolute; width: clamp(14px, 2.4vw, 34px); height: auto; fill: #bfd4ff; opacity: 0; transform: scale(0); pointer-events: none; }
+.intro-spark:nth-child(2) { top: -16%; left: -5%; --n: 0; } .intro-spark:nth-child(3) { top: -6%; right: -7%; --n: 1; }
+.intro-spark:nth-child(4) { bottom: -14%; left: 14%; --n: 2; } .intro-spark:nth-child(5) { bottom: -4%; right: 1%; --n: 3; }
+#intro[data-step="stars"] .intro-spark { animation: introTwinkle calc(var(--intro-stars) * 0.8) ease-out calc(var(--n) * var(--intro-stars) * 0.1) both; }
+@keyframes introTwinkle { 0% { opacity: 0; transform: scale(0) rotate(-30deg); } 45% { opacity: 1; transform: scale(1) rotate(0); } 100% { opacity: 0; transform: scale(0.3) rotate(25deg); } }
+.intro-strips { animation: introCollapse var(--intro-slice) cubic-bezier(0.6, 0, 0.9, 0.4) both; }
+.intro-strip { position: absolute; clip-path: inset(calc(var(--i) * 100% / 6) 0 calc((5 - var(--i)) * 100% / 6) 0); animation: introStrip calc(var(--intro-slice) * 0.85) cubic-bezier(0.6, 0, 0.9, 0.4) calc(var(--i) * var(--intro-slice) * 0.03) both; }
+@keyframes introStrip { to { transform: translateX(calc(var(--d) * 70vw)); } }
+@keyframes introCollapse { 0% { transform: scaleY(1); } 55% { transform: scaleY(1); } 100% { transform: scaleY(0.03); } }
+#intro[data-step="lift"] { transform: translateY(-101%); transition: transform var(--intro-lift) cubic-bezier(0.7, 0, 0.2, 1); }
+.intro-skip {
+  position: absolute; right: max(18px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 2;
+  background: none; border: 0; padding: 10px 6px; font: 500 0.8125rem/1 'Poppins', system-ui, sans-serif; letter-spacing: 0.04em;
+  color: #bfd4ff; opacity: 0.7; cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
+}
+.intro-skip:hover, .intro-skip:focus-visible { opacity: 1; }
+#intro[data-step="slice"] .intro-skip, #intro[data-step="lift"] .intro-skip { display: none; }
+@media (prefers-reduced-motion: reduce) { #intro { display: none !important; } }
+</style>
+<noscript><style>#intro { display: none !important; }</style></noscript>
+<script>
+/* Play the intro once per browser session, and never with reduced motion. */
+(function () {
+  try {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (sessionStorage.getItem('intro-seen')) return;
+  } catch (e) { /* no storage: it plays */ }
+  document.documentElement.classList.add('intro-on');
+})();
+</script>
 <link rel="stylesheet" href="css/style.css?v=580">
 <link rel="stylesheet" href="css/fx.css?v=10">
 <link rel="stylesheet" href="css/signpost.css?v=58">
@@ -74,6 +156,75 @@
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body data-page="home">
+
+<div id="intro" role="status">
+  <p class="intro-sr">you could rattle the stars</p>
+  <div class="intro-img intro-img--1" aria-hidden="true"></div>
+  <div class="intro-img intro-img--2" aria-hidden="true"></div>
+  <div class="intro-word intro-word--you" aria-hidden="true"><span class="intro-text" style="--k:58;--cap:26rem">you</span></div>
+  <div class="intro-word intro-word--could" aria-hidden="true"><span class="intro-text" style="--k:34;--cap:18rem">could</span></div>
+  <div class="intro-word intro-word--rattle" aria-hidden="true"><span class="intro-text" style="--k:26.4;--cap:13.5rem">rattle</span></div>
+  <div class="intro-word intro-word--the" aria-hidden="true"><span class="intro-text" style="--k:50.5;--cap:23rem">the</span></div>
+  <div class="intro-word intro-word--stars" aria-hidden="true"><span class="intro-stars"><span class="intro-text" style="--k:33.6;--cap:17.5rem">stars</span>
+    <svg class="intro-spark" viewBox="0 0 24 24"><path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z"/></svg>
+    <svg class="intro-spark" viewBox="0 0 24 24"><path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z"/></svg>
+    <svg class="intro-spark" viewBox="0 0 24 24"><path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z"/></svg>
+    <svg class="intro-spark" viewBox="0 0 24 24"><path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z"/></svg></span></div>
+  <div class="intro-strips" aria-hidden="true">
+    <span class="intro-strip" style="--i:0;--d:-1;--k:33.6;--cap:17.5rem">stars</span><span class="intro-strip" style="--i:1;--d:1;--k:33.6;--cap:17.5rem">stars</span><span class="intro-strip" style="--i:2;--d:-1;--k:33.6;--cap:17.5rem">stars</span>
+    <span class="intro-strip" style="--i:3;--d:1;--k:33.6;--cap:17.5rem">stars</span><span class="intro-strip" style="--i:4;--d:-1;--k:33.6;--cap:17.5rem">stars</span><span class="intro-strip" style="--i:5;--d:1;--k:33.6;--cap:17.5rem">stars</span>
+  </div>
+  <button class="intro-skip" type="button">skip</button>
+</div>
+<script>
+(function () {
+  var d = document.documentElement, root = document.getElementById('intro');
+  if (!root) return;
+  if (!d.classList.contains('intro-on')) { root.parentNode.removeChild(root); return; }
+  try { sessionStorage.setItem('intro-seen', '1'); } catch (e) { /* ignore */ }
+  var cs = getComputedStyle(d);
+  function ms(name) { var v = cs.getPropertyValue(name).trim(); return /ms$/.test(v) ? parseFloat(v) : (parseFloat(v) || 0) * 1000; }
+  var IMGS = ['assets/images/intro/me-night.webp', 'assets/images/intro/photographer.webp'], pics = [];
+  var steps = [['', ms('--intro-start')], ['you', ms('--intro-you')], ['could', ms('--intro-could')], ['img1', ms('--intro-img1')],
+    ['rattle', ms('--intro-rattle')], ['img2', ms('--intro-img2')], ['the', ms('--intro-the')], ['stars', ms('--intro-stars')]];
+  var i = 0, timer = 0, cap = 0, done = false, step = '';
+  function finish() {
+    if (done) return; done = true;
+    clearTimeout(timer); clearTimeout(cap);
+    document.removeEventListener('keydown', onKey);
+    if (root.parentNode) root.parentNode.removeChild(root);
+    d.classList.remove('intro-on');
+    document.dispatchEvent(new CustomEvent('loader:done'));
+  }
+  function show(name) { step = name; root.setAttribute('data-step', name); }
+  function exit() {
+    if (done || step === 'slice' || step === 'lift') return;
+    clearTimeout(timer);
+    show('slice');
+    timer = setTimeout(function () { show('lift'); timer = setTimeout(finish, ms('--intro-lift')); }, ms('--intro-slice'));
+  }
+  function play() {
+    if (done) return;
+    if (i >= steps.length) return exit();
+    var s = steps[i++], name = s[0], n = name === 'img1' ? 0 : name === 'img2' ? 1 : -1;
+    if (n > -1) {
+      var p = pics[n];
+      if (!(p && p.complete && p.naturalWidth)) { timer = setTimeout(play, s[1]); return; }   // photo not ready: the word before it just stays up a little longer
+      root.querySelector('.intro-img--' + (n + 1)).style.backgroundImage = 'url("' + IMGS[n] + '")';
+    }
+    show(name);
+    timer = setTimeout(play, s[1]);
+  }
+  function onKey(e) { if (e.key === 'Escape' || e.key === 'Enter') exit(); }
+  root.addEventListener('click', exit);
+  document.addEventListener('keydown', onKey);
+  cap = setTimeout(finish, ms('--intro-cap'));
+  IMGS.forEach(function (src, n) { var im = new Image(); im.decoding = 'async'; if ('fetchPriority' in im) im.fetchPriority = 'low'; im.src = src; pics[n] = im; });
+  var go = function () { go = function () {}; play(); };
+  if (document.fonts && document.fonts.load) Promise.race([document.fonts.load('1em "Sprite Graffiti"'), new Promise(function (r) { setTimeout(r, 700); })]).then(function () { go(); }, function () { go(); });
+  else go();
+})();
+</script>
 
 <div class="page-transition" aria-hidden="true">
   <div class="transition-card transition-card--accent"></div>
