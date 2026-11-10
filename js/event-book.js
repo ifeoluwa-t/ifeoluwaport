@@ -22,7 +22,7 @@
     if (p.kind === 'intro') return '<div class="' + cls + '"><span class="bk-kicker">' + esc(p.kicker) + '</span><p class="bk-hero">' + esc(p.text) + '</p><span class="bk-note">' + esc(p.note) + ' &rarr;</span></div>';
     if (p.kind === 'outro') return '<div class="' + cls + '"><span class="bk-kicker">Want more?</span><p class="bk-hero">' + esc(p.text) + '</p><a class="bk-link" href="' + esc(p.link) + '">' + esc(p.label) + ' &rarr;</a></div>';
     var tilt = (idx % 2 ? 1.6 : -1.8);
-    return '<div class="' + cls + '"><a class="bk-photo" href="events.html" style="--tilt:' + tilt + 'deg" aria-label="' + esc(p.title) + ' (opens the Events page)"><img src="' + esc(p.src) + '" width="' + p.w + '" height="' + p.h + '" alt="' + esc(p.alt) + '" draggable="false" loading="lazy" decoding="async"></a>' +
+    return '<div class="' + cls + '"><a class="bk-photo" href="events" style="--tilt:' + tilt + 'deg" aria-label="' + esc(p.title) + ' (opens the Events page)"><img src="' + esc(p.src) + '" width="' + p.w + '" height="' + p.h + '" alt="' + esc(p.alt) + '" draggable="false" loading="lazy" decoding="async"></a>' +
       '<h3 class="bk-title">' + esc(p.title) + '</h3><p class="bk-caption">' + esc(p.caption) + '</p><span class="bk-tag">' + esc(p.tag) + '</span></div>';
   }
 

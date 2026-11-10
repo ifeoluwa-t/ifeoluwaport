@@ -1442,7 +1442,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let url;
       try { url = new URL(link.href, window.location.href); } catch (err) { return; }
       if (url.origin !== window.location.origin) return;
-      if (!/\.html?$/.test(url.pathname)) return;
+      if (/\.[a-z0-9]+$/i.test(url.pathname) || url.pathname.indexOf('/api/') === 0) return;   // pages only: clean URLs (/work, /) have no extension
       if (url.pathname === window.location.pathname) return;
 
       e.preventDefault();

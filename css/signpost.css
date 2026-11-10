@@ -408,7 +408,7 @@
   .sp-signs li:nth-child(5) .sp-face { --bg: #0a66c2; --fg: #fff; }
   .sp-signs li:nth-child(6) .sp-face { --bg: #000; --fg: #fff; }
   /* Side-Quests wears the yellow of the Side Quests page */
-  .sp-sign[href="side-quests.html"] .sp-face { --bg: #ffd23f; --fg: var(--navy); }
+  .sp-sign[href="side-quests"] .sp-face { --bg: #ffd23f; --fg: var(--navy); }
 }
 
 /* The LinkedIn and X buttons in the footer card use their logos' own colours */
@@ -467,7 +467,7 @@
   .sp-sign { filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.3)); }
   .sp-signs { gap: 20px; }
   /* Side-Quests in its yellow; LinkedIn and X in their logo colours */
-  .sp-sign[href="side-quests.html"] .sp-face { --bg: #ffd23f; --fg: var(--navy); }
+  .sp-sign[href="side-quests"] .sp-face { --bg: #ffd23f; --fg: var(--navy); }
   .sp-signs li:nth-child(5) .sp-face { --bg: #0a66c2; --fg: #fff; }
   .sp-signs li:nth-child(6) .sp-face { --bg: #000; --fg: #fff; }
   .sp-i { font-size: 0.78em; }
