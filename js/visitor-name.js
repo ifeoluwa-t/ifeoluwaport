@@ -95,6 +95,7 @@
     input.maxLength = MAX;
     input.autocomplete = 'off';
     input.setAttribute('autocapitalize', 'words');
+    input.placeholder = 'name';
     input.spellcheck = false;
     input.setAttribute('enterkeyhint', 'done');
     input.setAttribute('data-1p-ignore', '');
@@ -116,7 +117,7 @@
 
     var timer = 0;
     function size() {
-      mirror.textContent = input.value || '\u200b';   // an empty mirror would have no line, and the field would change height
+      mirror.textContent = input.value || input.placeholder;   // sized by what is showing: the typed name, or the word 'name'
       field.classList.toggle('is-empty', input.value === '');
     }
     function commit(rewrite) {
