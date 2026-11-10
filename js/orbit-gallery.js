@@ -133,7 +133,7 @@
       fTitle.textContent = title; fSub.textContent = sub;
       var ev = c.getAttribute('data-event');
       if (ev) {                                          // a picture of an event: the card opens that event on the events page
-        fCard.href = 'events.html#' + ev;
+        fCard.href = 'events#' + ev;
         fCard.setAttribute('aria-label', 'Open ' + title + ' on the events page');
       } else {                                           // a picture with no event page behind it: the card is just a picture, not a link
         fCard.removeAttribute('href');

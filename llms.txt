@@ -11,16 +11,16 @@ Contact: hi@ifeoluwa.xyz. Also on LinkedIn (https://www.linkedin.com/in/ifeoluwa
 ## Main pages
 
 - [Home](https://ifeoluwa.xyz/): Introduction, what Ifeoluwa does, where they have worked and selected results.
-- [Work](https://ifeoluwa.xyz/work.html): Featured campaigns, communities and product launches.
-- [Storytelling](https://ifeoluwa.xyz/storytelling.html): Brand storytelling and content work.
-- [Events](https://ifeoluwa.xyz/events.html): Events planned, marketed and hosted.
-- [Side-Quests](https://ifeoluwa.xyz/side-quests.html): What Ifeoluwa gets up to outside marketing: music, books, comics, sport, photography, design and health.
+- [Work](https://ifeoluwa.xyz/work): Featured campaigns, communities and product launches.
+- [Storytelling](https://ifeoluwa.xyz/storytelling): Brand storytelling and content work.
+- [Events](https://ifeoluwa.xyz/events): Events planned, marketed and hosted.
+- [Side-Quests](https://ifeoluwa.xyz/side-quests): What Ifeoluwa gets up to outside marketing: music, books, comics, sport, photography, design and health.
 
 ## Case studies
 
-- [EUR/GBP Global Accounts](https://ifeoluwa.xyz/project-eur-gbp-global-accounts.html): Owned end-to-end product marketing for the launch of EUR and GBP accounts at Onboard. 300+ new accounts and six-figure dollar deposits in the first month.
-- [Onboard Business Pivot](https://ifeoluwa.xyz/project-onboard-business-pivot.html): Led product, content and brand marketing for Onboard's launch into B2B global payments. Eight-figure dollar transaction volume in three months and 4 global products launched.
-- [Consumer Product Refresh](https://ifeoluwa.xyz/project-consumer-product-refresh.html): Creative direction and content for Onboard's repositioning and redesign, from web pages to the app and Play Store. Website views up 412% and engagement up 82% in the first week.
-- [Onboard Test Pilots](https://ifeoluwa.xyz/project-onboard-test-pilots.html): A community of product testers who validate new features before public release. 4 major features tested and 2 Test Pilots secured paid roles.
-- [Onchain Design Sprint](https://ifeoluwa.xyz/project-onchain-design-sprint.html): A 2-week design sprint with Dacoit Design and other brands. 100+ designers trained and 7+ secured paid roles in Web3.
-- [Stablecoin Sprint](https://ifeoluwa.xyz/project-stablecoin-sprint.html): Co-organised, with creative direction, with Base West Africa, cNGN and Uglycash to grow stablecoin education and adoption in Africa. 70+ active users onboarded across 3 products.
+- [EUR/GBP Global Accounts](https://ifeoluwa.xyz/project-eur-gbp-global-accounts): Owned end-to-end product marketing for the launch of EUR and GBP accounts at Onboard. 300+ new accounts and six-figure dollar deposits in the first month.
+- [Onboard Business Pivot](https://ifeoluwa.xyz/project-onboard-business-pivot): Led product, content and brand marketing for Onboard's launch into B2B global payments. Eight-figure dollar transaction volume in three months and 4 global products launched.
+- [Consumer Product Refresh](https://ifeoluwa.xyz/project-consumer-product-refresh): Creative direction and content for Onboard's repositioning and redesign, from web pages to the app and Play Store. Website views up 412% and engagement up 82% in the first week.
+- [Onboard Test Pilots](https://ifeoluwa.xyz/project-onboard-test-pilots): A community of product testers who validate new features before public release. 4 major features tested and 2 Test Pilots secured paid roles.
+- [Onchain Design Sprint](https://ifeoluwa.xyz/project-onchain-design-sprint): A 2-week design sprint with Dacoit Design and other brands. 100+ designers trained and 7+ secured paid roles in Web3.
+- [Stablecoin Sprint](https://ifeoluwa.xyz/project-stablecoin-sprint): Co-organised, with creative direction, with Base West Africa, cNGN and Uglycash to grow stablecoin education and adoption in Africa. 70+ active users onboarded across 3 products.

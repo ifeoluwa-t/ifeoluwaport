@@ -21,7 +21,7 @@
   nav.id = 'cs-toc';
   nav.setAttribute('aria-label', 'In this file');
   nav.innerHTML =
-    '<a class="cs-toc-back" href="work.html" aria-label="Back to all work">' + arrow + 'All work</a>' +
+    '<a class="cs-toc-back" href="work" aria-label="Back to all work">' + arrow + 'All work</a>' +
     '<div><span class="cs-toc-label">In this file</span><ul class="cs-toc-list"></ul></div>';
   const list = nav.querySelector('.cs-toc-list');
 
