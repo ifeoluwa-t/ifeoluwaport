@@ -153,3 +153,25 @@ body[data-page="home"] .og-card.is-featured { --edge: var(--blue); --edge-deep: 
 @media (prefers-reduced-motion: reduce) {
   .hero-worked-at-logo::after, .hero-worked-at-logo::before { transition: none; }
 }
+
+/* ============================================
+   HERO NAME FIELD: "hi ___, I'm" (js/visitor-name.js turns the kicker into this; without JavaScript it stays plain text)
+============================================ */
+.hero-kicker.has-nick { position: relative; z-index: 3; white-space: nowrap; cursor: text; }   /* above the big name, which overlaps it */
+/* a 44px-tall tap area around the line, without changing its size */
+.hero-kicker.has-nick::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: max(100%, 44px); transform: translateY(-50%); }
+.hk-field { position: relative; display: inline-grid; vertical-align: baseline; max-width: calc(100vw - 9rem); }
+.hk-field::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0.14em; height: 1px; background: currentColor; opacity: 0; transition: opacity 0.15s; }
+.hk-field:focus-within::after { opacity: 0.4; }
+.hk-field:has(.hk-input:focus-visible)::after { opacity: 0.85; }
+.hk-mirror { grid-area: 1 / 1; visibility: hidden; white-space: pre; min-width: 1.2ch; padding-right: 2px; overflow: hidden; pointer-events: none; }
+.hk-input {
+  grid-area: 1 / 1; width: 0; min-width: 100%; height: 100%; box-sizing: border-box; margin: 0; padding: 0; border: 0; border-radius: 0; outline: 0;
+  background: transparent; box-shadow: none; appearance: none; -webkit-appearance: none;
+  font: inherit; line-height: inherit; letter-spacing: inherit; color: inherit; caret-color: currentColor; text-align: left; cursor: text;
+}
+.hk-cursor { display: none; position: absolute; left: 0; top: 50%; width: 2px; height: 1.05em; transform: translateY(-50%); background: currentColor; pointer-events: none; animation: hkBlink 1.1s steps(1, end) infinite; }
+.hk-field.is-empty:not(:focus-within) .hk-cursor { display: block; }
+@keyframes hkBlink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+@media (hover: hover) { .hero-kicker.has-nick:hover .hk-cursor { animation: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .hk-cursor { animation: none; opacity: 1; } .hk-field::after { transition: none; } }
