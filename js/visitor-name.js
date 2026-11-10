@@ -106,6 +106,14 @@
     field.append(mirror, input, cursor);
     kicker.append('hi ', field, tail);
 
+    // the line height of the kicker in px: the field uses it so a larger name does not make the line taller
+    function lineHeight() {
+      var cs = getComputedStyle(kicker), lh = parseFloat(cs.lineHeight);
+      kicker.style.setProperty('--hk-lh', (lh > 0 ? lh : parseFloat(cs.fontSize) * 1.5) + 'px');
+    }
+    lineHeight();
+    window.addEventListener('resize', lineHeight);
+
     var timer = 0;
     function size() {
       mirror.textContent = input.value || '\u200b';   // an empty mirror would have no line, and the field would change height
