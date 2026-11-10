@@ -1,4 +1,4 @@
-/* Side-Quests extras: the song list in "Recent listens" fades at the bottom while there is more to scroll to. */
+/* Side-Quests extras: the song list in "My taste sounds like" fades at the bottom while there is more to scroll to. */
 (function () {
   var list = document.getElementById('rot-list');
   if (!list) return;
