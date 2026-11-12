@@ -165,7 +165,7 @@ body[data-page="home"] .og-card.is-featured { --edge: var(--blue); --edge-deep: 
 .hk-field:focus-within::after { opacity: 0.4; }
 .hk-field:has(.hk-input:focus-visible)::after { opacity: 0.85; }
 /* a name is set a little larger than "hi" and ", I'm" (its line box is trimmed to match, so nothing moves) */
-.hk-field:not(.is-empty) { font-family: var(--font-display); font-weight: normal; letter-spacing: 0.02em; font-size: 1.45em; line-height: calc(var(--hk-lh, 1.5em) - 0.113em); }   /* trimmed so the bigger text sits in the same line box */
+.hk-field { font-family: var(--font-display); font-weight: normal; letter-spacing: 0.02em; font-size: 1.45em; line-height: calc(var(--hk-lh, 1.5em) - 0.113em); }   /* trimmed so the bigger text sits in the same line box */
 .hk-mirror { grid-area: 1 / 1; visibility: hidden; white-space: pre; min-width: 1.2ch; padding: 0 2px 0 5px; overflow: hidden; pointer-events: none; }
 .hk-input {
   grid-area: 1 / 1; width: 0; min-width: 100%; height: 0; min-height: 100%; box-sizing: border-box; margin: 0; padding: 0 0 0 5px; border: 0; border-radius: 0; outline: 0;
