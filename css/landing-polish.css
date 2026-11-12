@@ -172,7 +172,7 @@ body[data-page="home"] .og-card.is-featured { --edge: var(--blue); --edge-deep: 
   background: transparent; box-shadow: none; appearance: none; -webkit-appearance: none;
   font: inherit; line-height: inherit; letter-spacing: inherit; color: inherit; caret-color: currentColor; text-align: left; cursor: text;
 }
-.hk-input::placeholder { color: currentColor; opacity: 0.55; }   /* the placeholder '{{name}}' shows until something is typed */
+.hk-input::placeholder { color: currentColor; opacity: 0.55; }   /* the placeholder 'name' shows until something is typed */
 .hk-cursor { display: none; position: absolute; left: 2px; top: 50%; width: 2px; height: 1.05em; transform: translateY(-50%); background: currentColor; pointer-events: none; animation: hkBlink 1.1s steps(1, end) infinite; }
 .hk-field.is-empty:not(:focus-within) .hk-cursor { display: block; }
 @keyframes hkBlink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
