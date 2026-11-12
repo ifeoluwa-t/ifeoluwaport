@@ -95,7 +95,7 @@
     input.maxLength = MAX;
     input.autocomplete = 'off';
     input.setAttribute('autocapitalize', 'words');
-    input.placeholder = '{{name}}';
+    input.placeholder = 'name';
     input.spellcheck = false;
     input.setAttribute('enterkeyhint', 'done');
     input.setAttribute('data-1p-ignore', '');
